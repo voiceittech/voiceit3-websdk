@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>VoiceIt Web Demo</title>
+    <script src = "node_modules/socket.io-client/dist/socket.io.js"> </script>
+<!--     <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script> -->
+      <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css' />
+    <script src="js/bufferloader.js"></script>
+    <script src="js/id3-minimized.js"></script>
+<!--
+    	<script async src="js/brf-js/utils/BRFv4Stats.js"></script> -->
+
+  <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+<script src="semantic/dist/semantic.min.js"></script>
+  <!--  VideoJs/WebRTC stuff  -->
+  <link href="node_modules/video.js/dist/video-js.min.css" rel="stylesheet">
+  <link href="node_modules/videojs-record/dist/css/videojs.record.css" rel="stylesheet">
+  <script src="node_modules/video.js/dist/video.min.js"></script>
+  <script src="node_modules/recordrtc/RecordRTC.js"></script>
+  <script src="node_modules/webrtc-adapter/out/adapter.js"></script>
+  <script src="node_modules/videojs-record/dist/videojs.record.min.js"></script>
+  <script src="node_modules/progressbar.js/dist/progressbar.js"></script>
+
+  <script src="node_modules/wavesurfer.js/dist/wavesurfer.min.js"></script>
+<script src="node_modules/wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js"></script>
+<script src="node_modules/videojs-wavesurfer/dist/videojs.wavesurfer.js"></script>
+
+<script src="js/circle-progress.min.js"></script>
+</head>
+<body>
+ <div class="ui middle aligned center aligned grid">
+    <div class="column">
+
+
+<div id="headingHolder">
+      <h2 class="ui teal image header">
+      <img src="assets/images/logo.png" class="image"/>
+         <div class="content content2">
+          <i>
+          VoiceIt2
+        </i>
+        </div>
+          </h2>
+   <div id="toggleHolder" class="toggleHolder">
+            <div class="ui basic label" id="comingSoon">
+      Coming Soon!
+    </div>
+  <div class="ui toggle checkbox">
+  <input type="checkbox" name="public">
+  <label>Liveness Check</label>
+</div>
+</div>
+</div>
+
+<div id="options">
+      <div class="ui compact menu">
+    <div class="ui simple dropdown item">
+      Voice
+      <i class="dropdown "></i>
+      <div class="menu">
+        <div class="item voice biometricButton" >Enrollment</div>
+        <div class="item voice biometricButton">Verification</div>
+      </div>
+    </div>
+  </div>
+  <div class="ui compact menu">
+  <div class="ui simple dropdown item">
+    Face
+    <i class="dropdown"></i>
+    <div class="menu">
+      <div class="item face biometricButton">Enrollment</div>
+      <div class="item face biometricButton">Verification</div>
+    </div>
+  </div>
+</div>
+<div class="ui compact menu">
+  <div class="ui simple dropdown item">
+    Video
+    <i class="dropdown "></i>
+    <div class="menu">
+      <div class="item video biometricButton">Enrollment</div>
+      <div class="item video biometricButton">Verification</div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+  <div class="ui modal" id="voiceModal">
+    <i class="close icon"></i>
+  <div class="image content">
+    <div class="description">
+      <div class="ui header">
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="ui modal" id="videoModal">
+  <i class="close icon" id="closeButton"></i>
+  <div class="ui card" id="card">
+  <div class="image" id="cardOverlay">
+    <div id="warningOverlay"><img id="wait2" class="svg" src="assets/images/bars.svg"></img><span id="warnText" class="ui header">Reenrollment will delete all previous enrollments<br>Proceed?</span>
+    <div>
+        <i class="ic icon arrow circle left"></i>
+        <i class="ic icons icon arrow circle right"></i>
+    </div>
+    </div>
+    <div id="overlayHolder">
+      <div id="overlay2"></div>
+      <canvas width="460" height="345" id="cv">
+      </canvas>
+      <button id="readyButton" class="small ui customButton inverted basic button">
+          Ready?
+          <i class="chevron circle right icon"></i>
+      </button>
+      <div id="circle"></div>
+      <canvas id="imageData"></canvas>
+      <svg height="460" width="465" id="videoCircle">
+        <mask id="mask1">
+            <rect x="0" y="0" width="500" height="500" fill="white" />
+            <circle cx="230" cy="180" r="130" fill="black"/>
+        </mask>
+      <g mask="url(#mask1)">
+      <circle id="testSound" cx="230" cy="180" r="130" fill="#ffffff"/>
+      <circle id="testSound2" cx="230" cy="180" r="130" fill="#ffffff"/>
+      <circle id="testSound3" cx="230" cy="180" r="130" fill="#ffffff"/>
+      </g>
+      </svg>
+    </div>
+<video id="videoLiveness" autoplay playsinline></video>
+  </div>
+<canvas id="waveform" width="460" height="242"></canvas>
+  <div class="content" id="content">
+
+    <a class="header" style="height:2em;">
+      <span id="header"> </span>
+          <img id="wait" class="svg" src="assets/images/bars.svg"></img>
+    </a>
+  </div>
+  <div class="extra content" id="extra">
+    <img id="powered-by" src="assets/images/powered-by.png">
+  </img>
+</div>
+</div>
+</div>
+
+<div class="ui modal" id="faceModal">
+  <i class="close icon"></i>
+<div class="image content">
+  <div class="description">
+    <div class="ui header">
+    </div>
+  </div>
+</div>
+</div>
+
+<video id="video2" class="video-js vjs-default-skin"></video>
+<video id="video3" class="video-js vjs-default-skin"></video>
+<audio id="myAudio" class="video-js vjs-default-skin"></audio>
+<!-- <video id="myVideo3" class="video-js" width="620" height="420"></video> -->
+<video id="myVideo"></video>
+
+<script src="js/prompts.js"></script>
+<script src="js/api.js"></script>
+<script src="js/VoiceIt2.js"></script>
+<script src="js/progressCircle.js"></script>
+<script src="js/overlay.js"></script>
+<script src="js/vudio.js"></script>
+<script src="js/tracker.js"></script>
+<script src="js/liveness.js"></script>
+<script src="js/index.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+</body>

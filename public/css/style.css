@@ -1,0 +1,405 @@
+body {
+  background-color: #DADADA;
+}
+body > .grid {
+  height: 100%;
+}
+
+.ui.card>.content, .ui.cards>.card>.content {
+  border-top: none;
+}
+.ui.teal.image.header {
+  padding-bottom: 10px !important;
+}
+.column {
+  max-width: 450px;
+}
+
+#warnText {
+  padding-top: 5rem;
+  font-size: large;
+  width:100%;
+  font-weight: 300;
+}
+
+#warningOverlay > span {
+  opacity: 0;
+}
+
+#warningOverlay > div {
+  opacity: 0;
+}
+
+
+
+.ic {
+  color: white;
+  font-size: 1.8rem !important;
+}
+
+.ic:hover {
+  color: #fcbb1b;
+}
+
+#warningOverlay {
+  height: 345px;
+  width: 460px;
+  position: absolute;
+  z-index: 26;
+  background: black;
+  text-align:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-content: center;
+}
+
+#warningOverlay span {
+  color: white;
+}
+
+#waveform {
+  position: absolute;
+  top: 8%;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background-color: black;
+  opacity: 0;
+  /* max-height: 345px;
+max-width: 460px; */
+}
+
+#wait2 {
+  right: 0;
+  left: 0;
+  z-index:18;
+  max-height: 4rem;
+  fill: red;
+}
+
+#wait {
+  right: 0;
+  z-index:16;
+  max-height: 3rem;
+  fill: #ffffff;
+}
+
+#options {
+  flex-wrap: wrap;
+  display: flex;
+}
+
+.dropdown, .compact.menu {
+  flex-grow: 1 !important;
+}
+
+
+
+.ui.teal.image.header {
+  margin: 0px;
+  padding-bottom: 0px;
+}
+
+/* #myVideo3 {
+  display: none;
+} */
+
+#imageData {
+  height: 345px;
+  width: 460px;
+  /* display: none; */
+  position: absolute;
+}
+
+#videoLiveness {
+  position: relative;
+  height: 345px;
+  width: 460px;
+  display: none;
+}
+
+#card {
+  z-index: -2;
+}
+
+
+#myVideo {
+display: none !important;
+  position: absolute;
+  background-color: #000000;
+  margin: 0px auto;
+  height: 345px;
+  width: 460px;
+  top: 0;
+  z-index: -1;
+ }
+
+ #testSound{
+   opacity:1.0 !important;
+   z-index: 13;
+ }
+ #testSound2{
+   opacity:1.0 !important;
+   z-index: 12;
+ }
+ #testSound3{
+   opacity:1.0 !important;
+   z-index: 11;
+ }
+
+ .ui.card {
+   padding-top: 10%;
+   background-color: black;
+ }
+
+.ui.card>.extra {
+   background-color:  white;
+ }
+
+ .ui.card>.content>.header {
+   font-weight: normal !important;
+   font-size: 1.585714em !important;
+ }
+
+ #toggleHolder {
+  padding-bottom:10px !important;
+  text-align: end;
+ }
+
+.ui.card>.content {
+  background-color:  white;
+  padding: 6px;
+}
+
+.content2 {
+  padding-left: 0px !important;
+  font-size: 1.41428571rem;
+  vertical-align: bottom !important;
+}
+
+#comingSoon {
+  opacity: 0;
+}
+
+#video2, #video3 {
+  display: none;
+}
+.vjs-record .vjs-device-button.vjs-control {
+  display: none !important;
+}
+
+.ui.pointing.basic.label.left {
+  position:fixed;
+}
+
+#cv2 {
+  left: 21.2%;
+  position: absolute;
+  z-index: 3;
+}
+
+.ui.modal>.close {
+  z-index: 500;
+}
+
+#waveformHolder{
+
+}
+
+#headingHolder {
+  display: flex;
+  justify-content: space-between;
+}
+
+#powered-by {
+  max-width: 9em;
+  margin-right: 0.6em;
+}
+
+#header {
+    max-width: 300px;
+  color: white !important;
+}
+
+.toggleHolder {
+  padding-bottom: 0.5rem;
+  text-align: initial;
+  align-self: flex-end;
+  padding-bottom: 10px;
+}
+
+#circle canvas {
+  transform: rotate(-90deg);
+}
+
+#circle2 canvas {
+
+}
+
+#content {
+  bottom: 2em;
+  z-index: 6;
+  position: relative;
+  padding: 0px;
+  background-color: black;
+  text-align: center;
+}
+
+ .ui.card>.content>.header {
+   margin: 0px auto;
+ }
+
+#extra {
+  background-color: black !important;
+}
+.ui.card>.extra{
+  border: none !important;
+  padding: 2px !important;
+  text-align: end !important;
+}
+#videoModal {
+  margin-bottom: 15%;
+  background: transparent;
+}
+.ui.teal.header {
+  color:  #000000 !important;
+}
+
+.ui.modal {
+  width: auto !important;
+}
+
+.ui.dimmer {
+  background-color: rgba(0,0,0,0.7);
+}
+
+
+#readyButton:focus {
+  box-shadow: 0 0 0 2px rgba(255,255,255,.5) inset !important;
+}
+
+#myVideo2 , #myVideo2_html5_api , .myVideo2-dimensions{
+  /* display: none !important; */
+}
+
+#readyButton:hover {
+  box-shadow: 0 0 0 2px #fff inset!important;
+}
+
+
+#myAudio{
+  display: none;
+}
+
+#video:focus {
+    background: #e0e1e2 none !important;
+    color: rgba(0,0,0,.6) !important;
+}
+
+.video-js .vjs-tech {
+  /* outline: none !important; */
+}
+
+#circle {
+z-index: 12;
+top: 4.5%;
+position: absolute;
+width: 255px;
+height: 255px;
+left: 21%;
+}
+
+#readyButton {
+  right: 14em;
+  position: absolute;
+  bottom: 0%;
+  z-index: 8;
+}
+
+#video:hover {
+  background: rgba(34,36,38,.15) !important;
+}
+
+td {
+  padding: 0px !important;
+}
+tr {
+    padding: 0px !important;
+}
+
+.customButton {
+  margin: auto !important;
+  font-weight: 600 !important;
+}
+
+
+
+#videoCircle {
+  position: absolute;
+  z-index:11;
+  display: none;
+  top:-9.3%;
+  opacity: 0.0;
+}
+
+
+
+#overlayHolder {
+  display: flex;
+  position: relative;
+  min-height: 345px;
+  width: 100%;
+}
+
+#overlay2 {
+  display: flex;
+  position: absolute;
+  min-height: 345px;
+  width: 100%;
+  z-index: 1;
+  background: rgba(0,0,0,0.7);
+}
+
+#cv {
+  z-index: 2;
+}
+
+#closeButton{
+  color: #ffffff;
+  font-size: 25px;
+}
+
+#freq {
+  opacity: 0;
+  bottom: 6%;
+  left: 12%;
+  position:absolute;
+  z-index: 3;
+  max-width: 600px !important;
+  max-height: 600px !important;
+}
+
+#circle svg {
+  position: absolute;
+}
+
+
+.ui.card {
+  display: block;
+  background-color: @grey;
+  width: 100%;
+  text-align: left;
+  font-style: italic;
+  font-size: 0.8em;
+  margin: 0px !important;
+}
+
+.large.ui.buttons {
+  width: 100%;
+}
+
+a {
+  color: #000000 !important;
+}
