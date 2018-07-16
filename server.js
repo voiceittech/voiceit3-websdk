@@ -13,6 +13,7 @@ var io = require('socket.io')(http);
 var tests = [0,1,2,3,4];
 var testNum;
 var currTest;
+var time;
 var testIndex = 0;
 var passed = false;
 var oldTest = -1;
@@ -20,6 +21,8 @@ var passedTests = 0;
 var oldVertices = [];
 var time = new Date().getTime();
 var face;
+var timeStamps = [];
+var successTimeStamps = [];
 
 //counters
 var turnedRightCounter = 0;
@@ -80,6 +83,7 @@ function doLiveness(cas, a){
           facedDownCounter++;
           if(facedDownCounter > 1){
             passed = true;
+            successTimeStamps.push(timeStamps[timeStamps.length-1]);
             }
         }
       }
@@ -93,6 +97,7 @@ function doLiveness(cas, a){
         turnedRightCounter++;
         if(turnedRightCounter > 1){
           passed = true;
+          successTimeStamps.push(timeStamps[timeStamps.length-1]);
           }
         }
       }
@@ -106,6 +111,7 @@ function doLiveness(cas, a){
           turnedLeftCounter++;
           if(turnedLeftCounter > 1){
             passed = true;
+            successTimeStamps.push(timeStamps[timeStamps.length-1]);
             }
       }
       }
@@ -140,7 +146,9 @@ function doLiveness(cas, a){
         console.log("You smiled!");
         smileCounter++;
         if(smileCounter > 1){
+          time = new Date().getTime();
           passed = true;
+          successTimeStamps.push(timeStamps[timeStamps.length-1]);
           }
       }
       }
@@ -176,17 +184,22 @@ function doLiveness(cas, a){
         console.log("you yawned!");
         yawnCounter++;
         if(yawnCounter > 1){
+          time = new Date().getTime();
           passed = true;
+          successTimeStamps.push(timeStamps[timeStamps.length-1]);
           }
       }
       }
       break;
-      case 5:
-        if((v[0] > 12 && (v[1] > 0.4 || v[2] > 0.4))) {
-        		console.log("you blinked!");
-            passed = true;
-        	}
-        	storeVertices(v);
+      //blink detection is really bad because laptop webcams are so far away 
+
+      // case 5:
+      //   if((v[0] > 12 && (v[1] > 0.4 || v[2] > 0.4))) {
+      //   		console.log("you blinked!");
+      //       passed = true;
+
+      //   	}
+      //   	storeVertices(v);
       default:
     }
   }
@@ -298,7 +311,7 @@ function handleClientRequest (type, contentLanguage, recording, phrase) {
           });
         break;
         case "deleteEnrollments":
-        myVoiceIt.getAllEnrollmentsForUser({
+        myVoiceIt.deleteAllEnrollmentsForUser({
           userId: "usr_9d2bffcd2540450f9c9e75f393ebe876",
         },(jsonResponse)=>{
           console.log(jsonResponse);
@@ -319,17 +332,25 @@ function handleClientRequest (type, contentLanguage, recording, phrase) {
       }
   };
 
+//takes the picture upon liveness completion and makes liveness-related API calls
+function handleLivenessCompletion(){
+
+}
+
 app.get('/', function(req, res) {
 });
 
-//Handle client-node communication
+//Handle client-server communication
 io.on('connection', function(socket){
+  //initiate lvieness event from cleint
   socket.on('initiate', function(count){
     tests = shuffle(tests);
     testNum = count;
     currTest = tests[testIndex];
     socket.emit('initiated', currTest);
   });
+
+  //date event from client
   socket.on('data', function(faceObject) {
     face = faceObject;
     if (oldTest != currTest){
@@ -346,14 +367,27 @@ io.on('connection', function(socket){
       //debugging only
       if (testIndex > 4){
       testIndex = 0;
+      currTest = tests[testIndex];
+      socket.emit('test', currTest);
       }
-    currTest = tests[testIndex];
-    socket.emit('test', currTest);
     }
   });
+
+  //Api request from client
   socket.on('apiRequest', function(array){
     console.log(array);
     handleClientRequest(array[0],array[1],array[2],array[3]);
+  });
+
+  //recorded data from client
+  socket.on('recording', function(recording){
+    recording = recording[0];
+    handleLivenessCompletion();
+  });
+
+  //timestamps of the recording 
+  socket.on('timestamp',function(timestamp){
+    timeStamps.push(timestamp);
   });
 });
 

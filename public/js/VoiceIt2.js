@@ -1,6 +1,6 @@
 function voiceIt2(){
 
-    var mainThis = this;
+    var main = this;
     this.video;
     this.player;
     this.socket2 = io.connect('http://localhost:8000',{reconnection:true, reconnectionDelay: 1, randomizationFactor: 0, reconnectionDelayMax: 1});
@@ -9,152 +9,114 @@ function voiceIt2(){
     this.type = [];
     this.setupVJS = false;
     this.MAX_ATTEMPTS = 3;
+    this.liveness = false;
 
-    //needed for the audio/video streams 
-    this.vudio;
-    this.circle1 = undefined;
+    //display/control objects such as overlays, waveforms, etc
+    this.wavej;   
+    this.circlej;
+    this.vidCirclej;
+    this.headerj;
+    this.vidFramej;
+    this.warningOverlayj;
+    this.waitj;
+    this.wait2j;
+    this.readyButtonj;
+    this.overlayj;
+
+    //needed for the audio/video streams, and for destroying instances
     this.videoCircleStream;
     this.imageDataCtx;
     this.videoStream;
     this.attempts = 0;
     this.setupWaveForm = false;
     this.destroyed = false;
+    this.errorCodes = ["TVER","PNTE" ,"NFEF","UNAC"];
 
-    //anonymous funct. to tidy up stuff
     //assigns the this.type of action determined by the click 
-    this.assigntype = function() {
+    this.init = function() {
       $('#options .item.voice').eq(0).click(function(){
-        mainThis.type[0] = 'voice';
-        mainThis.type[1] = 'Enrollment';
-        mainThis.initiate();
+        main.type[0] = 'voice';
+        main.type[1] = 'Enrollment';
+        main.initiate();
       });
       $('#options .item.voice').eq(1).click(function(){
-        mainThis.type[0] = 'voice';
-        mainThis.type[1] = 'Verification';
-        mainThis.initiate();
+        main.type[0] = 'voice';
+        main.type[1] = 'Verification';
+        main.initiate();
       });
       $('#options .item.face').eq(0).click(function(){
-        mainThis.type[0] = 'face';
-        mainThis.type[1] = 'Enrollment';
-        mainThis.initiate();
+        main.type[0] = 'face';
+        main.type[1] = 'Enrollment';
+        main.initiate();
       });
       $('#options .item.face').eq(1).click(function(){
-        mainThis.type[0] = 'face';
-        mainThis.type[1] = 'Verification';
-        mainThis.initiate();
+        main.type[0] = 'face';
+        main.type[1] = 'Verification';
+        main.initiate();
       });
       $('#options .item.video').eq(0).click(function(){
-        mainThis.type[0] = 'video';
-        mainThis.type[1] = 'Enrollment';
-        mainThis.initiate();
+        main.type[0] = 'video';
+        main.type[1] = 'Enrollment';
+        main.initiate();
       });
       $('#options .item.video').eq(1).click(function(){
-        mainThis.type[0] = 'video';
-        mainThis.type[1] = 'Verification';
-        mainThis.initiate();
+        main.type[0] = 'video';
+        main.type[1] = 'Verification';
+        main.initiate();
       });
 
-      //Assigning the start() function to the read button
-      $('#readyButton').click(
-          function() {
-            mainThis.start();
-          }
-        );
-
-      //warning overlay buttons 
-      $('.ic').eq(0).click(
-        function(){
-        $('#closeButton').click();
-        }
-      );
-
-      $("input[type='checkbox']").eq(0).click(function(){
-        setTimeout(function(){
-          if ($("input[type='checkbox']")[0].checked){
-          $("input[type='checkbox']").click();
-          $('#comingSoon').fadeTo(250,1.0);
-          }
-        },250);
-      });
-
-      //proceede for enrollment
-      $('.ic').eq(1).click(
-        function(){
-          mainThis.destroyed = false;
-          var type = ['delete', 'Enrollments'];
-          var array = [type,0,0];
-              //Request deleteAllEnrollmentsForUser Call
-              //Control now transferred to socket.on(..) 
-              mainThis.socket2.emit('apiRequest', array);
-              $('#warningOverlay > span').fadeTo(300,0.0);
-              $('#warningOverlay > div').fadeTo(300,0.0,function(){
-                $('#warningOverlay > span').css('display','none');
-                $('#warningOverlay > div').css('display','none');
-                $('#wait2').css('display', 'flex !important');
-                $('#wait2').fadeTo(300,1.0);
-              });
-          });
-
-      $('#videoModal')
-      .modal({
-          onHide: function() {
-              mainThis.destroy();
-              }
-        });
-
-      mainThis.socket2.on('requestResponse', function(response){
-
+      main.socket2.on('requestResponse', function(response){
             //check if it was deletion
             if(response[1] == "deleteEnrollments"){
-                mainThis.handleDeletion(response);
+                main.handleDeletion(response);
 
             }  
             //All other API call such as verifications, enrollments, etc.
             else {
-              if (!mainThis.destroyed){
+              if (!main.destroyed){
             response = response[0];
-            if (mainThis.type[1] == "Enrollment"){
+            if (main.type[1] == "Enrollment"){
               if (response.responseCode == "SUCC"){
-                if(mainThis.enrollCounter < 3){
-                mainThis.enrollCounter = mainThis.enrollCounter + 1;
-                console.log(mainThis.enrollCounter);
-                mainThis.continueEnrollment(response);
+                if(main.enrollCounter < 3){
+                main.enrollCounter = main.enrollCounter + 1;
+                console.log(main.enrollCounter);
+                main.continueEnrollment(response);
                 }
                } else {
-                mainThis.attempts++;
-                if (mainThis.attempts > mainThis.MAX_ATTEMPTS){
-                    $('#wait').fadeTo(500,0.0,function(){
+                main.attempts++;
+                if (main.attempts > main.MAX_ATTEMPTS){
+                    main.waitj.fadeTo(500,0.0,function(){
                     $(this).css('display','none');
-                    $('#header').css('dislay','inline-block');
-                    $('#header').fadeTo(500,1.0);
+                    main.headerj.css('dislay','inline-block');
+                    main.headerj.fadeTo(500,1.0);
                   });
-                  $('#header').text("Exceeded maximum attempts allowed. Please try later");
+                  main.headerj.text("Exceeded maximum attempts allowed. Please try later");
                 } else {
-                  console.log(mainThis.enrollCounter);
-                 mainThis.continueEnrollment(response);
+                  console.log(main.enrollCounter);
+                 main.continueEnrollment(response);
                     }
                   }
                 } 
-               else if (mainThis.type[1] == "Verification") {
-                  mainThis.handleResponse(response);
-                      if (response.responseCode == "SUCC"){
-                       //do something after successful
-                      } else {
-                      mainThis.attempts++;
-                     //continue to verify
-                     if (mainThis.attempts >= mainThis.MAX_ATTEMPTS){
-                        //save the max attempts in the user session?
-                        $('#wait').fadeTo(500,0.0,function(){
-                        $(this).css('display','none');
-                        $('#header').css('dislay','inline-block');
-                        $('#header').fadeTo(500,1.0);
-                        });
-                        $('#header').text("Exceeded maximum attempts allowed. Please try later");
-                         } 
-                      else {
-                       if (response.responseCode !== "TVER" && response.responseCode !== "PNTE" && response.responseCode !== "NFEF" && response.responseCode !== "UNAC"){
+               else if (main.type[1] == "Verification") {
+                    main.handleResponse(response);
+                    if (response.responseCode == "SUCC"){
+                    //do something after successful. Right now it just stays there
+                    } else {
+                    main.attempts++;
+                    //continue to verify
+                    if (main.attempts > main.MAX_ATTEMPTS){
+                      //save the max attempts in the user session?
+                      main.waitj.fadeTo(500,0.0,function(){
+                      $(this).css('display','none');
+                      main.headerj.css('dislay','inline-block');
+                      main.headerj.fadeTo(500,1.0);
+                      });
+                      main.headerj.text("Exceeded maximum attempts allowed. Please try later");
+                       } 
+                    else {
+                       if (!main.errorCodes.includes(response.responseCode)){
                         setTimeout(function(){
-                        mainThis.continueVerification(response);
+                        main.continueVerification(response);
                         },100);
                         }
                     }
@@ -163,67 +125,149 @@ function voiceIt2(){
         }
       }
       });
+      main.assignClicks();
     }
 
-      //called by the the start up buttons
-      this.initiate = function (){
-        if (mainThis.type[1] == 'Enrollment'){
-         setTimeout(function(){
-        $('#waveform').css('opacity','0.0');
-        $('#imageData').css('opacity','0.0');
-        $('#readyButton').css('opacity','0.0');
+
+    this.assignClicks = function(){
+
+        //Assigning the start() function to the read button
+        $('#readyButton').click(
+          function() {
+            main.start();
+          }
+        );
+
+        //warning overlay buttons 
+        $('.ic').eq(0).click(
+        function(){
+        $('#closeButton').click();
+        }
+        );
+
+        //show "coming soon for liveness, for now..."
+        $("#livenessToggle").eq(0).click(function(){
+        setTimeout(function(){
+          if ($("input[type='checkbox']")[0].checked){
+          $("input[type='checkbox']").click();
+          $('#comingSoon').fadeTo(250,1.0);
+          }
+        },250);
+       });
+
+       //proceede for enrollment
+        $('.ic').eq(1).click(
+        function(){
+          main.destroyed = false;
+          var type = ['delete', 'Enrollments'];
+          var array = [type,0,0];
+              //Request deleteAllEnrollmentsForUser Call
+              //Control now transferred to socket.on(..) 
+              main.socket2.emit('apiRequest', array);
+              $('#warningOverlay > span').fadeTo(300,0.0);
+              $('#warningOverlay > div').fadeTo(300,0.0,function(){
+                $('#warningOverlay > span').css('display','none');
+                $('#warningOverlay > div').css('display','none');
+                main.wait2j.css('display', 'flex !important');
+                main.wait2j.fadeTo(300,1.0);
+              });
+           });
+
+         $('#videoModal')
+        .modal({
+          onHide: function() {
+              main.destroy();
+              }
+         });
+
+        //when liveness is ready
+        // $('#livenessToggle').eq(0).toggle(function(){
+        //   main.liveness = true;
+        //   console.log(main.liveness);
+        // }, function(){
+        //   main.liveness = false;
+        //   console.log(main.liveness);
+        // });
+
+        }
+          //called by the the start up buttons
+        this.initiate = function (){
+         main.createObjects();
+          if (main.type[1] == 'Enrollment'){
+          main.showWarningOverlay();
+            } else {
+          main.warningOverlayj.css('display','none');
+          }
+          main.setup();
+          //main.convertSVG();
+   }
+
+    this.createObjects = function(){
+      //create J-Query object; needed to perform JQ specific methods such as fading, and also others such as changin css styles
+      main.wavej = $('#waveform').eq(0);   
+      main.circlej = $('#circle').eq(0);
+      main.vidCirclej = $('#videoCircle').eq(0);
+      main.headerj = $('#header').eq(0);
+      main.vidFramej = $('#imageData').eq(0);
+      main.warningOverlayj = $('#warningOverlay').eq(0);
+      main.waitj = $('#wait').eq(0);
+      main.wait2j = $('#wait2').eq(0);
+      main.readyButtonj = $('#readyButton').eq(0);
+      main.overlayj= $('#overlay2').eq(0);
+    }
+
+    this.showWarningOverlay = function(){
+        setTimeout(function(){
+        main.wavej.css('opacity','0.0');
+        main.vidFramej.css('opacity','0.0');
+        main.readyButtonj.css('opacity','0.0');
         },200);
-          $('#wait2').css('display','none');
+          main.wait2j.css('display','none');
           setTimeout(function(){
             $('#warningOverlay > div').fadeTo(600, 1.0);
             $('#warningOverlay > span').fadeTo(600, 1.0);
           },300);
-        $('#warningOverlay').css('display','flex');
-        $('#warningOverlay').css('opacity','1.0');
-        $('#readyButton').css('display','none');
-        } else {
-        $('#warningOverlay').css('display','none');
-        }
-        mainThis.setup();
-        //mainThis.convertSVG();
-      }
+        main.warningOverlayj.css('display','flex');
+        main.warningOverlayj.css('opacity','1.0');
+        main.readyButtonj.css('display','none');
+    }
 
     this.handleDeletion = function(response){
              console.log('received response...');
               if(response[0].responseCode == "SUCC"){
                 setTimeout(function(){
-                $('#warningOverlay').fadeTo(500,0.0,function(){
-                  if (mainThis.type[0] == "voice"){
-                    $('#waveform').fadeTo(500,0.3);
+                main.warningOverlayj.fadeTo(500,0.0,function(){
+                  if (main.type[0] == "voice"){
+                    main.wavej.fadeTo(500,0.3);
                   } else {
-                    $('#imageData').fadeTo(500,1.0);
+                    main.vidFramej.fadeTo(500,1.0);
                   }
-                $('#readyButton').fadeTo(500,1.0);
-                $('#warningOverlay').css('display','none');
-                $('#readyButton').css('display','block');
+                main.readyButtonj.fadeTo(500,1.0);
+                main.warningOverlayj.css('display','none');
+                main.readyButtonj.css('display','block');
                 });
                 },1000);
               }  else {
-                //could not delete enrollemts!
+                main.headerd
               }
     }
 
     this.handleResponse  = function(response) {
       setTimeout(function () {
-      $('#wait').fadeTo(300,0.0, function() {
+      main.waitj.fadeTo(300,0.0, function() {
         $(this).css('display', 'none');
-        $('#header').css('display', 'inline-block');
-        $('#header').fadeTo(300, 1.0);
+        main.headerj.css('display', 'inline-block');
+        main.headerj.fadeTo(300, 1.0);
         });
         if (response.responseCode == "SUCC"){
-          if (mainThis.type[1] == "Verification"){
-            $('#header').text(mainThis.prompt.getPrompt("SUCC_V"));
+          if (main.type[1] == "Verification"){
+            main.headerj.text(main.prompt.getPrompt("SUCC_V"));
           } else {
-            $('#header').text(mainThis.prompt.getPrompt("SUCC_E"));
+            main.headerj.text(main.prompt.getPrompt("SUCC_E"));
           }
         }
            else {
-            $('#header').text(mainThis.prompt.getPrompt(response.responseCode));
+            main.headerj.text(main.prompt.getPrompt(response.responseCode));
           }
         }, 500);
       }
@@ -231,84 +275,84 @@ function voiceIt2(){
     this.continueEnrollment = function(response){
       console.log("continuing Enrollment...");
       //hanlde the response (can use handleresponse() method- will see it later on)
-      if (mainThis.type[0] !== "face"){
+      if (main.type[0] !== "face"){
         if (response.responseCode == "SUCC"){
-          if (mainThis.enrollCounter == 1) {
-             $('#header').text(mainThis.prompt.getPrompt("SUCC_E_1"));
-           } else if (mainThis.enrollCounter == 2){
-            $('#header').text(mainThis.prompt.getPrompt("SUCC_E_2"));
-           } else if (mainThis.enrollCounter == 3){
-             $('#header').text(mainThis.prompt.getPrompt("SUCC_E_3"));
+          if (main.enrollCounter == 1) {
+             main.headerj.text(main.prompt.getPrompt("SUCC_E_1"));
+           } else if (main.enrollCounter == 2){
+            main.headerj.text(main.prompt.getPrompt("SUCC_E_2"));
+           } else if (main.enrollCounter == 3){
+             main.headerj.text(main.prompt.getPrompt("SUCC_E_3"));
             } 
           }
             else {
-           $('#header').text(mainThis.prompt.getPrompt(response.responseCode));
+           main.headerj.text(main.prompt.getPrompt(response.responseCode));
            }
-           $('#wait').fadeTo(300,0.0, function() {
-           $('#wait').css('display', 'none');
-           $('#header').css('display', 'inline-block');
-           $('#header').fadeTo(300, 1.0);
+           main.waitj.fadeTo(300,0.0, function() {
+           main.waitj.css('display', 'none');
+           main.headerj.css('display', 'inline-block');
+           main.headerj.fadeTo(300, 1.0);
       });
-    } else if (mainThis.type[0] == "face") {
+    } else if (main.type[0] == "face") {
       if (response.responseCode == "SUCC"){
-          $('#header').text(mainThis.prompt.getPrompt("SUCC_E_3"));
+          main.headerj.text(main.prompt.getPrompt("SUCC_E_3"));
         }
         //handle re-recording and animations for face
      else {
         setTimeout(function(){
-            $('#circle').fadeTo(350,0.0);
-            $('#header').fadeTo(500,0,function(){
-            $('#header').text(mainThis.prompt.getPrompt("LOOK_INTO_CAM"));
-            $('#header').fadeTo(500,1.0,function(){
-            $('#circle').circleProgress('redraw');
-            $('#circle').circleProgress();
-            $('#circle').circleProgress({value: 1.0, animation: {duration: 5000, easing:false}});
-            $('#circle').fadeTo(350,1.0);
+            main.circlej.fadeTo(350,0.0);
+            main.headerj.fadeTo(500,0,function(){
+            main.headerj.text(main.prompt.getPrompt("LOOK_INTO_CAM"));
+            main.headerj.fadeTo(500,1.0,function(){
+            main.circlej.circleProgress('redraw');
+            main.circlej.circleProgress();
+            main.circlej.circleProgress({value: 1.0, animation: {duration: 5000, easing:false}});
+            main.circlej.fadeTo(350,1.0);
             });
           });
-        $('#overlay2').fadeTo(500,0.3,function(){
-           mainThis.player.record().start();
+        main.overlayj.fadeTo(500,0.3,function(){
+           main.player.record().start();
           });
         },2000);
-        $('#header').text(mainThis.prompt.getPrompt(response.responseCode));
+        main.headerj.text(main.prompt.getPrompt(response.responseCode));
       }
-        $('#wait').fadeTo(300,0.0, function() {
-        $('#wait').css('display', 'none');
-        $('#header').css('display', 'inline-block');
-        $('#header').fadeTo(300, 1.0);
+        main.waitj.fadeTo(300,0.0, function() {
+        main.waitj.css('display', 'none');
+        main.headerj.css('display', 'inline-block');
+        main.headerj.fadeTo(300, 1.0);
       });
     }
 
     //handle re-recording and prompts/animations along with it (for voice/video)
-    if (mainThis.enrollCounter < 3  && mainThis.type[0] !== "face"){
+    if (main.enrollCounter < 3  && main.type[0] !== "face"){
       setTimeout(function(){
-        $('#circle').fadeTo(350,0.0);
-        $('#header').fadeTo(350, 0.0,function(){
-        if (mainThis.enrollCounter == 0){
-        $('#header').text(mainThis.prompt.getPrompt("ENROLL_0"));
+        main.circlej.fadeTo(350,0.0);
+        main.headerj.fadeTo(350, 0.0,function(){
+        if (main.enrollCounter == 0){
+        main.headerj.text(main.prompt.getPrompt("ENROLL_0"));
         }
-        if (mainThis.enrollCounter == 1) {
-        $('#header').text(mainThis.prompt.getPrompt("ENROLL_1"));
-        } else if (mainThis.enrollCounter == 2){
-        $('#header').text(mainThis.prompt.getPrompt("ENROLL_2"));
+        if (main.enrollCounter == 1) {
+        main.headerj.text(main.prompt.getPrompt("ENROLL_1"));
+        } else if (main.enrollCounter == 2){
+        main.headerj.text(main.prompt.getPrompt("ENROLL_2"));
         } 
-        $('#header').fadeTo(350, 1.0,function(){
-          if (mainThis.type[0] !== "voice"){
-            $('#circle').circleProgress('redraw');
-            $('#circle').circleProgress();
-            $('#circle').circleProgress({value: 1.0, animation: {duration: 5000, easing:false}});
-            $('#circle').fadeTo(350,1.0);
+        main.headerj.fadeTo(350, 1.0,function(){
+          if (main.type[0] !== "voice"){
+            main.circlej.circleProgress('redraw');
+            main.circlej.circleProgress();
+            main.circlej.circleProgress({value: 1.0, animation: {duration: 5000, easing:false}});
+            main.circlej.fadeTo(350,1.0);
       }
         });
         });
-        if (mainThis.type[0] == "voice"){
-          $('#circle').css('opacity',0.0);
-          mainThis.player.record().start();
-        $('#waveform').fadeTo(200,1.0, function(){
+        if (main.type[0] == "voice"){
+          main.circlej.css('opacity',0.0);
+          main.player.record().start();
+        main.wavej.fadeTo(200,1.0, function(){
         });
-        } else if (mainThis.type[0] == "video"){
-        $('#overlay2').fadeTo(500,0.3,function(){
-           mainThis.player.record().start();
+        } else if (main.type[0] == "video"){
+        main.overlayj.fadeTo(500,0.3,function(){
+           main.player.record().start();
           });
         }
        },2000);
@@ -316,118 +360,102 @@ function voiceIt2(){
     }
           
     this.setup = function() {
-          mainThis.enrollCounter = 0;
-          mainThis.destroy();
+          main.enrollCounter = 0;
+          main.destroy();
           //set all to none to make sure
-          $('#wait').css('display', 'none');
-          $('#circle').css('display', 'none');
-          $('#videoCircle').css('display', 'none');
-          $('#header').text("");
-          $('#header').css('display','none');
-          $('#readyButton').css('display', 'inline-block');
-          $('#overlay2').css('opacity', '0');
-          mainThis.showLoadingOverlay();
-          if (mainThis.type[0] == "voice"){
-            mainThis.handleVoiceSetup();
-          } else if (mainThis.type[0] == "face"){
-            mainThis.handleFaceSetup();
+          main.waitj.css('display', 'none');
+          main.circlej.css('display', 'none');
+          main.vidCirclej.css('display', 'none');
+          main.headerj.text("");
+          main.headerj.css('display','none');
+          main.readyButtonj.css('display', 'inline-block');
+          main.overlayj.css('opacity', '0');
+          main.showLoadingOverlay();
+          if (main.type[0] == "voice"){
+            main.handleVoiceSetup();
+          } else if (main.type[0] == "face"){
+            main.handleFaceSetup();
           } else {
-            mainThis.handleVideoSetup();
+            main.handleVideoSetup();
           }
         }
 
     //ready up animations and stuff for voice enroll/verific.
     this.handleVoiceSetup = function (){
-      $('#header').css('opacity','0.0');
-      mainThis.attempts = 0;
-      $('#videoCircle').css('display','none');
+      main.headerj.css('opacity','0.0');
+      main.attempts = 0;
+      main.vidCirclej.css('display','none');
       console.log('initiating prerequisites for voice..');
-         mainThis.createWaveform();
-         mainThis.initVoiceRecord();
-         if (!mainThis.setupVJS){
-           mainThis.setupListners();
+         main.createWaveform();
+         main.initVoiceRecord();
+         if (!main.setupVJS){
+           main.setupListners();
           }
-          $('#waveform').css("display","block");
-          $('#waveform').fadeTo(800,0.3);
+          main.wavej.css("display","block");
+          main.wavej.fadeTo(800,0.3);
                    window.setTimeout(function() {
                   $("button[title='Device']").eq(0).click();
                    }, 500);
-                   $('#circle').css("display","none");
-                   $('#imageData').css('display', 'none');
+                   main.circlej.css("display","none");
+                   main.vidFramej.css('display', 'none');
                    //   $("#waveform").fadeTo(2000, 0.6);
                    $('#videoModal').modal('show');
       }
 
     //ready up animations and stuff for face enroll/verific.
     this.handleFaceSetup = function(){
-      mainThis.attempts = 0;
-      $('#circle').css('display','block');
-      $('#circle').css('opacity','0.0');
-      $('#header').css('opacity','0.0');
+      main.attempts = 0;
+      main.circlej.css('display','block');
+      main.circlej.css('opacity','0.0');
+      main.headerj.css('opacity','0.0');
             console.log('initiating prerequisites for face..');
               $ ('#imageData').css('display','block');
-              $('#waveform').css('display','none');
-              mainThis.initFaceRecord();
+              main.wavej.css('display','none');
+              main.initFaceRecord();
               if (!this.setupVJS){
-                mainThis.setupListners();
+                main.setupListners();
               }
               window.setTimeout(function() {
                 $("button[title='Device']").eq(0).click();
               }, 500);
-              // if ($("input[type='checkbox']")[0].checked){
-              //    //createVideo();
-              // liveness();
-              // } else {
-              $('#imageData').css('display', 'none');
-              mainThis.createVideo();
-              // }
-              $('#videoCircle').css('display','none');
-              $('#overlay2').css('opacity', '1.0');
+              main.vidFramej.css('display', 'none');
+              main.createVideo();
+              main.vidCirclej.css('display','none');
+              main.overlayj.css('opacity', '1.0');
               $('#videoModal').modal('show');
-              $('#readyButton').css('opacity',0.0);
-              $('#readyButton').fadeTo(550,1.0);
-              $('#imageData').css('opacity','0.0');
-              $('#imageData').fadeTo(550,1.0);
-              // if (!$("input[type='checkbox']")[0].checked){
-              // }
+              main.readyButtonj.css('opacity',0.0);
+              main.readyButtonj.fadeTo(550,1.0);
+              main.vidFramej.css('opacity','0.0');
+              main.vidFramej.fadeTo(550,1.0);
             }
 
     //ready up animations and stuff for video enroll/verific.
     this.handleVideoSetup = function(){
-        mainThis.attempts = 0;
-              $('#header').css('opacity','0.0');
-              $('#circle').css('opacity','0.0');
+        main.attempts = 0;
+              main.headerj.css('opacity','0.0');
+              main.circlej.css('opacity','0.0');
             console.log('initiating prerequisites for video..');
-              $('#imageData').css('display','block');
-              $('#imageData').fadeTo(500,1.0);
-              $('#waveform').css('display','none');
-              mainThis.initVideoRecord();
-              if (!mainThis.setupVJS){
-                mainThis.setupListners();
+              main.vidFramej.css('display','block');
+              main.vidFramej.fadeTo(500,1.0);
+              main.wavej.css('display','none');
+              main.initVideoRecord();
+              if (!main.setupVJS){
+                main.setupListners();
               }
               window.setTimeout(function() {
                 $("button[title='Device']").eq(0).click();
               }, 500);
-              // if ($("input[type='checkbox']")[0].checked){
-              //   //createVideo();
-              //     if (mainThis.type[1] == "Verification"){
-              //       liveness();
-              //     } else {
-              //       mainThis.createVideo();
-              //     }
-              // } else {
-              mainThis.createVideo();
-              // }
-      $('#circle').css('display','block');
-              $('#overlay2').css('opacity', '1.0');
+              main.createVideo();
+      main.circlej.css('display','block');
+              main.overlayj.css('opacity', '1.0');
               $('#videoModal').modal('show');
-              $('#waveform').css('display', 'none');
+              main.wavej.css('display', 'none');
               }
 
     this.createVideo = function() {
       var webcam = document.querySelector('#myVideo');
       var imageData		= document.getElementById("imageData");
-      mainThis.imageDataCtx		= imageData.getContext("2d");
+      main.imageDataCtx		= imageData.getContext("2d");
       navigator.mediaDevices.getUserMedia({ audio: false, video: {height: 480, width: 640}}).then(
           function(stream) {
 
@@ -436,7 +464,7 @@ function voiceIt2(){
              imageData.width	= webcam.videoWidth;
              imageData.height	= webcam.videoHeight;
              webcam.play();
-             mainThis.videoStream = stream;
+             main.videoStream = stream;
              }
            }
           ).catch(function(err){
@@ -445,8 +473,8 @@ function voiceIt2(){
         );
         function drawFrames(){
           //mirror the video by drawing it onto the canvas 
-         mainThis.imageDataCtx.setTransform(-1.0, 0, 0, 1, webcam.videoWidth, 0);
-         mainThis.imageDataCtx.drawImage(webcam, 0, 0, webcam.videoWidth, webcam.videoHeight);
+         main.imageDataCtx.setTransform(-1.0, 0, 0, 1, webcam.videoWidth, 0);
+         main.imageDataCtx.drawImage(webcam, 0, 0, webcam.videoWidth, webcam.videoHeight);
           window.requestAnimationFrame(drawFrames);
         }
         drawFrames();
@@ -459,7 +487,7 @@ function voiceIt2(){
       audio.attr('id','myAudio');
       audio.attr('class','video-js vjs-default-skin');
      }
-      mainThis.player = videojs('myAudio', {
+      main.player = videojs('myAudio', {
         controls: true,
           width: 200,
           height: 200,
@@ -500,7 +528,7 @@ function voiceIt2(){
       audio.attr('id','video2');
       audio.attr('class','video-js vjs-default-skin');
      }
-        mainThis.player = videojs('video2', {
+        main.player = videojs('video2', {
          controls: true,
            width: 640,
            height: 480,
@@ -514,7 +542,8 @@ function voiceIt2(){
                    audio: true,
                    video: true,
                    maxLength: 5,
-                   debug: true
+                   debug: true,
+                   timeSlice: 35
                }
            }
        }, function(){
@@ -532,7 +561,7 @@ function voiceIt2(){
       audio.attr('id','video3');
       audio.attr('class','video-js vjs-default-skin');
      }
-      mainThis.player = videojs('video3', {
+      main.player = videojs('video3', {
       controls: true,
         width: 640,
         height: 480,
@@ -546,7 +575,8 @@ function voiceIt2(){
                 audio: false,
                 video: true,
                 maxLength: 5,
-                debug: true
+                debug: true,
+                timeSlice: 35
             }
         }
       }, function(){
@@ -559,117 +589,108 @@ function voiceIt2(){
 
     //one-time setup for the listners to prevent duplicate api calls/records
     this.setupListners = function (){
-         mainThis.player.on('deviceError', function() {
-           console.log('device error:', mainThis.player.deviceErrorCode);
+         main.player.on('deviceError', function() {
+           console.log('device error:', main.player.deviceErrorCode);
          });
-         mainThis.player.on('error', function(error) {
+         main.player.on('error', function(error) {
            console.log('error:', error);
          });
          // user this.type the record button and started recording
-        mainThis.player.on('startRecord', function() {
+        main.player.on('startRecord', function() {
           console.log('started recording!');
          });
          //recording is available
-        mainThis.player.on('finishRecord', function() {
-          if (mainThis.type[0] == "voice"){
-            $('#waveform').fadeTo(300,0.3);
-          } else if (mainThis.type[0] == "video") {
-            $('#videoCircle').fadeTo(300,0.3);
-            $('#overlay2').fadeTo(300,1.0);
+        main.player.on('finishRecord', function() {
+          if (main.type[0] == "voice"){
+            main.wavej.fadeTo(300,0.3);
+          } else if (main.type[0] == "video") {
+            main.vidCirclej.fadeTo(300,0.3);
+            main.overlayj.fadeTo(300,1.0);
           } else {
-            $('#overlay2').fadeTo(300,1.0);
+            main.overlayj.fadeTo(300,1.0);
           }
-           var array = [mainThis.type, "en-US", mainThis.player.recordedData, mainThis.prompt.getPhrase(0)];
-           mainThis.socket2.emit('apiRequest', array);
-           $('#header').fadeTo(300, 0.0, function() {
+           var array = [main.type, "en-US", main.player.recordedData, main.prompt.getPhrase(0)];
+           main.socket2.emit('apiRequest', array);
+           main.headerj.fadeTo(300, 0.0, function() {
               $(this).css('display', 'none');
-              $('#wait').css('display', 'inline-block');
-              $('#wait').fadeTo(300,1.0);
+              main.waitj.css('display', 'inline-block');
+              main.waitj.fadeTo(300,1.0);
              });
            });
+          main.player.on('timestamp',function(){
+          main.socket2.emit('timestamp',main.player.currentTimestamp);
+          });
          //to ensure one-time assignment to the listeners 
-         mainThis.setupVJS = true;
+         main.setupVJS = true;
        }
 
        $('#closeButton').click(function(){
-         mainThis.destroy();
+         main.destroy();
        });
 
 
     this.start = function () {
-      $('#header').css('display','inline-block');
-      $('#header').css('opacity', '0.0');
-      $('#header').fadeTo(1000,1.0); 
-      if (mainThis.type[0] !== "face"){
-        $('#header').text("Please say: " + mainThis.prompt.getPhrase(0));
+      main.headerj.css('display','inline-block');
+      main.headerj.css('opacity', '0.0');
+      main.headerj.fadeTo(1000,1.0); 
+      if (main.type[0] !== "face"){
+        main.headerj.text("Please say: " + main.prompt.getPhrase(0));
       }  else {
-        $('#header').text(this.prompt.getPrompt("LOOK_INTO_CAM"));
+        main.headerj.text(this.prompt.getPrompt("LOOK_INTO_CAM"));
       }
-      if (mainThis.type[0] == "voice"){
-           $('#circle').css("display","none");
-           $('#waveform').fadeTo(500,1.0);
+      if (main.type[0] == "voice"){
+           main.circlej.css("display","none");
+           main.wavej.fadeTo(500,1.0);
          } 
-      else if (mainThis.type[0] == "face"){
-              // if ($("input[type='checkbox']")[0].checked){
-              //    //face liveness
-              //  } else {
-
-                   mainThis.createCircle();
-                  $('#circle').css("opacity","1.0");
-                 $('#circle').circleProgress('redraw');
-                 $('#circle').circleProgress();
-                 $('#circle').circleProgress({value: 1.0, animation: {duration: 5000, easing:false}});
-                  console.log("creating circle");
-                  // }
-      } else if (mainThis.type[0] == "video"){
-                  console.log("createed video circle");
-                  // if ($("input[type='checkbox']")[0].checked){
-                  // } else {
-                  mainThis.createVideoCircle();
-                  // }
-                  $('#videoCircle').css('display','block');
-                  $('#videoCircle').fadeTo(500,0.5);
-                  // if ($("input[type='checkbox']")[0].checked){
-                  //   //video liveness
-                  // } else {
-                   mainThis.createCircle();
-                 $('#circle').circleProgress('redraw');
-                 $('#circle').circleProgress();
-                 $('#circle').circleProgress({value: 1.0, animation: {duration: 5000, easing:false}});
-                 $('#circle').css("display","block");
-                 $('#circle').css("opacity","1.0");
-             // }
+      else if (main.type[0] == "face"){
+                main.createCircle();
+                main.circlej.css("opacity","1.0");
+                main.circlej.circleProgress('redraw');
+                main.circlej.circleProgress();
+                main.circlej.circleProgress({value: 1.0, animation: {duration: 5200, easing:false}});
+                console.log("creating circle");
+      } else if (main.type[0] == "video"){
+                console.log("createed video circle");
+                main.createVideoCircle();
+                main.vidCirclej.css('display','block');
+                main.vidCirclej.fadeTo(500,0.5);
+                main.createCircle();
+                main.circlej.circleProgress('redraw');
+                main.circlej.circleProgress();
+                main.circlej.circleProgress({value: 1.0, animation: {duration: 5200, easing:false}});
+                main.circlej.css("display","block");
+                main.circlej.css("opacity","1.0");
           }
-        $('#overlay2').fadeTo(1500, 0.3);
-        $('#readyButton').css('display', 'none');
-        mainThis.player.record().start();
+        main.overlayj.fadeTo(1500, 0.3);
+        main.readyButtonj.css('display', 'none');
+        main.player.record().start();
       }
 
     //continue verification if errors, response codes, etc
     this.continueVerification = function (response){
         setTimeout(function(){
-        $('#circle').fadeTo(350,0.0);
-        $('#header').fadeTo(350, 0.0,function(){
-          if (mainThis.type[0] == "face"){
-          $('#header').text(mainThis.prompt.getPrompt("LOOK_INTO_CAM"));
+        main.circlej.fadeTo(350,0.0);
+        main.headerj.fadeTo(350, 0.0,function(){
+          if (main.type[0] == "face"){
+          main.headerj.text(main.prompt.getPrompt("LOOK_INTO_CAM"));
           } else {
-          $('#header').text(mainThis.prompt.getPrompt("VERIFY"));
+          main.headerj.text(main.prompt.getPrompt("VERIFY"));
           }
-          $('#header').fadeTo(350,1.0);
+          main.headerj.fadeTo(350,1.0);
         });
-        if (mainThis.type[0] == "voice"){
-          $('#circle').css('opacity','0.0');
-          $('#waveform').fadeTo(500,1.0, function(){
-            mainThis.player.record().start();
+        if (main.type[0] == "voice"){
+          main.circlej.css('opacity','0.0');
+             main.wavej.fadeTo(500,1.0, function(){
+            main.player.record().start();
           });
         } else {
-          $('#circle').fadeTo(350,0.0);
-          $('#overlay2').fadeTo(500,0.3, function(){
-          mainThis.player.record().start();
-          $('#circle').fadeTo(350,1.0);
-          $('#circle').circleProgress('redraw');
-          $('#circle').circleProgress();
-          $('#circle').circleProgress({value: 1.0, animation: {duration: 5000, easing:false}});
+          main.circlej.fadeTo(350,0.0);
+          main.overlayj.fadeTo(500,0.3, function(){
+          main.player.record().start();
+          main.circlej.fadeTo(350,1.0);
+          main.circlej.circleProgress('redraw');
+          main.circlej.circleProgress();
+          main.circlej.circleProgress({value: 1.0, animation: {duration: 5000, easing:false}});
           });
         }
       },2000);
@@ -677,44 +698,31 @@ function voiceIt2(){
 
     //show this before verification with liveness 
     this.showLoadingOverlay = function (){
-      if (mainThis.type[1] !== "Enrollment"){
+      if (main.type[1] !== "Enrollment"){
       var timeOut = 1000;
-      $('#imageData').css('opacity','0.0');
-      $('#waveform').css('opacity','0.0');
-      $('#warningOverlay').css('display','flex');
-      $('#warningOverlay').css('opacity','1.0');
-      $('#wait2').css('opacity', 0.0);
-      $('#wait2').css('display','none');
+      main.vidFramej.css('opacity','0.0');
+      main.wavej.css('opacity','0.0');
+      main.warningOverlayj.css('display','flex');
+      main.warningOverlayj.css('opacity','1.0');
+      main.wait2j.css('opacity', 0.0);
+      main.wait2j.css('display','none');
       $('#warningOverlay > div').css('display','none');
       $('#warningOverlay > span').css('display','none');
-     //  if ($("input[type='checkbox']")[0].checked && mainThis.type[0] !== "voice"){
-     //    timeOut = 2500;
-     //    $('#warnText').text("Please wait while we load resources");
-     //    $('#warningOverlay > span').fadeTo(500,1.0);
-     //  setTimeout(function(){
-     //  $('#warningOverlay > span').fadeTo(300,0.0, function(){
-     //  $('#warningOverlay').css('display','none');
-     //  $('#imageData').fadeTo(350,1.0);
-     //  });
-     // },timeOut);
-     //  } 
-       // if (mainThis.type[0] == "voice") {
-        $('#wait2').css('opacity','0.0');
-        $('#wait2').css('display','flex');
-        $('#wait2').fadeTo(500,1.0);
+        main.wait2j.css('opacity','0.0');
+        main.wait2j.css('display','flex');
+        main.wait2j.fadeTo(500,1.0);
         setTimeout(function(){
-          $('#warningOverlay').fadeTo(350, 0.0, function(){
-            $('#warningOverlay').css('display','none');
-            mainThis.destroyed = false;
+          main.warningOverlayj.fadeTo(350, 0.0, function(){
+            main.warningOverlayj.css('display','none');
+            main.destroyed = false;
           });
         },timeOut);
        } 
-     // }
     }
 
     //create the surrounding
     this.createCircle = function () {
-        $('#circle').circleProgress({
+        main.circlej.circleProgress({
          value: 1.0,
          size: 268,
          fill: {
@@ -729,12 +737,12 @@ function voiceIt2(){
 
     //create the audio waveform
     this.createWaveform  = function () {
-      if (!mainThis.setupWaveForm){
+      if (!main.setupWaveForm){
           var colors =  ['#fb6d6b', '#c10056',' #a50053', '#51074b'];
           var canvas = document.querySelector('#waveform');
-          if (typeof mainThis.vudio == "undefined"){
+          if (typeof main.vudio == "undefined"){
           console.log("created again");
-          vudio = new Vudio(canvas, {
+          main.vudio = new Vudio(canvas, {
           effect: 'waveform',
           accuracy: 512,
           width: 512,
@@ -745,24 +753,24 @@ function voiceIt2(){
             }
         });
       } 
-      mainThis.setupWaveForm = true;
+      main.setupWaveForm = true;
     }
       }
 
     //destroy video,canvas, and other objects
     this.destroy = function (){
-        if(typeof mainThis.player !== "undefined"){
+        if(typeof main.player !== "undefined"){
           console.log("destroying instances");
-          mainThis.player.record().destroy();
-          mainThis.player = undefined;
+          main.player.record().destroy();
+          main.player = undefined;
         }
-        mainThis.setupVJS = false;
+        main.setupVJS = false;
         $("#circle").css('display','none');
-        $('#readyButton').css('display','none');
-        mainThis.destroyed = true;
+        main.readyButtonj.css('display','none');
+        main.destroyed = true;
 
-              //////////////////// The ones below either have a jutter, or are unable to restart the streams- will come back later///////////////
-          ////////////////////The solution is, I think, to destroy the html elements associated to the objects, then recreate them and add them the DOM//////////////
+    //////////// The ones below either have a jutter, or are unable to restart the streams- will come back later/////////
+    ////////////The solution is, I think, to destroy the html elements associated to the objects, then recreate them and add them the DOM/////////
 
       //stop  the audio stream for the waveform circle 
       // if (this.typeof vudio !== "undefined"){
@@ -780,7 +788,7 @@ function voiceIt2(){
       // };
 
       //stop the audio stream for the video circle- not working properly, will come back 
-      // if (this.typeof circle1 !== "undefined"){
+      // if (this.typeof vidCircle !== "undefined"){
       // videoCircleStream.stop();
       // console.log(videoCircleStream.getTracks());
       // }
@@ -791,8 +799,8 @@ function voiceIt2(){
             var analyser;
             var amp;
             var vol2;
-            if (!mainThis.circle1){
-            mainThis.circle1 =  $("#testSound").eq(0);
+            if (!main.vidCircle){
+            main.vidCircle =  $("#testSound").eq(0);
 
 
             navigator.mediaDevices.getUserMedia({audio: true, video: false})
@@ -804,7 +812,7 @@ function voiceIt2(){
               microphone.connect(analyser);
               analyser.minDecibels = -95;
               amp = new Uint8Array(analyser.frequencyBinCount);
-              mainThis.videoCircleStream  = stream;
+              main.videoCircleStream  = stream;
               window.requestAnimationFrame(draw);
             }).catch(function(err){
               console.log("error buddy: " + err);
@@ -817,7 +825,7 @@ function voiceIt2(){
             }
             vol = (vol * 2 )/ 5;
             vol = (vol + 130); //fit to the overlay
-            mainThis.circle1.attr('r',vol);
+            main.vidCircle.attr('r',vol);
             window.requestAnimationFrame(draw);
             }
           
