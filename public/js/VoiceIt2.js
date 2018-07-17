@@ -6,13 +6,17 @@ function voiceIt2(){
     this.socket2 = io.connect('http://localhost:8000',{reconnection:true, reconnectionDelay: 1, randomizationFactor: 0, reconnectionDelayMax: 1});
     this.enrollCounter = 0;
     this.prompt = new prompts();
-    this.type = [];
+    this.type = {
+      biometricType: "",
+      action: ""
+    };
     this.setupVJS = false;
     this.MAX_ATTEMPTS = 3;
     this.liveness = false;
+    this.timeStampId;
 
     //display/control objects such as overlays, waveforms, etc
-    this.wavej;   
+    this.wavej;
     this.circlej;
     this.vidCirclej;
     this.headerj;
@@ -32,50 +36,52 @@ function voiceIt2(){
     this.destroyed = false;
     this.errorCodes = ["TVER","PNTE" ,"NFEF","UNAC"];
 
-    //assigns the this.type of action determined by the click 
+    //assigns the this.type of action determined by the click
     this.init = function() {
       $('#options .item.voice').eq(0).click(function(){
-        main.type[0] = 'voice';
-        main.type[1] = 'Enrollment';
+        main.type.biometricType = 'voice';
+        main.type.action = 'Enrollment';
+        console.log(main.type);
         main.initiate();
       });
       $('#options .item.voice').eq(1).click(function(){
-        main.type[0] = 'voice';
-        main.type[1] = 'Verification';
+        main.type.biometricType = 'voice';
+        main.type.action = 'Verification';
         main.initiate();
       });
       $('#options .item.face').eq(0).click(function(){
-        main.type[0] = 'face';
-        main.type[1] = 'Enrollment';
+        main.type.biometricType = 'face';
+        main.type.action = 'Enrollment';
         main.initiate();
       });
       $('#options .item.face').eq(1).click(function(){
-        main.type[0] = 'face';
-        main.type[1] = 'Verification';
+        main.type.biometricType = 'face';
+        main.type.action = 'Verification';
         main.initiate();
       });
       $('#options .item.video').eq(0).click(function(){
-        main.type[0] = 'video';
-        main.type[1] = 'Enrollment';
+        main.type.biometricType = 'video';
+        main.type.action = 'Enrollment';
         main.initiate();
       });
       $('#options .item.video').eq(1).click(function(){
-        main.type[0] = 'video';
-        main.type[1] = 'Verification';
+        main.type.biometricType = 'video';
+        main.type.action = 'Verification';
         main.initiate();
       });
 
       main.socket2.on('requestResponse', function(response){
+        console.log(response);
             //check if it was deletion
-            if(response[1] == "deleteEnrollments"){
+            if(response.type == "deleteEnrollments"){
                 main.handleDeletion(response);
 
-            }  
+            }
             //All other API call such as verifications, enrollments, etc.
             else {
               if (!main.destroyed){
-            response = response[0];
-            if (main.type[1] == "Enrollment"){
+            response = response.response;
+            if (main.type.action == "Enrollment"){
               if (response.responseCode == "SUCC"){
                 if(main.enrollCounter < 3){
                 main.enrollCounter = main.enrollCounter + 1;
@@ -96,10 +102,10 @@ function voiceIt2(){
                  main.continueEnrollment(response);
                     }
                   }
-                } 
-               else if (main.type[1] == "Verification") {
-                    main.handleResponse(response);
+                }
+               else if (main.type.action == "Verification") {
                     if (response.responseCode == "SUCC"){
+                    main.handleResponse(response);
                     //do something after successful. Right now it just stays there
                     } else {
                     main.attempts++;
@@ -112,8 +118,9 @@ function voiceIt2(){
                       main.headerj.fadeTo(500,1.0);
                       });
                       main.headerj.text("Exceeded maximum attempts allowed. Please try later");
-                       } 
+                       }
                     else {
+                      main.handleResponse(response);
                        if (!main.errorCodes.includes(response.responseCode)){
                         setTimeout(function(){
                         main.continueVerification(response);
@@ -130,7 +137,6 @@ function voiceIt2(){
 
 
     this.assignClicks = function(){
-
         //Assigning the start() function to the read button
         $('#readyButton').click(
           function() {
@@ -138,32 +144,21 @@ function voiceIt2(){
           }
         );
 
-        //warning overlay buttons 
+        //warning overlay buttons
         $('.ic').eq(0).click(
         function(){
         $('#closeButton').click();
         }
         );
 
-        //show "coming soon for liveness, for now..."
-        $("#livenessToggle").eq(0).click(function(){
-        setTimeout(function(){
-          if ($("input[type='checkbox']")[0].checked){
-          $("input[type='checkbox']").click();
-          $('#comingSoon').fadeTo(250,1.0);
-          }
-        },250);
-       });
-
        //proceede for enrollment
         $('.ic').eq(1).click(
         function(){
           main.destroyed = false;
-          var type = ['delete', 'Enrollments'];
-          var array = [type,0,0];
+          var options = {biometricType: "delete", action: "Enrollments"};
               //Request deleteAllEnrollmentsForUser Call
-              //Control now transferred to socket.on(..) 
-              main.socket2.emit('apiRequest', array);
+              //Control now transferred to socket.on(..)
+              main.socket2.emit('apiRequest', options);
               $('#warningOverlay > span').fadeTo(300,0.0);
               $('#warningOverlay > div').fadeTo(300,0.0,function(){
                 $('#warningOverlay > span').css('display','none');
@@ -180,31 +175,27 @@ function voiceIt2(){
               }
          });
 
-        //when liveness is ready
-        // $('#livenessToggle').eq(0).toggle(function(){
-        //   main.liveness = true;
-        //   console.log(main.liveness);
-        // }, function(){
-        //   main.liveness = false;
-        //   console.log(main.liveness);
-        // });
+        //liveness
+        $('#livenessToggle').eq(0).click(function(){
+          main.liveness = !main.liveness;
+        });
 
-        }
-          //called by the the start up buttons
+      }
+        //called by the the start up buttons
         this.initiate = function (){
          main.createObjects();
-          if (main.type[1] == 'Enrollment'){
+          if (main.type.action == 'Enrollment'){
           main.showWarningOverlay();
             } else {
           main.warningOverlayj.css('display','none');
           }
           main.setup();
           //main.convertSVG();
-   }
+      }
 
     this.createObjects = function(){
       //create J-Query object; needed to perform JQ specific methods such as fading, and also others such as changin css styles
-      main.wavej = $('#waveform').eq(0);   
+      main.wavej = $('#waveform').eq(0);
       main.circlej = $('#circle').eq(0);
       main.vidCirclej = $('#videoCircle').eq(0);
       main.headerj = $('#header').eq(0);
@@ -234,10 +225,11 @@ function voiceIt2(){
 
     this.handleDeletion = function(response){
              console.log('received response...');
-              if(response[0].responseCode == "SUCC"){
+             response = response.response;
+              if(response.responseCode == "SUCC"){
                 setTimeout(function(){
                 main.warningOverlayj.fadeTo(500,0.0,function(){
-                  if (main.type[0] == "voice"){
+                  if (main.type.biometricType == "voice"){
                     main.wavej.fadeTo(500,0.3);
                   } else {
                     main.vidFramej.fadeTo(500,1.0);
@@ -260,7 +252,7 @@ function voiceIt2(){
         main.headerj.fadeTo(300, 1.0);
         });
         if (response.responseCode == "SUCC"){
-          if (main.type[1] == "Verification"){
+          if (main.type.action == "Verification"){
             main.headerj.text(main.prompt.getPrompt("SUCC_V"));
           } else {
             main.headerj.text(main.prompt.getPrompt("SUCC_E"));
@@ -275,7 +267,7 @@ function voiceIt2(){
     this.continueEnrollment = function(response){
       console.log("continuing Enrollment...");
       //hanlde the response (can use handleresponse() method- will see it later on)
-      if (main.type[0] !== "face"){
+      if (main.type.biometricType !== "face"){
         if (response.responseCode == "SUCC"){
           if (main.enrollCounter == 1) {
              main.headerj.text(main.prompt.getPrompt("SUCC_E_1"));
@@ -283,7 +275,7 @@ function voiceIt2(){
             main.headerj.text(main.prompt.getPrompt("SUCC_E_2"));
            } else if (main.enrollCounter == 3){
              main.headerj.text(main.prompt.getPrompt("SUCC_E_3"));
-            } 
+            }
           }
             else {
            main.headerj.text(main.prompt.getPrompt(response.responseCode));
@@ -293,7 +285,7 @@ function voiceIt2(){
            main.headerj.css('display', 'inline-block');
            main.headerj.fadeTo(300, 1.0);
       });
-    } else if (main.type[0] == "face") {
+    } else if (main.type.biometricType == "face") {
       if (response.responseCode == "SUCC"){
           main.headerj.text(main.prompt.getPrompt("SUCC_E_3"));
         }
@@ -324,7 +316,7 @@ function voiceIt2(){
     }
 
     //handle re-recording and prompts/animations along with it (for voice/video)
-    if (main.enrollCounter < 3  && main.type[0] !== "face"){
+    if (main.enrollCounter < 3  && main.type.biometricType !== "face"){
       setTimeout(function(){
         main.circlej.fadeTo(350,0.0);
         main.headerj.fadeTo(350, 0.0,function(){
@@ -335,9 +327,9 @@ function voiceIt2(){
         main.headerj.text(main.prompt.getPrompt("ENROLL_1"));
         } else if (main.enrollCounter == 2){
         main.headerj.text(main.prompt.getPrompt("ENROLL_2"));
-        } 
+        }
         main.headerj.fadeTo(350, 1.0,function(){
-          if (main.type[0] !== "voice"){
+          if (main.type.biometricType !== "voice"){
             main.circlej.circleProgress('redraw');
             main.circlej.circleProgress();
             main.circlej.circleProgress({value: 1.0, animation: {duration: 5000, easing:false}});
@@ -345,20 +337,20 @@ function voiceIt2(){
       }
         });
         });
-        if (main.type[0] == "voice"){
+        if (main.type.biometricType == "voice"){
           main.circlej.css('opacity',0.0);
           main.player.record().start();
         main.wavej.fadeTo(200,1.0, function(){
         });
-        } else if (main.type[0] == "video"){
+        } else if (main.type.biometricType == "video"){
         main.overlayj.fadeTo(500,0.3,function(){
-           main.player.record().start();
+        main.player.record().start();
           });
         }
        },2000);
       }
     }
-          
+
     this.setup = function() {
           main.enrollCounter = 0;
           main.destroy();
@@ -371,12 +363,12 @@ function voiceIt2(){
           main.readyButtonj.css('display', 'inline-block');
           main.overlayj.css('opacity', '0');
           main.showLoadingOverlay();
-          if (main.type[0] == "voice"){
+          if (main.type.biometricType == "voice"){
             main.handleVoiceSetup();
-          } else if (main.type[0] == "face"){
+          } else if (main.type.biometricType == "face"){
             main.handleFaceSetup();
           } else {
-            main.handleVideoSetup();
+             main.handleVideoSetup();
           }
         }
 
@@ -427,6 +419,9 @@ function voiceIt2(){
               main.readyButtonj.fadeTo(550,1.0);
               main.vidFramej.css('opacity','0.0');
               main.vidFramej.fadeTo(550,1.0);
+              if (main.liveness){
+                liveness();
+              }
             }
 
     //ready up animations and stuff for video enroll/verific.
@@ -472,7 +467,7 @@ function voiceIt2(){
           }
         );
         function drawFrames(){
-          //mirror the video by drawing it onto the canvas 
+          //mirror the video by drawing it onto the canvas
          main.imageDataCtx.setTransform(-1.0, 0, 0, 1, webcam.videoWidth, 0);
          main.imageDataCtx.drawImage(webcam, 0, 0, webcam.videoWidth, webcam.videoHeight);
           window.requestAnimationFrame(drawFrames);
@@ -480,7 +475,7 @@ function voiceIt2(){
         drawFrames();
       }
 
-    //set up video JS for vocie 
+    //set up video JS for vocie
     this.initVoiceRecord = function () {
      if ($('#myAudio').length == 0){
       var audio = $('<audio />').appendTo('body');
@@ -542,8 +537,7 @@ function voiceIt2(){
                    audio: true,
                    video: true,
                    maxLength: 5,
-                   debug: true,
-                   timeSlice: 35
+                   debug: true
                }
            }
        }, function(){
@@ -554,7 +548,7 @@ function voiceIt2(){
       // }
     }
 
-    //set up video JS for face 
+    //set up video JS for face
     this.initFaceRecord = function () {
      if ($('#video3').length == 0){
       var audio = $('<audio />').appendTo('body');
@@ -575,8 +569,7 @@ function voiceIt2(){
                 audio: false,
                 video: true,
                 maxLength: 5,
-                debug: true,
-                timeSlice: 35
+                debug: true
             }
         }
       }, function(){
@@ -597,30 +590,33 @@ function voiceIt2(){
          });
          // user this.type the record button and started recording
         main.player.on('startRecord', function() {
-          console.log('started recording!');
+          if (main.liveness){
+            main.socket2.emit('timestamp', 1);
+          }
          });
+
          //recording is available
         main.player.on('finishRecord', function() {
-          if (main.type[0] == "voice"){
+          if (main.liveness){
+            main.socket2.emit('recording',main.player.recordedData);
+          }
+          if (main.type.biometricType == "voice"){
             main.wavej.fadeTo(300,0.3);
-          } else if (main.type[0] == "video") {
+          } else if (main.type.biometricType == "video") {
             main.vidCirclej.fadeTo(300,0.3);
             main.overlayj.fadeTo(300,1.0);
           } else {
             main.overlayj.fadeTo(300,1.0);
           }
-           var array = [main.type, "en-US", main.player.recordedData, main.prompt.getPhrase(0)];
-           main.socket2.emit('apiRequest', array);
+           var options = {biometricType: main.type.biometricType, action: main.type.action, recording: main.player.recordedData};
+           main.socket2.emit('apiRequest', options);
            main.headerj.fadeTo(300, 0.0, function() {
               $(this).css('display', 'none');
               main.waitj.css('display', 'inline-block');
               main.waitj.fadeTo(300,1.0);
              });
            });
-          main.player.on('timestamp',function(){
-          main.socket2.emit('timestamp',main.player.currentTimestamp);
-          });
-         //to ensure one-time assignment to the listeners 
+         //to ensure one-time assignment to the listeners
          main.setupVJS = true;
        }
 
@@ -632,24 +628,25 @@ function voiceIt2(){
     this.start = function () {
       main.headerj.css('display','inline-block');
       main.headerj.css('opacity', '0.0');
-      main.headerj.fadeTo(1000,1.0); 
-      if (main.type[0] !== "face"){
+      main.headerj.fadeTo(1000,1.0);
+      if (main.type.biometricType !== "face"){
         main.headerj.text("Please say: " + main.prompt.getPhrase(0));
       }  else {
         main.headerj.text(this.prompt.getPrompt("LOOK_INTO_CAM"));
       }
-      if (main.type[0] == "voice"){
+      if (main.type.biometricType == "voice"){
            main.circlej.css("display","none");
            main.wavej.fadeTo(500,1.0);
-         } 
-      else if (main.type[0] == "face"){
+         }
+         if (!main.liveness){
+            if (main.type.biometricType == "face"){
                 main.createCircle();
                 main.circlej.css("opacity","1.0");
                 main.circlej.circleProgress('redraw');
                 main.circlej.circleProgress();
                 main.circlej.circleProgress({value: 1.0, animation: {duration: 5200, easing:false}});
                 console.log("creating circle");
-      } else if (main.type[0] == "video"){
+              } else if (main.type.biometricType == "video"){
                 console.log("createed video circle");
                 main.createVideoCircle();
                 main.vidCirclej.css('display','block');
@@ -661,9 +658,12 @@ function voiceIt2(){
                 main.circlej.css("display","block");
                 main.circlej.css("opacity","1.0");
           }
-        main.overlayj.fadeTo(1500, 0.3);
-        main.readyButtonj.css('display', 'none');
-        main.player.record().start();
+          main.overlayj.fadeTo(1500, 0.3);
+          main.readyButtonj.css('display', 'none');
+          main.player.record().start();
+        } else {
+          //further liveness
+        }
       }
 
     //continue verification if errors, response codes, etc
@@ -671,14 +671,14 @@ function voiceIt2(){
         setTimeout(function(){
         main.circlej.fadeTo(350,0.0);
         main.headerj.fadeTo(350, 0.0,function(){
-          if (main.type[0] == "face"){
+          if (main.type.biometricType == "face"){
           main.headerj.text(main.prompt.getPrompt("LOOK_INTO_CAM"));
           } else {
           main.headerj.text(main.prompt.getPrompt("VERIFY"));
           }
           main.headerj.fadeTo(350,1.0);
         });
-        if (main.type[0] == "voice"){
+        if (main.type.biometricType == "voice"){
           main.circlej.css('opacity','0.0');
              main.wavej.fadeTo(500,1.0, function(){
             main.player.record().start();
@@ -696,9 +696,9 @@ function voiceIt2(){
       },2000);
     }
 
-    //show this before verification with liveness 
+    //show this before verification with liveness
     this.showLoadingOverlay = function (){
-      if (main.type[1] !== "Enrollment"){
+      if (main.type.action !== "Enrollment"){
       var timeOut = 1000;
       main.vidFramej.css('opacity','0.0');
       main.wavej.css('opacity','0.0');
@@ -717,7 +717,7 @@ function voiceIt2(){
             main.destroyed = false;
           });
         },timeOut);
-       } 
+       }
     }
 
     //create the surrounding
@@ -752,7 +752,7 @@ function voiceIt2(){
             color: colors
             }
         });
-      } 
+      }
       main.setupWaveForm = true;
     }
       }
@@ -772,22 +772,22 @@ function voiceIt2(){
     //////////// The ones below either have a jutter, or are unable to restart the streams- will come back later/////////
     ////////////The solution is, I think, to destroy the html elements associated to the objects, then recreate them and add them the DOM/////////
 
-      //stop  the audio stream for the waveform circle 
+      //stop  the audio stream for the waveform circle
       // if (this.typeof vudio !== "undefined"){
       // vudio.stream.stop();
       //  }
 
-      // //clear the canvas after done with video 
+      // //clear the canvas after done with video
       // if (this.typeof imageDataCtx !== "undefined"){
       //   var canvas = document.getElementById("imageData");
       //   imageDataCtx.clearRect(0, 0, canvas.width, canvas.height);
       // }
-      // //stop the video stream for the video 
+      // //stop the video stream for the video
       // if (this.typeof videoStream !== "undefined"){
       //   videoStream.stop();
       // };
 
-      //stop the audio stream for the video circle- not working properly, will come back 
+      //stop the audio stream for the video circle- not working properly, will come back
       // if (this.typeof vidCircle !== "undefined"){
       // videoCircleStream.stop();
       // console.log(videoCircleStream.getTracks());
@@ -828,7 +828,7 @@ function voiceIt2(){
             main.vidCircle.attr('r',vol);
             window.requestAnimationFrame(draw);
             }
-          
+
             //helper to get the net audio volume
             function getRMS (spectrum) {
             var rms = 0;

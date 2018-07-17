@@ -102,10 +102,6 @@ max-width: 460px; */
   padding-bottom: 0px;
 }
 
-/* #myVideo3 {
-  display: none;
-} */
-
 #imageData {
   height: 345px;
   width: 460px;
@@ -280,9 +276,6 @@ display: none !important;
   box-shadow: 0 0 0 2px rgba(255,255,255,.5) inset !important;
 }
 
-#myVideo2 , #myVideo2_html5_api , .myVideo2-dimensions{
-  /* display: none !important; */
-}
 
 #readyButton:hover {
   box-shadow: 0 0 0 2px #fff inset!important;

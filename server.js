@@ -1,6 +1,6 @@
 let voiceit2 = require('voiceit2-nodejs');
-let credentials = require('./credentials');
-let myVoiceIt = new voiceit2(credentials.API_KEY, credentials.API_TOKEN);
+let config = require('./config.js');
+let myVoiceIt = new voiceit2(config.API_KEY, config.API_TOKEN);
 let fs = require('fs');
 var faceLib = require('./faceLib');
 var express = require('express');
@@ -8,6 +8,7 @@ app = express();
 app.use(express.static('public'));
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var ffmpeg = require('fluent-ffmpeg');
 
 //test stuff
 var tests = [0,1,2,3,4];
@@ -21,6 +22,7 @@ var passedTests = 0;
 var oldVertices = [];
 var time = new Date().getTime();
 var face;
+var timeStampId;
 var timeStamps = [];
 var successTimeStamps = [];
 
@@ -30,6 +32,15 @@ var turnedLeftCounter = 0;
 var yawnCounter = 0;
 var smileCounter = 0;
 var facedDownCounter = 0;
+
+//start timestamps for video
+function initTimeStamps(){
+  console.log('timestamps started');
+    timeStampId = setInterval(function(){
+    var time = Date.now();
+    timeStamps.push(time);
+  },50);
+}
 
 //helper to convert a point to a vector
 function Point(x,y){
@@ -41,6 +52,12 @@ function Point(x,y){
      var distance = Math.sqrt((Math.pow(point.x-this.x,2))+(Math.pow(point.y-this.y,2)))
      return distance;
  };
+}
+
+function stampToVidSeconds(timeStamps, allTimestamps){
+  for (var i = 0; i < successTimeStamps.length; i++){
+    timeStamps[i] = (allTimestamps[allTimestamps.length-1] - timeStamps[i])/1000;
+  }
 }
 
 //shuffle an array
@@ -83,7 +100,6 @@ function doLiveness(cas, a){
           facedDownCounter++;
           if(facedDownCounter > 1){
             passed = true;
-            successTimeStamps.push(timeStamps[timeStamps.length-1]);
             }
         }
       }
@@ -97,7 +113,6 @@ function doLiveness(cas, a){
         turnedRightCounter++;
         if(turnedRightCounter > 1){
           passed = true;
-          successTimeStamps.push(timeStamps[timeStamps.length-1]);
           }
         }
       }
@@ -111,7 +126,6 @@ function doLiveness(cas, a){
           turnedLeftCounter++;
           if(turnedLeftCounter > 1){
             passed = true;
-            successTimeStamps.push(timeStamps[timeStamps.length-1]);
             }
       }
       }
@@ -132,9 +146,6 @@ function doLiveness(cas, a){
 
       smileFactor -= 1.40; // 1.40 - neutral, 1.70 smiling
 
-      if(smileFactor > 0.25) smileFactor = 0.25;
-      if(smileFactor < 0.00) smileFactor = 0.00;
-
       smileFactor *= 4.0;
 
       if(smileFactor < 0.0) { smileFactor = 0.0; }
@@ -148,7 +159,6 @@ function doLiveness(cas, a){
         if(smileCounter > 1){
           time = new Date().getTime();
           passed = true;
-          successTimeStamps.push(timeStamps[timeStamps.length-1]);
           }
       }
       }
@@ -173,7 +183,6 @@ function doLiveness(cas, a){
 
       yawnFactor *= 2.0;
 
-      if(yawnFactor > 1.0) yawnFactor = 1.0;
 
       if(yawnFactor < 0.0) { yawnFactor = 0.0; }
       if(yawnFactor > 1.0) { yawnFactor = 1.0; }
@@ -186,12 +195,11 @@ function doLiveness(cas, a){
         if(yawnCounter > 1){
           time = new Date().getTime();
           passed = true;
-          successTimeStamps.push(timeStamps[timeStamps.length-1]);
           }
       }
       }
       break;
-      //blink detection is really bad because laptop webcams are so far away 
+      //blink detection is really bad because laptop webcams are so far away
 
       // case 5:
       //   if((v[0] > 12 && (v[1] > 0.4 || v[2] > 0.4))) {
@@ -205,106 +213,106 @@ function doLiveness(cas, a){
   }
 
 //switched to the respective api call
-function handleClientRequest (type, contentLanguage, recording, phrase) {
-    type = type[0]+type[1];
-    var response;
+function handleClientRequest(options) {
+    var type = options.biometricType + options.action;
     switch (type){
       case "voiceVerification":
-      console.log(phrase);
-      fs.appendFileSync("audio.wav", new Buffer.alloc(recording.length,recording));
+      fs.appendFileSync("audio.wav", new Buffer.alloc(options.recording.length,options.recording));
       myVoiceIt.voiceVerification({
-        userId: "usr_9d2bffcd2540450f9c9e75f393ebe876",
-        contentLanguage : "en-US",
+        userId: config.userId,
+        contentLanguage : config.contentLanguage,
         audioFilePath : "audio.wav",
-        phrase: phrase
+        phrase: config.phrase
       },(jsonResponse)=>{
-        var array = [jsonResponse, type];
+        var obj = {response: jsonResponse,
+           type: type };
         console.log(jsonResponse);
-        io.emit('requestResponse', array);
+        io.emit('requestResponse', obj);
           fs.unlink('audio.wav', (err) => {
           if (err) throw err;
            });
         });
       break;
       case "voiceEnrollment":
-      console.log(recording);
-      fs.appendFileSync("audio.wav", new Buffer.alloc(recording.length,recording));
+      fs.appendFileSync("audio.wav", new Buffer.alloc(options.recording.length,options.recording));
       myVoiceIt.createVoiceEnrollment({
-        userId: "usr_9d2bffcd2540450f9c9e75f393ebe876",
-        contentLanguage : "en-US",
+        userId: config.userId,
+        contentLanguage : config.contentLanguage,
         audioFilePath : "audio.wav",
-        phrase: phrase
+        phrase: config.phrase
       },(jsonResponse)=>{
-        var array = [jsonResponse, type];
+        var obj = {response: jsonResponse,
+           type: type };
         console.log(jsonResponse);
-        io.emit('requestResponse', array);
+        io.emit('requestResponse', obj);
           fs.unlink('audio.wav', (err) => {
           if (err) throw err;
            });
         });
         break;
         case "faceEnrollment":
-        console.log(recording);
-        fs.appendFileSync("video.mp4", new Buffer.alloc(recording.length,recording));
+        fs.appendFileSync("video.mp4", new Buffer.alloc(options.recording.length,options.recording));
         myVoiceIt.createFaceEnrollment({
-          userId: "usr_9d2bffcd2540450f9c9e75f393ebe876",
+          userId: config.userId,
           videoFilePath : "video.mp4"
         },(jsonResponse)=>{
-          var array = [jsonResponse, type];
+          var obj = {response: jsonResponse,
+             type: type };
           console.log(jsonResponse);
-          io.emit('requestResponse', array);
+          io.emit('requestResponse', obj);
             fs.unlink('video.mp4', (err) => {
             if (err) throw err;
              });
           });
         break;
         case "faceVerification":
-        console.log(type);
-        fs.appendFileSync("video.mp4", new Buffer.alloc(recording.length,recording));
+        fs.appendFileSync("video.mp4", new Buffer.alloc(options.recording.length,options.recording));
         myVoiceIt.faceVerification({
-          userId: "usr_9d2bffcd2540450f9c9e75f393ebe876",
-          contentLanguage : "en-US",
+          userId: config.userId,
+          contentLanguage : config.contentLanguage,
           videoFilePath: "video.mp4"
         },(jsonResponse)=>{
-          var array = [jsonResponse, type];
+          var obj = {response: jsonResponse,
+             type: type };
           console.log(jsonResponse);
-          io.emit('requestResponse', array);
+          io.emit('requestResponse', obj);
             fs.unlink('video.mp4', (err) => {
             if (err) throw err;
              });
           });
         break;
         case "videoEnrollment":
-        console.log(type);
-        recording = recording.video;
+        var recording = options.recording.video;
+        console.log(recording);
         fs.appendFileSync("video.mov", new Buffer.alloc(recording.length,recording));
         myVoiceIt.createVideoEnrollment({
-          userId: "usr_9d2bffcd2540450f9c9e75f393ebe876",
-          contentLanguage : "en-US",
+          userId: config.userId,
+          contentLanguage : config.contentLanguage,
           videoFilePath : "video.mov",
-          phrase: phrase
+          phrase: config.phrase
         },(jsonResponse)=>{
-          var array = [jsonResponse, type];
+          var obj = {response: jsonResponse,
+             type: type };
           console.log(jsonResponse);
-          io.emit('requestResponse', array);
+          io.emit('requestResponse', obj);
             fs.unlink('video.mov', (err) => {
             if (err) throw err;
              });
           });
         break;
         case "videoVerification":
-        recording = recording.video;
-        console.log(recording);
-        fs.appendFileSync("video.mov", new Buffer.alloc(recording.length,recording));
+        options.recording = options.recording.video;
+        fs.appendFileSync("video.mov", new Buffer.alloc(options.recording.length,options.recording));
         myVoiceIt.videoVerification({
-          userId: "usr_9d2bffcd2540450f9c9e75f393ebe876",
-          contentLanguage : "en-US",
+          userId: config.userId,
+          contentLanguage : config.contentLanguage,
           videoFilePath : "video.mov",
-          phrase: phrase
+          phrase: config.phrase
         },(jsonResponse)=>{
-          var array = [jsonResponse, type];
+          var obj = {response: jsonResponse,
+             type: type };
           console.log(jsonResponse);
-          io.emit('requestResponse', array);
+          io.emit('requestResponse', obj);
             fs.unlink('video.mov', (err) => {
             if (err) throw err;
              });
@@ -312,20 +320,22 @@ function handleClientRequest (type, contentLanguage, recording, phrase) {
         break;
         case "deleteEnrollments":
         myVoiceIt.deleteAllEnrollmentsForUser({
-          userId: "usr_9d2bffcd2540450f9c9e75f393ebe876",
+          userId: config.userId,
         },(jsonResponse)=>{
           console.log(jsonResponse);
-          var array = [jsonResponse, type];
-          io.emit('requestResponse', array);
+          var obj = {response: jsonResponse,
+             type: type };
+          io.emit('requestResponse', obj);
           });
         break;
         case "getPhrases":
         myVoiceIt.getPhrases({
-          lang: contentLanguage,
+          lang: config.contentLanguage,
         },(jsonResponse)=>{
           console.log(jsonResponse);
-          var array = [jsonResponse, type];
-          io.emit('requestResponse', array);
+          var obj = {response: jsonResponse,
+             type: type };
+          io.emit('requestResponse', obj);
           });
         break;
         default:
@@ -333,12 +343,32 @@ function handleClientRequest (type, contentLanguage, recording, phrase) {
   };
 
 //takes the picture upon liveness completion and makes liveness-related API calls
-function handleLivenessCompletion(){
+function handleLivenessCompletion(recording){
+    clearInterval(timeStampId);
+    stampToVidSeconds(successTimeStamps,timeStamps);
+    fs.appendFileSync("vid.mov", new Buffer.alloc(recording.length,recording));
+    var proc = new ffmpeg('vid.mov')
+    .on('end', function(stdout, stderr) {
+        fs.unlink('vid.mov', (err) => {
+        if (err) throw err;
+         });
+        fs.unlink('./test_1.png', (err) => {
+        if (err) throw err;
+        });
+        fs.unlink('./test_2.png', (err) => {
+          if (err) throw err;
+        });
+        fs.unlink('./test_3.png', (err) => {
+          if (err) throw err;
+        });
+      }).takeScreenshots({
+      count: 3,
+      filename:'test.png',
+      timemarks: successTimeStamps //number of seconds
+      }, './', function(err) {
+      });
+  }
 
-}
-
-app.get('/', function(req, res) {
-});
 
 //Handle client-server communication
 io.on('connection', function(socket){
@@ -359,7 +389,13 @@ io.on('connection', function(socket){
     }
     doLiveness(currTest,face);
     if (passed){
-      passedTests = passedTests + 1;
+      if (currTest !== 4 && currTest !== 3){
+        successTimeStamps.push(timeStamps[timeStamps.length-1]);
+      } else {
+        //add delay for right, left, face-down
+        successTimeStamps.push(timeStamps[timeStamps.length-1]+1);
+      }
+      passedTests++;
       passed = false;
       resetCounters();
       testIndex += 1;
@@ -367,27 +403,26 @@ io.on('connection', function(socket){
       //debugging only
       if (testIndex > 4){
       testIndex = 0;
+      }
       currTest = tests[testIndex];
       socket.emit('test', currTest);
-      }
     }
   });
 
   //Api request from client
-  socket.on('apiRequest', function(array){
-    console.log(array);
-    handleClientRequest(array[0],array[1],array[2],array[3]);
+  socket.on('apiRequest', function(options){
+    console.log(options);
+    handleClientRequest(options);
   });
 
   //recorded data from client
   socket.on('recording', function(recording){
-    recording = recording[0];
-    handleLivenessCompletion();
+    handleLivenessCompletion(recording);
   });
 
-  //timestamps of the recording 
-  socket.on('timestamp',function(timestamp){
-    timeStamps.push(timestamp);
+  //timestamps of the recording
+  socket.on('timestamp',function(c){
+    initTimeStamps();
   });
 });
 

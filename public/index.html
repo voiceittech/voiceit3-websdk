@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css' />
     <script src="js/bufferloader.js"></script>
-    <script src="js/id3-minimized.js"></script>
+
 <!--
     	<script async src="js/brf-js/utils/BRFv4Stats.js"></script> -->
 
@@ -51,11 +51,11 @@
         </div>
           </h2>
    <div id="toggleHolder" class="toggleHolder">
-            <div class="ui basic label" id="comingSoon">
+        <div class="ui basic label" id="comingSoon">
       Coming Soon!
     </div>
   <div class="ui toggle checkbox">
-  <input type="checkbox" name="public">
+  <input id="livenessToggle" type="checkbox" name="public">
   <label>Liveness Check</label>
 </div>
 </div>
@@ -172,12 +172,10 @@
 <video id="myVideo"></video>
 
 <script src="js/prompts.js"></script>
-<script src="js/api.js"></script>
 <script src="js/VoiceIt2.js"></script>
 <script src="js/progressCircle.js"></script>
 <script src="js/overlay.js"></script>
 <script src="js/vudio.js"></script>
-<script src="js/tracker.js"></script>
 <script src="js/liveness.js"></script>
 <script src="js/index.js"></script>
 <link rel="stylesheet" type="text/css" href="css/style.css"/>
