@@ -1,6 +1,7 @@
+
 $(document)
   .ready(function() {
 
-  	var start = new voiceIt2();
-    start.init();
+  	window.VoiceIt2 = new voiceIt2();
+    window.VoiceIt2.init();
   });

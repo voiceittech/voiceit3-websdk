@@ -26,6 +26,7 @@ function voiceIt2(){
     this.wait2j;
     this.readyButtonj;
     this.overlayj;
+    this.doing = "face";
 
     //needed for the audio/video streams, and for destroying instances
     this.videoCircleStream;
@@ -35,6 +36,13 @@ function voiceIt2(){
     this.setupWaveForm = false;
     this.destroyed = false;
     this.errorCodes = ["TVER","PNTE" ,"NFEF","UNAC"];
+
+    // this.encapsulatedVoiceEnrollment = function(){
+    //    main.type.biometricType = 'voice';
+    //    main.type.action = 'Enrollment';
+    //    console.log(main.type);
+    //    main.initiate();   
+    // }
 
     //assigns the this.type of action determined by the click
     this.init = function() {
@@ -68,6 +76,35 @@ function voiceIt2(){
         main.type.biometricType = 'video';
         main.type.action = 'Verification';
         main.initiate();
+      });
+
+      main.socket2.on('stopRecording', function(s){
+        console.log('stopping recording');
+        main.player.record().stop();
+        main.doing = "face";
+      });
+
+      main.socket2.on('completeLiveness', function(s){
+        if (s == 5){
+          //main.player.record().reset();
+          // main.initVoiceRecord();
+          // main.setupListners();
+          main.doing = "voice";
+          main.player.record().start();
+          main.doing == "voice";
+          setTimeout(function(){
+            main.player.record().stop();
+          },5000);
+          main.createVideoCircle();
+          main.vidCirclej.css('display','block');
+          main.vidCirclej.fadeTo(500,0.5);
+          main.createCircle();
+          main.circlej.circleProgress('redraw');
+          main.circlej.circleProgress();
+          main.circlej.circleProgress({value: 1.0, animation: {duration: 5200, easing:false}});
+          main.circlej.css("display","block");
+          main.circlej.css("opacity","1.0");
+        }
       });
 
       main.socket2.on('requestResponse', function(response){
@@ -137,10 +174,24 @@ function voiceIt2(){
 
 
     this.assignClicks = function(){
+
+        $('#skipButton').click(function(){
+          $('#warningOverlay').fadeTo(400,0.0,function(){
+            $('#skipButton').css('display','none');
+            $('#warningOverlay').css('display','none');
+          })
+        });
         //Assigning the start() function to the read button
         $('#readyButton').click(
           function() {
             main.start();
+            main.circlej.fadeTo(500,1.0);
+            if (main.liveness && main.type.action !== "Enrollment"){
+              var obj = {
+                type: main.type.biometricType
+              };
+              main.socket2.emit('initiate', obj);
+            }
           }
         );
 
@@ -208,6 +259,9 @@ function voiceIt2(){
     }
 
     this.showWarningOverlay = function(){
+      $('#skipButton').css('display','none');
+        $("#livenessTutorial").css('display','none');
+        $("#livenessText").css('display','none');
         setTimeout(function(){
         main.wavej.css('opacity','0.0');
         main.vidFramej.css('opacity','0.0');
@@ -377,6 +431,7 @@ function voiceIt2(){
       main.headerj.css('opacity','0.0');
       main.attempts = 0;
       main.vidCirclej.css('display','none');
+      main.circlej.css('opacity','none');
       console.log('initiating prerequisites for voice..');
          main.createWaveform();
          main.initVoiceRecord();
@@ -403,10 +458,6 @@ function voiceIt2(){
             console.log('initiating prerequisites for face..');
               $ ('#imageData').css('display','block');
               main.wavej.css('display','none');
-              main.initFaceRecord();
-              if (!this.setupVJS){
-                main.setupListners();
-              }
               window.setTimeout(function() {
                 $("button[title='Device']").eq(0).click();
               }, 500);
@@ -419,8 +470,14 @@ function voiceIt2(){
               main.readyButtonj.fadeTo(550,1.0);
               main.vidFramej.css('opacity','0.0');
               main.vidFramej.fadeTo(550,1.0);
-              if (main.liveness){
+              if (main.liveness && main.type.action !== "Enrollment"){
+                main.initFaceLiv();
                 liveness();
+              } else {
+              main.initFaceRecord();
+              }
+              if (!main.setupVJS){
+                main.setupListners();
               }
             }
 
@@ -433,10 +490,6 @@ function voiceIt2(){
               main.vidFramej.css('display','block');
               main.vidFramej.fadeTo(500,1.0);
               main.wavej.css('display','none');
-              main.initVideoRecord();
-              if (!main.setupVJS){
-                main.setupListners();
-              }
               window.setTimeout(function() {
                 $("button[title='Device']").eq(0).click();
               }, 500);
@@ -445,7 +498,46 @@ function voiceIt2(){
               main.overlayj.css('opacity', '1.0');
               $('#videoModal').modal('show');
               main.wavej.css('display', 'none');
+              if (main.liveness && main.type.action !== "Enrollment"){
+                main.initFaceLiv();
+                liveness();
+              } else {
+                main.initVideoRecord();
+                }
+                if (!main.setupVJS){
+                  main.setupListners();
+                }
               }
+
+    this.initFaceLiv = function(){
+      if ($('#video3').length == 0){
+       var audio = $('<audio />').appendTo('body');
+       audio.attr('id','video3');
+       audio.attr('class','video-js vjs-default-skin');
+      }
+       main.player = videojs('video3', {
+       controls: true,
+         width: 640,
+         height: 480,
+         fluid: false,
+         controlBar: {
+             fullscreenToggle: false,
+             volumePanel: false
+         },
+         plugins: {
+             record: {
+                 audio: true,
+                 video: true,
+                 maxLength: 50,
+                 debug: true
+             }
+         }
+       }, function(){
+         // print version information at startup
+         var msg = 'Using video.js ' + videojs.VERSION;
+         videojs.log(msg);
+       });
+    }
 
     this.createVideo = function() {
       var webcam = document.querySelector('#myVideo');
@@ -545,7 +637,6 @@ function voiceIt2(){
            var msg = 'Using video.js ' + videojs.VERSION;
            videojs.log(msg);
        });
-      // }
     }
 
     //set up video JS for face
@@ -577,7 +668,6 @@ function voiceIt2(){
         var msg = 'Using video.js ' + videojs.VERSION;
         videojs.log(msg);
       });
-    // }
     }
 
     //one-time setup for the listners to prevent duplicate api calls/records
@@ -590,35 +680,46 @@ function voiceIt2(){
          });
          // user this.type the record button and started recording
         main.player.on('startRecord', function() {
-          if (main.liveness){
+          if (main.liveness && main.type.action !== "Enrollment"){
+            if (main.doing !== "voice"){
             main.socket2.emit('timestamp', 1);
+            }
           }
          });
-
-         //recording is available
         main.player.on('finishRecord', function() {
-          if (main.liveness){
-            main.socket2.emit('recording',main.player.recordedData);
-          }
-          if (main.type.biometricType == "voice"){
-            main.wavej.fadeTo(300,0.3);
-          } else if (main.type.biometricType == "video") {
-            main.vidCirclej.fadeTo(300,0.3);
-            main.overlayj.fadeTo(300,1.0);
+          if (main.liveness && main.type.action !== "Enrollment"){
+            var obj;
+            if (main.doing == "voice"){
+              console.log('emitting the blob for voice');
+              obj = {recording: main.player.recordedData, kind: "voice" };
+              main.vidCirclej.fadeTo(300,0.3);
+              main.overlayj.fadeTo(300,1.0);
+            } else {
+              console.log('emitting the blob for face');
+              obj = {recording: main.player.recordedData, kind: "face" };
+            }
+            main.socket2.emit('recording', obj);
           } else {
-            main.overlayj.fadeTo(300,1.0);
+            if (main.type.biometricType == "voice"){
+              main.wavej.fadeTo(300,0.3);
+            } else if (main.type.biometricType == "video") {
+              main.vidCirclej.fadeTo(300,0.3);
+              main.overlayj.fadeTo(300,1.0);
+            } else {
+              main.overlayj.fadeTo(300,1.0);
+            }
+             var options = {biometricType: main.type.biometricType, action: main.type.action, recording: main.player.recordedData};
+             main.socket2.emit('apiRequest', options);
+             main.headerj.fadeTo(300, 0.0, function() {
+                $(this).css('display', 'none');
+                main.waitj.css('display', 'inline-block');
+                main.waitj.fadeTo(300,1.0);
+               });
           }
-           var options = {biometricType: main.type.biometricType, action: main.type.action, recording: main.player.recordedData};
-           main.socket2.emit('apiRequest', options);
-           main.headerj.fadeTo(300, 0.0, function() {
-              $(this).css('display', 'none');
-              main.waitj.css('display', 'inline-block');
-              main.waitj.fadeTo(300,1.0);
-             });
-           });
          //to ensure one-time assignment to the listeners
          main.setupVJS = true;
-       }
+       });
+     }
 
        $('#closeButton').click(function(){
          main.destroy();
@@ -629,6 +730,7 @@ function voiceIt2(){
       main.headerj.css('display','inline-block');
       main.headerj.css('opacity', '0.0');
       main.headerj.fadeTo(1000,1.0);
+      if (!main.liveness || main.type.action == 'Enrollment'){
       if (main.type.biometricType !== "face"){
         main.headerj.text("Please say: " + main.prompt.getPhrase(0));
       }  else {
@@ -638,8 +740,7 @@ function voiceIt2(){
            main.circlej.css("display","none");
            main.wavej.fadeTo(500,1.0);
          }
-         if (!main.liveness){
-            if (main.type.biometricType == "face"){
+    else if (main.type.biometricType == "face"){
                 main.createCircle();
                 main.circlej.css("opacity","1.0");
                 main.circlej.circleProgress('redraw');
@@ -658,12 +759,12 @@ function voiceIt2(){
                 main.circlej.css("display","block");
                 main.circlej.css("opacity","1.0");
           }
-          main.overlayj.fadeTo(1500, 0.3);
-          main.readyButtonj.css('display', 'none');
-          main.player.record().start();
         } else {
           //further liveness
         }
+        main.overlayj.fadeTo(1500, 0.3);
+        main.readyButtonj.css('display', 'none');
+        main.player.record().start();
       }
 
     //continue verification if errors, response codes, etc
@@ -698,9 +799,12 @@ function voiceIt2(){
 
     //show this before verification with liveness
     this.showLoadingOverlay = function (){
-      if (main.type.action !== "Enrollment"){
       var timeOut = 1000;
-      main.vidFramej.css('opacity','0.0');
+      if (main.type.action !== "Enrollment"){
+        $('#skipButton').css('display','none');
+        $("#livenessTutorial").css('display','none');
+        $("#livenessText").css('display','none');
+            main.vidFramej.css('opacity','0.0');
       main.wavej.css('opacity','0.0');
       main.warningOverlayj.css('display','flex');
       main.warningOverlayj.css('opacity','1.0');
@@ -711,13 +815,34 @@ function voiceIt2(){
         main.wait2j.css('opacity','0.0');
         main.wait2j.css('display','flex');
         main.wait2j.fadeTo(500,1.0);
+      if (!main.liveness || main.type.biometricType == "voice"){
+         main.wait2j.css('opacity','0.0');
+        main.wait2j.css('display','flex');
+        main.wait2j.fadeTo(500,1.0);
         setTimeout(function(){
           main.warningOverlayj.fadeTo(350, 0.0, function(){
             main.warningOverlayj.css('display','none');
             main.destroyed = false;
           });
         },timeOut);
+       } else if (main.liveness ){
+        $('#skipButton').css('opacity','0.0');
+        $('#skipButton').css('display','initial');
+        main.wait2j.css('display','none');
+        $('#livenessText').css('display','flex');
+        $("#livenessTutorial").css('display','flex');
+        timeOut = 8500;
+        setTimeout(function(){
+        $('#skipButton').fadeTo(350,1.0);
+        },3000);
+          setTimeout(function(){
+          main.warningOverlayj.fadeTo(550, 0.0, function(){
+            main.warningOverlayj.css('display','none');
+            main.destroyed = false;
+          });
+        },timeOut);
        }
+     }
     }
 
     //create the surrounding

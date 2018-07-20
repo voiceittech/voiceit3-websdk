@@ -1,5 +1,5 @@
 function prompts () {
-  this.phrases = ["Never forget tomorrow is a new day", 
+  this.phrases = ["Never forget tomorrow is a new day",
                   "My face and my voice identify me"
                   ];
 
@@ -81,11 +81,14 @@ function prompts () {
   UNFD: "User not found. Pease make sure you have the right user ID",
   /* Liveness Prompts */
   SMILE : "Please smile broadly",
-  YAWN: "Please yawm",
-  FACE_DOW: "Please Face Down",
+  YAWN: "Please yawn broadly",
+  FACE_DOWN: "Please slightly turn your face down and back",
   BLINK : "Please blink three times",
-  FACE_LEFT : "Please turn your face to the left and back",
-  FACE_RIGHT : "Please turn your face to the right and back ",
-  LIVENESS_SUCCESS : "You've successfully passed liveness"
+  FACE_LEFT : "Please slightly turn your face to the left and back",
+  FACE_RIGHT : "Please slightly turn your face to the right and back ",
+  LIVENESS_SUCCESS : "You've successfully passed liveness",
+  LIVENESS_TIMEDOUT: "Sorry, liveness timed out. Please perform the liveness tests quickly",
+  LIVENESS_FAILED: "Sorry, liveness test failed",
+  LIVENESS_TRY_AGAIN: "test failed, please try again"
 };
 }
