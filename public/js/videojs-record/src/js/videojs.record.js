@@ -574,7 +574,7 @@ class Record extends Plugin {
             switch (this.getRecordType()) {
                 case AUDIO_ONLY:
                     // disable playback events
-                    this.surfer.setupPlaybackEvents(false);
+                    //this.surfer.setupPlaybackEvents(false);
 
                     // start/resume live audio visualization
                     this.surfer.surfer.microphone.paused = false;

@@ -67,7 +67,7 @@
       Voice
       <i class="dropdown "></i>
       <div class="menu">
-        <div class="item voice biometricButton" >Enrollment</div>
+        <div class="item voice biometricButton" id="voiceEnrollmentBtn">Enrollment</div>
         <div class="item voice biometricButton">Verification</div>
       </div>
     </div>
@@ -110,11 +110,16 @@
   <i class="close icon" id="closeButton"></i>
   <div class="ui card" id="card">
   <div class="image" id="cardOverlay">
-    <div id="warningOverlay"><img id="wait2" class="svg" src="assets/images/bars.svg"></img><span id="warnText" class="ui header">Reenrollment will delete all previous enrollments<br>Proceed?</span>
+    <div id="warningOverlay">
+      <img id="wait2" class="svg" src="assets/images/bars.svg"></img>
+      <span id="warnText" class="ui header">Reenrollment will delete all previous enrollments<br>Proceed?</span>
     <div>
         <i class="ic icon arrow circle left"></i>
-        <i class="ic icons icon arrow circle right"></i>
+        <i class="ic icons icon arrow circle right"></i>    
     </div>
+    <h4 id="livenessText">Please move closer to the camera. You'll be performing a predetermined number of liveness challanges. You'll have 2 seconds to perform each test, selected randomly from the following 5:</h4>
+<svg id="livenessTutorial" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 431.3 108.33"><defs><style>.cls-1,.cls-12,.cls-13,.cls-2{fill:#fff;}.cls-12,.cls-13,.cls-2{font-size:14px;font-family:MyriadPro-Regular, Myriad Pro;}.cls-2{letter-spacing:0.06em;}.cls-3{letter-spacing:0.1em;}.cls-4{letter-spacing:0.09em;}.cls-5{letter-spacing:0.1em;}.cls-6{letter-spacing:0.1em;}.cls-7{letter-spacing:0.09em;}.cls-8{letter-spacing:0.11em;}.cls-9{letter-spacing:0.1em;}.cls-10{letter-spacing:0.09em;}.cls-11{letter-spacing:0.11em;}.cls-12,.cls-15{letter-spacing:0.1em;}.cls-13{letter-spacing:0.03em;}.cls-14{letter-spacing:0.09em;}</style></defs><title>Asset 4</title><g id="Layer_2" data-name="Layer 2"><g id="Capa_1" data-name="Capa 1"><path class="cls-1" d="  M123.54,67.41a33,33,0,1,1,33-33A33.05,33.05,0,0,1,123.54,67.41Zm0-64a31,31,0,1,0,31,31A31,31,0,0,0,123.52,3.41Z"/><path class="cls-1" d="M130.94,51.32a1,1,0,0,1-1-1,1,1,0,0,1,1-1,11.81,11.81,0,0,0,11.8-11.8,1,1,0,0,1,2,0A13.81,13.81,0,0,1,130.94,51.32Z"/><circle class="cls-1" cx="117.63" cy="23.36" r="4.25"/><circle class="cls-1" cx="137.33" cy="18.67" r="4.25"/><path class="cls-1" d="M129.3,29.29c0-.47.13-.86.37-.89s.48.34.52.81c.5,5.5,3.26,9.75,6.16,9.49.24,0,.48.34.52.81s-.12.86-.37.88C133.11,40.7,129.88,35.72,129.3,29.29Z"/><path class="cls-1" d="M183.2,33.64a33,33,0,1,1,33,33A33,33,0,0,1,183.2,33.64Zm2,0a31,31,0,1,0,31-31A31,31,0,0,0,185.2,33.64Z"/><path class="cls-1" d="M195,36.75a1,1,0,0,1,2,0A11.83,11.83,0,0,0,208.8,48.56a1,1,0,0,1,0,2A13.83,13.83,0,0,1,195,36.75Z"/><circle class="cls-1" cx="222.1" cy="22.59" r="4.25"/><circle class="cls-1" cx="202.4" cy="17.9" r="4.25"/><path class="cls-1" d="M203.23,39.63c-.24,0-.41-.42-.36-.89s.27-.83.52-.8c2.9.26,5.65-4,6.15-9.5,0-.46.27-.83.52-.8s.41.42.37.88C209.85,35,206.62,39.93,203.23,39.63Z"/><path class="cls-1" d="M36.47,66.54a33,33,0,1,1,33-33A33.05,33.05,0,0,1,36.47,66.54Zm0-64a31,31,0,1,0,31,31A31,31,0,0,0,36.44,2.54Z"/><path class="cls-1" d="M28,55.8A1,1,0,0,1,29,54.1a11.82,11.82,0,0,0,16.27-3.76,1,1,0,0,1,1.69,1A13.81,13.81,0,0,1,28,55.8Z"/><circle class="cls-1" cx="27.3" cy="31.8" r="4.25"/><circle class="cls-1" cx="47.55" cy="31.79" r="4.25"/><path class="cls-1" d="M32.09,49.87c-.3,0-.54-.45-.53-1s.25-1,.56-1c3.58,0,6.55-5.19,6.64-11.66,0-.55.26-1,.56-1s.54.45.54,1C39.76,43.8,36.28,49.92,32.09,49.87Z"/><path class="cls-1" d="M309.29,66.64a33,33,0,1,1,33-33A33.05,33.05,0,0,1,309.29,66.64Zm0-64a31,31,0,1,0,31,31A31,31,0,0,0,309.27,2.64Z"/><circle class="cls-1" cx="299.99" cy="26.64" r="4.25"/><circle class="cls-1" cx="320.24" cy="26.63" r="4.25"/><path class="cls-1" d="M310.12,54.6c6.56,0,12.11-6.07,14.37-14.29H295.74C298,48.53,303.57,54.6,310.12,54.6Z"/><path class="cls-1" d="M398.31,66a33,33,0,1,1,33-33A33,33,0,0,1,398.31,66Zm0-64a31,31,0,1,0,31,31A31,31,0,0,0,398.29,2Z"/><circle class="cls-1" cx="389.01" cy="26" r="4.25"/><circle class="cls-1" cx="409.26" cy="26" r="4.25"/><ellipse class="cls-1" cx="398.31" cy="45.06" rx="8.49" ry="12.06"/></g></g></svg>
+      <a id="skipButton" class="ui basic label">Skip</a>
     </div>
     <div id="overlayHolder">
       <div id="overlay2"></div>
@@ -133,8 +138,6 @@
         </mask>
       <g mask="url(#mask1)">
       <circle id="testSound" cx="230" cy="180" r="130" fill="#ffffff"/>
-      <circle id="testSound2" cx="230" cy="180" r="130" fill="#ffffff"/>
-      <circle id="testSound3" cx="230" cy="180" r="130" fill="#ffffff"/>
       </g>
       </svg>
     </div>
@@ -168,6 +171,7 @@
 <video id="video2" class="video-js vjs-default-skin"></video>
 <video id="video3" class="video-js vjs-default-skin"></video>
 <audio id="myAudio" class="video-js vjs-default-skin"></audio>
+<audio id="myAudio2" class="video-js vjs-default-skin"></audio>
 <!-- <video id="myVideo3" class="video-js" width="620" height="420"></video> -->
 <video id="myVideo"></video>
 
@@ -179,4 +183,9 @@
 <script src="js/liveness.js"></script>
 <script src="js/index.js"></script>
 <link rel="stylesheet" type="text/css" href="css/style.css"/>
+<!-- <script>
+  $("#voiceEnrollmentBtn").click(function(){
+     window.VoiceIt2.encapsulatedVoiceEnrollment();
+  });
+</script> -->
 </body>

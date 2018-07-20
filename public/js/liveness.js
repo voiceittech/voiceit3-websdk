@@ -1,11 +1,13 @@
 var brfv4Example = { stats: {} };
 var data;
 var testing = 0;
+var livPrompts = new prompts();
+var animationID;
+var Data = [];
 
 var brfv4BaseURL = "js/brf-js/libs/brf_wasm/";
 var support	= (typeof WebAssembly === 'object');
 var oldCircles = [];
-var myPropmpts = new prompts();
 
 	if(support) {
 		function testSafariWebAssemblyBug() {
@@ -27,7 +29,7 @@ var script	= document.createElement("script");
 		script.setAttribute("src", brfv4BaseURL + "BRFv4_JS_TK190218_v4.0.5_trial.js");
 		document.getElementsByTagName("head")[0].appendChild(script);
 
-	function liveness() {
+	function liveness(type) {
 		var socket = io.connect('http://localhost:8000',{reconnection:true, reconnectionDelay: 1, randomizationFactor: 0, reconnectionDelayMax: 1});
 
 		var webcam			= document.getElementById("myVideo");		// our webcam video
@@ -50,8 +52,8 @@ var script	= document.createElement("script");
 			console.log("startCamera");
 
       navigator.mediaDevices.getUserMedia({ audio: false, video: {
-				width: { min: 320, ideal: 320, max: 320 },
-				height: { min: 240, ideal: 240, max: 240 }
+				width: { min: 640, ideal: 640, max: 640 },
+				height: { min: 480, ideal: 480, max: 480 }
 			}})
       .then(onStreamFetched).catch(function (err) { console.log("No camera available: " + err); });
 
@@ -86,7 +88,7 @@ var script	= document.createElement("script");
 				if(imageDataCtx === null) {
 					onStreamDimensionsAvailable();
 				} else {
-					trackFaces();
+				//	trackFaces();
 				}
 			}
 		}
@@ -113,20 +115,87 @@ var script	= document.createElement("script");
 
 			//Give option to select number of liveness tests?
 			var numOfTests = 5;
-			var startTracking;
 
-				socket.emit('initiate', numOfTests);
 				socket.on('initiated', function(s){
 					test = s;
 					createLivenessCircle();
-					startTracking = new trackFaces();
+					trackFaces();
 					drawCircle(test);
 				});
-				socket.on('test', function(s){
-					console.log(s);
-					test = s;
+				socket.on('test', function(test){
 					redrawCircle(test);
 				});
+				socket.on('test2', function(test){
+					setTimeout(function(){
+					$('#overlay2').fadeTo(300,0.3);	
+					},300); 
+					$('#circle').css('display','block');
+					redrawCircle(test);
+				});
+				socket.on('completeLiveness', function(s){
+					if (s == 5){
+						window.cancelAnimationFrame(animationID);
+					}
+					else if (s == 4){
+						//show waiting for response, passed liveness tests
+						$('#circle').circleProgress({value: oldCircles[0], fill: {color: "#FBC132"}, animation: false});
+						$('#circle > canvas').css('transform', oldCircles[1]);
+						setTimeout(function(){
+							$('#circle').fadeTo(200,0.0,function(){
+								console.log('fading circleee');
+								$('#circle').css('display','none');
+							});
+						},300);
+						$('#overlay2').fadeTo(300,1.0);
+						$('#header').fadeTo(300,0,function(){
+							$('#header').css('display','none');
+							$('#wait').css('display','inline-block');
+							$('#wait').css('opacity','0');
+							$('#wait').fadeTo(300,1.0);
+						});
+						window.cancelAnimationFrame(animationID);
+					} else if (s == 3){
+						//passed liveness and face identification
+								$('#wait').fadeTo(300,0.0,function(){
+									$(this).css('display','none');
+									$('#header').css('display','inline-block');
+									$('#header').fadeTo(300,1.0);
+									$('#header').text(livPrompts.getPrompt("LIVENESS_SUCCESS"));
+								});
+						window.cancelAnimationFrame(animationID);
+					} else if (s == 2){
+						//failed face, but passed liveness
+						$('#wait').fadeTo(300,0.0,function(){
+							$(this).css('display','none');
+							$('#header').css('display','inline-block');
+							$('#header').fadeTo(300,1.0);
+							$('#header').text(livPrompts.getPrompt("LIVENESS_FAILED"));
+						});
+						window.cancelAnimationFrame(animationID);
+					}  else if (s == 1) {
+						//failed, give more tries
+						$('#circle').fadeTo(300,0.0,function(){
+							$(this).css('display','none');
+						});
+						$('#overlay2').fadeTo(300,1.0);
+						$('#header').fadeTo(300,0,function(){
+							$(this).text(livPrompts.getPrompt("LIVENESS_TRY_AGAIN"));
+							$('#header').fadeTo(300,1.0);
+						});
+					} 
+					else if (s == 0){
+						//failed liveness
+						$('#circle').fadeTo(300,0.0,function(){
+							$(this).css('display','none');
+						});
+						$('#overlay2').fadeTo(300,1.0);
+						$('#header').fadeTo(300,0,function(){
+							$(this).text(livPrompts.getPrompt("LIVENESS_FAILED"));
+							$('#header').fadeTo(300,1.0);
+						});
+						window.cancelAnimationFrame(animationID);
+					}
+	      });
 		}
 
 	function trackFaces() {
@@ -138,6 +207,7 @@ var script	= document.createElement("script");
 			imageDataCtx.setTransform( 1.0, 0, 0, 1, 0, 0); // unmirrored for draw of results
 			data = imageDataCtx.getImageData(0,0, resolution.width, resolution.height).data;
 			brfManager.update(data);
+			// Data.push(data);
 
 	 var faces = brfManager.getFaces();
       var face = faces[0];
@@ -147,7 +217,7 @@ var script	= document.createElement("script");
 					socket.emit('data', face);
 			}
 			if (stats.end) stats.end();
-			requestAnimationFrame(trackFaces);
+			animationID = requestAnimationFrame(trackFaces);
 		}
 
 	function createLivenessCircle() {
@@ -162,51 +232,76 @@ var script	= document.createElement("script");
 	 lineCap: "round",
 	 emptyFill: 'rgba(0,0,0,0)',
 	 animation: false
-	});	}
+	});
+}
 
 
 	function drawCircle(int){
 	switch (int) {
 		case 0:
+		$('#header').css('opacity','0.0');
+		$('#header').text(livPrompts.getPrompt('FACE_DOWN'));
+		$('#header').fadeTo(500,1.0);
 		$('#circle').css('opacity','0.0');
 		$('#circle').circleProgress({value: 0.25, fill: {color: "#ffffff"}, animation: false});
 		$('#circle > canvas').css('transform', 'rotate(0deg)');
-		$('#circle').fadeTo(200,1.0);
 		oldCircles[0] = 0.25;
 		oldCircles[1] = 'rotate(0deg)';
 		break;
 		case 1:
+		$('#header').css('opacity','0.0');
+		$('#header').text(livPrompts.getPrompt('FACE_RIGHT'));
+		$('#header').fadeTo(500,1.0);
 		$('#circle').css('opacity','0.0');
 		$('#circle').circleProgress({value: 0.25, fill: {color: "#ffffff"}, animation: false});
 		$('#circle > canvas').css('transform', 'rotate(-90deg)');
-		$('#circle').fadeTo(200,1.0);
 		oldCircles[0] = 0.25;
 		oldCircles[1] = 'rotate(-90deg)';
 		break;
 		case 2:
+		$('#header').css('opacity','0.0');
+		$('#header').text(livPrompts.getPrompt('FACE_LEFT'));
+		$('#header').fadeTo(500,1.0);
 		$('#circle').css('opacity','0.0');
 		$('#circle').circleProgress({value: 0.25, fill: {color: "#ffffff"}, animation: false});
 		$('#circle > canvas').css('transform', 'rotate(90deg)');
-		$('#circle').fadeTo(200,1.0);
 		oldCircles[0] = 0.25;
 		oldCircles[1] = 'rotate(90deg)';
 		break;
-		default:
+		case 3:
+		$('#header').css('opacity','0.0');
+		$('#header').text(livPrompts.getPrompt('SMILE'));
+		$('#header').fadeTo(500,1.0);
 		$('#circle').css('opacity','0.0');
 		$('#circle').circleProgress({value: 1.0, fill: {color: "#ffffff"}, animation: false});
 		$('#circle > canvas').css('transform', 'rotate(0deg)');
-		$('#circle').fadeTo(200,1.0);
 		oldCircles[0] = 1.0;
 		oldCircles[1] = 'rotate(0deg)';
+		break;
+		case 4:
+		$('#header').css('opacity','0.0');
+		$('#header').text(livPrompts.getPrompt('YAWN'));
+		$('#header').fadeTo(500,1.0);
+		$('#circle').css('opacity','0.0');
+		$('#circle').circleProgress({value: 1.0, fill: {color: "#ffffff"}, animation: false});
+		$('#circle > canvas').css('transform', 'rotate(0deg)');
+		oldCircles[0] = 1.0;
+		oldCircles[1] = 'rotate(0deg)';
+		break;
+		default:
 	}
 }
 
 	function redrawCircle(int){
 		switch (int) {
 			case 0:
-			$('#circle').circleProgress({value: oldCircles[0], fill: {color: "#a50053"}, animation: false});
+			$('#circle').circleProgress({value: oldCircles[0], fill: {color: "#FBC132"}, animation: false});
 			$('#circle > canvas').css('transform', oldCircles[1]);
 			setTimeout(function(){
+				$('#header').fadeTo(250,0.0,function(){
+				$('#header').text(livPrompts.getPrompt('FACE_DOWN'));
+				});
+				$('#header').fadeTo(500,1.0);
 				$('#circle').fadeTo(200,0.0,function(){
 				$('#circle').circleProgress({value: 0.25, fill: {color: "#ffffff"}, animation: false});
 				$('#circle > canvas').css('transform', 'rotate(0deg)');
@@ -215,12 +310,16 @@ var script	= document.createElement("script");
 				oldCircles[1] = 'rotate(0deg)';
 				$('#circle').fadeTo(200,1.0);
 				});
-			},200);
+			},300);
 			break;
 			case 1:
-			$('#circle').circleProgress({value: oldCircles[0], fill: {color: "#a50053"}, animation: false});
+			$('#circle').circleProgress({value: oldCircles[0], fill: {color: "#FBC132"}, animation: false});
 			$('#circle > canvas').css('transform', oldCircles[1]);
 			setTimeout(function(){
+				$('#header').fadeTo(250,0.0,function(){
+					$('#header').text(livPrompts.getPrompt('FACE_RIGHT'));
+				});
+				$('#header').fadeTo(500,1.0);
 				$('#circle').fadeTo(200,0.0, function(){
 				$('#circle').circleProgress({value: 0.25, fill: {color: "#ffffff"}, animation: false});
 				$('#circle > canvas').css('transform', 'rotate(-90deg)');
@@ -228,12 +327,16 @@ var script	= document.createElement("script");
 				oldCircles[1] = 'rotate(-90deg)';
 				$('#circle').fadeTo(200,1.0);
 				});
-			},200);
+			},300);
 			break;
 			case 2:
-			$('#circle').circleProgress({value: oldCircles[0], fill: {color: "#a50053"}, animation: false});
+			$('#circle').circleProgress({value: oldCircles[0], fill: {color: "#FBC132"}, animation: false});
 			$('#circle > canvas').css('transform', oldCircles[1]);
 			setTimeout(function(){
+				$('#header').fadeTo(250,0.0,function(){
+					$('#header').text(livPrompts.getPrompt('FACE_LEFT'));
+				});
+				$('#header').fadeTo(500,1.0);
 			$('#circle').fadeTo(200,0.0, function(){
 				$('#circle').circleProgress({value: 0.25, fill: {color: "#ffffff"}, animation: false});
 				$('#circle > canvas').css('transform', 'rotate(90deg)');
@@ -241,19 +344,41 @@ var script	= document.createElement("script");
 				oldCircles[1] = 'rotate(90deg)';
 				$('#circle').fadeTo(200,1.0);
 			});
-			},200);
+			},300);
 			break;
-			default:
-			$('#circle').circleProgress({value: oldCircles[0], fill: {color: "#a50053"}, animation: false});
+			case 3:
+			$('#circle').circleProgress({value: oldCircles[0], fill: {color: "#FBC132"}, animation: false});
 			$('#circle > canvas').css('transform', oldCircles[1]);
 			setTimeout(function(){
+				$('#header').fadeTo(250,0.0,function(){
+						$('#header').text(livPrompts.getPrompt('SMILE'));
+				});
+				$('#header').fadeTo(500,1.0);
 			$('#circle').fadeTo(200,0.0, function(){
 				$('#circle').circleProgress({value: 1.0, fill: {color: "#ffffff"}, animation: false});
 				oldCircles[0] = 1.0;
 				oldCircles[1] = 'rotate(0deg)';
 				$('#circle').fadeTo(200,1.0);
 			});
-			},200);
+			},300);
+			break;
+			case 4:
+			$('#circle').circleProgress({value: oldCircles[0], fill: {color: "#FBC132"}, animation: false});
+			$('#circle > canvas').css('transform', oldCircles[1]);
+			setTimeout(function(){
+				$('#header').fadeTo(250,0.0,function(){
+				$('#header').text(livPrompts.getPrompt('YAWN'));
+				});
+				$('#header').fadeTo(500,1.0);
+			$('#circle').fadeTo(200,0.0, function(){
+				$('#circle').circleProgress({value: 1.0, fill: {color: "#ffffff"}, animation: false});
+				oldCircles[0] = 1.0;
+				oldCircles[1] = 'rotate(0deg)';
+				$('#circle').fadeTo(200,1.0);
+			});
+			},300);
+			break;
+			default:
 		}
 	}
 }

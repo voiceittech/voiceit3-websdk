@@ -14,7 +14,7 @@
     "express": "^4.16.3",
     "fluent-ffmpeg": "^2.1.2",
     "socket.io": "^2.1.1",
-    "voiceit2-nodejs": "^1.0.6",
+    "unirest": "^0.5.1",
     "ws": "^5.2.1"
   }
 }

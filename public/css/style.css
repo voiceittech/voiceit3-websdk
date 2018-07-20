@@ -15,6 +15,29 @@ body > .grid {
   max-width: 450px;
 }
 
+#livenessTutorial {
+  width: 70%;
+}
+
+#skipButton{
+  position: absolute;
+  bottom: 0px;
+}
+
+#livenessText{
+  margin-bottom: 7%;
+  font-weight: normal !important;
+  max-width: 80%;
+  color: white;
+}
+
+.cls-2, .cls-12, .cls-13 {
+  font-family: inherit !important;
+  font-size: 8px !important;
+  letter-spacing: 1px !important;
+}
+
+
 #warnText {
   padding-top: 5rem;
   font-size: large;
@@ -136,15 +159,6 @@ display: none !important;
    opacity:1.0 !important;
    z-index: 13;
  }
- #testSound2{
-   opacity:1.0 !important;
-   z-index: 12;
- }
- #testSound3{
-   opacity:1.0 !important;
-   z-index: 11;
- }
-
  .ui.card {
    padding-top: 10%;
    background-color: black;

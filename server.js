@@ -1,4 +1,4 @@
-let voiceit2 = require('voiceit2-nodejs');
+let voiceit2 = require('./js/voiceit-client');
 let config = require('./config.js');
 let myVoiceIt = new voiceit2(config.API_KEY, config.API_TOKEN);
 let fs = require('fs');
@@ -12,11 +12,13 @@ var ffmpeg = require('fluent-ffmpeg');
 
 //test stuff
 var tests = [0,1,2,3,4];
-var testNum;
 var currTest;
 var time;
 var testIndex = 0;
-var passed = false;
+var passed = {
+  test: -1,
+  value: false
+};
 var oldTest = -1;
 var passedTests = 0;
 var oldVertices = [];
@@ -25,6 +27,19 @@ var face;
 var timeStampId;
 var timeStamps = [];
 var successTimeStamps = [];
+var numTests;
+var testTimer;
+var currTime;
+var type;
+var livTries = 0;
+const MAX_TRIES = 2;
+var doingLiveness = false;
+var checkForFaceStraight = false;
+var verificationTries = 0;
+const MAX_LIV_VER_TRIES = 2;
+var livFaceRecord;
+var livVoiceRecord;
+
 
 //counters
 var turnedRightCounter = 0;
@@ -35,6 +50,7 @@ var facedDownCounter = 0;
 
 //start timestamps for video
 function initTimeStamps(){
+  timeStamps = [];
   console.log('timestamps started');
     timeStampId = setInterval(function(){
     var time = Date.now();
@@ -56,7 +72,7 @@ function Point(x,y){
 
 function stampToVidSeconds(timeStamps, allTimestamps){
   for (var i = 0; i < successTimeStamps.length; i++){
-    timeStamps[i] = (allTimestamps[allTimestamps.length-1] - timeStamps[i])/1000;
+    timeStamps[i] = (timeStamps[i] - allTimestamps[0])/1000;
   }
 }
 
@@ -94,39 +110,106 @@ function doLiveness(cas, a){
       case 0:
       var face = a.rotationX;
       var timeNew = new Date().getTime();
-      if ((timeNew - time) > 500){
+      if ((timeNew - testTimer) > 700){
         if (face >= 0.25) {
           console.log("You faced down");
           facedDownCounter++;
           if(facedDownCounter > 1){
-            passed = true;
-            }
+            passed.test = 0;
+            passed.value = true;
+            testTimer = Date.now();
+          }
+        } else if (a.rotationY < -0.40 || a.rotationY > 0.40){
+            livTries++;
+            if (livTries > MAX_TRIES){
+          io.emit('stopRecording',1);
+          io.emit('completeLiveness',0); 
+          doingLiveness = false;    
+          } else {
+          doingLiveness = false;
+          io.emit('completeLiveness',1);
+          testIndex += 1;
+          
+          if (testIndex > 4){
+          testIndex = 0;
+          }
+         currTest = tests[testIndex];
+         setTimeout(function(){
+            io.emit('test2', currTest);
+           doingLiveness = true;
+           testTimer = Date.now();
+          },2000);
         }
+      } 
       }
       break;
       case 1:
       var face = a.rotationY;
       var timeNew = new Date().getTime();
-      if ((timeNew - time) > 500){
-      if (face < -0.4) {
+      if ((timeNew - testTimer) > 700){
+      if (face < -0.40) {
         console.log("you turned right!");
         turnedRightCounter++;
         if(turnedRightCounter > 1){
-          passed = true;
+          passed.test = 1;
+          passed.value = true;
+          testTimer = Date.now();
           }
+        } else if (a.rotationY > 0.40){
+            livTries++;
+            if (livTries > MAX_TRIES){
+          io.emit('completeLiveness',0); 
+          doingLiveness = false;    
+          } else {
+          doingLiveness = false;
+          io.emit('completeLiveness',1);
+          testIndex += 1;
+          
+          if (testIndex > 4){
+          testIndex = 0;
+          }
+         currTest = tests[testIndex];
+         setTimeout(function(){
+            io.emit('test2', currTest);
+           doingLiveness = true;
+           testTimer = Date.now();
+          },2000);
         }
+      } 
       }
       break;
       case 2:
       var face = a.rotationY;
       var timeNew = new Date().getTime();
-      if ((timeNew - time) > 500){
-      if (face > 0.4) {
+      if ((timeNew - testTimer) > 700){
+      if (face > 0.40) {
           console.log("you turned left!");
           turnedLeftCounter++;
           if(turnedLeftCounter > 1){
-            passed = true;
+            passed.test = 2;
+            passed.value = true;
+            testTimer = Date.now();
             }
+      } else if (a.rotationY < - 0.40){
+            livTries++;
+            if (livTries > MAX_TRIES){
+          io.emit('completeLiveness',0); 
+          doingLiveness = false;    
+          } else {
+          doingLiveness = false;
+          io.emit('completeLiveness',1);
+          testIndex += 1;
+  
+          if (testIndex > 4){
+          testIndex = 0;
+          }
+         currTest = tests[testIndex];
+         setTimeout(function(){
+            io.emit('test2', currTest);
+           doingLiveness = true;
+           testTimer = Date.now();
+          },2000);
+        }
       }
       }
       break;
@@ -152,13 +235,14 @@ function doLiveness(cas, a){
       if(smileFactor > 1.0) { smileFactor = 1.0; }
 
       var timeNew = new Date().getTime();
-      if ((timeNew - time) > 500){
-      if(smileFactor > 0.50){
+      if ((timeNew - testTimer) > 700){
+      if(smileFactor > 0.55){
         console.log("You smiled!");
         smileCounter++;
         if(smileCounter > 1){
-          time = new Date().getTime();
-          passed = true;
+          passed.test = 3;
+          passed.value = true;
+          testTimer = Date.now();
           }
       }
       }
@@ -188,13 +272,15 @@ function doLiveness(cas, a){
       if(yawnFactor > 1.0) { yawnFactor = 1.0; }
 
       var timeNew = new Date().getTime();
-      if ((timeNew - time) > 500){
-      if (yawnFactor > 0.25){
+      if ((timeNew - testTimer) > 500){
+      if (yawnFactor > 0.4){
         console.log("you yawned!");
         yawnCounter++;
         if(yawnCounter > 1){
           time = new Date().getTime();
-          passed = true;
+          passed.test = 4;
+          passed.value = true;
+          testTimer = Date.now();
           }
       }
       }
@@ -202,12 +288,12 @@ function doLiveness(cas, a){
       //blink detection is really bad because laptop webcams are so far away
 
       // case 5:
-      //   if((v[0] > 12 && (v[1] > 0.4 || v[2] > 0.4))) {
-      //   		console.log("you blinked!");
+      //   if((v[0] > 12 && (v[1] > 0.59 || v[2] > 0.59))) {
+      //      console.log("you blinked!");
       //       passed = true;
 
-      //   	}
-      //   	storeVertices(v);
+      //    }
+      //    storeVertices(v);
       default:
     }
   }
@@ -234,6 +320,7 @@ function handleClientRequest(options) {
         });
       break;
       case "voiceEnrollment":
+      console.log(config.phrase);
       fs.appendFileSync("audio.wav", new Buffer.alloc(options.recording.length,options.recording));
       myVoiceIt.createVoiceEnrollment({
         userId: config.userId,
@@ -343,70 +430,233 @@ function handleClientRequest(options) {
   };
 
 //takes the picture upon liveness completion and makes liveness-related API calls
-function handleLivenessCompletion(recording){
-    clearInterval(timeStampId);
+function handleFaceLivenessCompletion(data){
     stampToVidSeconds(successTimeStamps,timeStamps);
-    fs.appendFileSync("vid.mov", new Buffer.alloc(recording.length,recording));
+    console.log(successTimeStamps);
+    if (type == "face"){
+          fs.appendFileSync("vid.mov", new Buffer.alloc(data.recording.length,data.recording));
+    } else {
+    fs.appendFileSync("vid.mov", new Buffer.alloc(livFaceRecord.length,livFaceRecord));
+  }
+
     var proc = new ffmpeg('vid.mov')
     .on('end', function(stdout, stderr) {
-        fs.unlink('vid.mov', (err) => {
-        if (err) throw err;
-         });
-        fs.unlink('./test_1.png', (err) => {
-        if (err) throw err;
-        });
-        fs.unlink('./test_2.png', (err) => {
-          if (err) throw err;
-        });
-        fs.unlink('./test_3.png', (err) => {
-          if (err) throw err;
-        });
+         if (type == "face"){
+      doLivenessFaceCalls(data.recording);
+        } else {
+      doLivenessFaceCalls(data);
+        }
       }).takeScreenshots({
-      count: 3,
-      filename:'test.png',
+      count: numTests+2,
+      filename:'pic.png',
       timemarks: successTimeStamps //number of seconds
       }, './', function(err) {
       });
+  }
+
+  function handleVidLivenessCompletion(data){
+    if (data.kind == "face"){
+      livFaceRecord = data.recording;
+      console.log("face data received");
+    } else if (data.kind == "voice"){
+      handleFaceLivenessCompletion(data);
+    }
+
+  }
+
+  function doLivenessFaceCalls(data){
+    var responses = successTimeStamps.length;
+    var passes = 0;
+    var fails = 0;
+    var curr;
+    for (var i = 1; i <= successTimeStamps.length; i++){
+      myVoiceIt.faceVerificationLiv({
+        userId: config.userId,
+        contentLanguage : config.contentLanguage,
+        photo: "pic_"+i+".png"
+      },(jsonResponse) => {
+        curr++
+        console.log(jsonResponse);
+        var obj = {response: jsonResponse,
+           type: type };
+        if (jsonResponse.responseCode == "SUCC"){
+          passes++;
+            if (passes >= successTimeStamps.length/2){
+                  if (data.kind == "face"){
+                  io.emit('completeLiveness', 3);
+                } else  {
+                  doLivenessVidCalls(data.recording);
+                }
+           }
+        } else {
+          fails++;
+          if (fails >= successTimeStamps.length/2){
+              io.emit('completeLiveness', 2);
+          }
+        }
+        if (curr >= responses){
+            removeFiles(responses);
+        }
+        });
+        }
+  }
+
+  function doLivenessVidCalls(recording){
+      fs.appendFileSync("vid2.mp4", new Buffer.alloc(recording.length,recording));
+        ffmpeg("vid2.mp4")
+        .output("audio.wav")
+        .on('end', function() {                    
+            
+          myVoiceIt.voiceVerification({
+        userId: config.userId,
+        contentLanguage : config.contentLanguage,
+        audioFilePath : "audio.wav",
+        phrase: config.phrase
+        },(jsonResponse)=>{
+        console.log(jsonResponse);
+        var obj = {response: jsonResponse,
+           type: type };
+        if (jsonResponse.responseCode == "SUCC"){
+          io.emit("completeLiveness",3);
+        } else {
+          io.emit("completeLiveness",2);
+        }
+          fs.unlink('vid2.mp4', (err) => {
+          if (err) throw err;
+           });
+          fs.unlink('audio.wav', (err) => {
+          if (err) throw err;
+           });
+        });
+
+        }).on('error', function(e){
+            console.log('error: ', e.code, e.msg);
+        }).run();
+
+
+  }
+
+  function removeFiles(num){
+    for (var i = 1; i <= num; i++){
+    fs.unlink("./pic_"+i+".png", (err) => {
+      if (err) throw err;
+      });
+    }
+    fs.unlink("./vid.mov", (err) => {
+      if (err) throw err;
+     });
   }
 
 
 //Handle client-server communication
 io.on('connection', function(socket){
   //initiate lvieness event from cleint
-  socket.on('initiate', function(count){
+  socket.on('initiate', function(data){
+    livTries  = 0;
+    type = data.type;
+    testTimer = Date.now();
+    passedTests = 0;
     tests = shuffle(tests);
-    testNum = count;
+    numTests = config.numLivTests;
     currTest = tests[testIndex];
-    socket.emit('initiated', currTest);
+    successTimeStamps = [];
+    doingLiveness = true;
+    io.emit('initiated', currTest);
   });
 
   //date event from client
   socket.on('data', function(faceObject) {
+    if (doingLiveness){
+    currTime = Date.now();
+    //liveness test timed out
+    if ((currTime - testTimer) > 3000){
+      livTries++;
+      if (livTries > MAX_TRIES){
+      socket.emit('completeLiveness',0); 
+      doingLiveness = false;    
+      } else {
+      doingLiveness = false;
+      socket.emit('completeLiveness',1);
+      testIndex += 1;
+      
+      if (testIndex > 4){
+      testIndex = 0;
+      }
+      currTest = tests[testIndex];
+      setTimeout(function(){
+        socket.emit('test2', currTest);
+        doingLiveness = true;
+        testTimer = Date.now();
+      },2000);
+      }
+    }
     face = faceObject;
     if (oldTest != currTest){
       console.log("testing for: " + currTest);
       oldTest = currTest;
     }
     doLiveness(currTest,face);
-    if (passed){
-      if (currTest !== 4 && currTest !== 3){
-        successTimeStamps.push(timeStamps[timeStamps.length-1]);
-      } else {
-        //add delay for right, left, face-down
-        successTimeStamps.push(timeStamps[timeStamps.length-1]+1);
-      }
-      passedTests++;
-      passed = false;
-      resetCounters();
+    if (passed.value && !checkForFaceStraight){
       testIndex += 1;
-      time = new Date().getTime();
-      //debugging only
       if (testIndex > 4){
       testIndex = 0;
       }
       currTest = tests[testIndex];
       socket.emit('test', currTest);
+      if (currTest < 3){
+        checkForFaceStraight = true;
+      } else if (currTest >= 3){
+        if (successTimeStamps.length < numTests){
+        successTimeStamps.push(timeStamps[timeStamps.length-1]);
+        }
+      passedTests++;
+      if (passedTests >= numTests){
+        successTimeStamps[successTimeStamps.length-1] = successTimeStamps[successTimeStamps.length-1] - 100;
+        console.log("stop recordingg");
+        passed.value = false;
+        doingLiveness = false;
+        io.emit('stopRecording',1);
+        if (type == "video"){
+          setTimeout(function(){
+          io.emit('completeLiveness',5);
+          },100);
+        } else {
+          io.emit('completeLiveness',4);
+        } 
+      } else {
+      passed.value = false;
+      resetCounters();
+      testTimer = new Date().getTime();
     }
+    }
+    }
+    //wait for face back 
+    if (face.rotationY < 0.2 && face.rotationY > -0.2 && checkForFaceStraight){
+        if (successTimeStamps.length < numTests){
+        successTimeStamps.push(timeStamps[timeStamps.length-1]);
+        }
+        passedTests++
+        if (passedTests >= numTests){
+          console.log("stop recordingg");
+        passed.value = false;
+        doingLiveness = false;
+        io.emit('stopRecording',1);
+        if (type == "video"){
+          console.log("continuing liveness");
+          setTimeout(function(){
+          io.emit('completeLiveness',5);
+          },100);
+        } else {
+          io.emit('completeLiveness',4);
+        }
+      } else {
+      passed.value = false;
+      resetCounters();
+      testTimer = new Date().getTime();
+    }
+      checkForFaceStraight = false;
+      }
+  }
   });
 
   //Api request from client
@@ -416,8 +666,17 @@ io.on('connection', function(socket){
   });
 
   //recorded data from client
-  socket.on('recording', function(recording){
-    handleLivenessCompletion(recording);
+  socket.on('recording', function(data){
+    data.recording = data.recording.video;
+    if (data.kind !== "voice"){
+    clearInterval(timeStampId);
+    }
+    console.log(data.recording);
+      if (type == "face"){
+          handleFaceLivenessCompletion(data);
+      } else if (type == "video") {
+         handleVidLivenessCompletion(data);
+    }
   });
 
   //timestamps of the recording

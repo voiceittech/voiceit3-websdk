@@ -3,5 +3,6 @@ module.exports = {
   API_TOKEN: process.env.VOICEIT_TWO_API_TOKEN ? process.env.VOICEIT_TWO_API_TOKEN : 'API_TOKEN_HERE',
   userId: "usr_9d2bffcd2540450f9c9e75f393ebe876",
   contentLanguage: "en-US",
-  phrase: "Never forget tomorrow is a new day"
+  phrase: "Never forget tomorrow is a new day",
+  numLivTests: 3
 }
