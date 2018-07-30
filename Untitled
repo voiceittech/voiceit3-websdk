@@ -1,0 +1,410 @@
+var data = [{
+  "attributes": {
+    "class": "ui modal",
+    "id": "voiceItModal"
+  },
+  "nodeName": "div",
+  "parent": "body"
+}, {
+  "attributes": {
+    "class": "close icon",
+    "id": "closeButton"
+  },
+  "nodeName": "i",
+  "parent": "#voiceItModal"
+}, {
+  "attributes": {
+    "class": "ui card",
+    "id": "card"
+  },
+  "nodeName": "div",
+  "parent": "#voiceItModal"
+}, {
+  "attributes": {
+    "class": "image",
+    "id": "cardOverlay"
+  },
+  "nodeName": "div",
+  "parent": "#card"
+}, {
+  "attributes": {
+    "id": "waveform",
+    "width": "460",
+    "height": "242"
+  },
+  "nodeName": "canvas",
+  "parent": "#card"
+}, {
+  "attributes": {
+    "class": "content",
+    "id": "content"
+  },
+  "nodeName": "div",
+  "parent": "#card"
+}, {
+  "attributes": {
+    "class": "extra content",
+    "id": "extra"
+  },
+  "nodeName": "div",
+  "parent": "#card"
+}, {
+  "attributes": {
+    "id": "warningOverlay"
+  },
+  "nodeName": "div",
+  "parent": "#cardOverlay"
+}, {
+  "attributes": {
+    "id": "overlayHolder"
+  },
+  "nodeName": "div",
+  "parent": "#cardOverlay"
+}, {
+  "attributes": {
+    "id": "videoLiveness",
+    "autoplay": "",
+    "playsinline": ""
+  },
+  "nodeName": "video",
+  "parent": "#cardOverlay"
+}, {
+  "attributes": {
+    "id": "headerA",
+    "class": "header"
+  },
+  "nodeName": "a",
+  "parent": "#content"
+}, {
+  "attributes": {
+    "id": "powered-by",
+    "src": "assets/images/powered-by.png"
+  },
+  "nodeName": "img",
+  "parent": "#extra"
+}, {
+  "attributes": {
+    "id": "wait2",
+    "class": "svg",
+    "src": "assets/images/bars.svg"
+  },
+  "nodeName": "img",
+  "parent": "#warningOverlay"
+}, {
+  "attributes": {
+    "id": "warnText",
+    "class": "ui header"
+  },
+  "nodeName": "span",
+  "parent": "#warningOverlay",
+  "text": "Reenrollment will delete all previous enrollments. \n Proceed?"
+}, {
+  "attributes": {
+    "id": "iconHolder"
+  },
+  "nodeName": "div",
+  "parent": "#warningOverlay"
+}, {
+  "attributes": {
+    "id": "livenessText"
+  },
+  "nodeName": "h4",
+  "parent": "#warningOverlay",
+  "text": "Please move closer to the camera. You'll be performing a predetermined number of liveness challanges. You'll have 2 seconds to perform each test, selected randomly from the following 5:"
+}, {
+  "attributes": {
+    "id": "livenessTutorial",
+    "src": "assets/images/livenessTutorial.svg"
+  },
+  "nodeName": "img",
+  "parent": "#warningOverlay"
+}, {
+  "attributes": {
+    "id": "skipButton",
+    "class": "ui basic label"
+  },
+  "nodeName": "a",
+  "parent": "#warningOverlay",
+  "text": "Skip"
+}, {
+  "attributes": {
+    "id": "overlay2"
+  },
+  "nodeName": "div",
+  "parent": "#overlayHolder"
+}, {
+  "attributes": {
+    "width": "460",
+    "height": "345",
+    "id": "cv"
+  },
+  "nodeName": "canvas",
+  "parent": "#overlayHolder"
+}, {
+  "attributes": {
+    "id": "readyButton",
+    "class": "small ui customButton inverted basic button"
+  },
+  "nodeName": "button",
+  "parent": "#overlayHolder",
+  "text": "Ready?"
+}, {
+  "attributes": {
+    "id": "circle"
+  },
+  "nodeName": "div",
+  "parent": "#overlayHolder"
+}, {
+  "attributes": {
+    "id": "imageData"
+  },
+  "nodeName": "canvas",
+  "parent": "#overlayHolder"
+}, {
+  "attributes": {
+    "height": "460",
+    "width": "465",
+    "id": "videoCircle"
+  },
+  "nodeName": "svg",
+  "parent": "#overlayHolder"
+}, {
+  "attributes": {
+    "id": "header"
+  },
+  "nodeName": "span",
+  "parent": "#headerA"
+}, {
+  "attributes": {
+    "id": "wait",
+    "class": "svg",
+    "src": "assets/images/bars.svg"
+  },
+  "nodeName": "img",
+  "parent": "#headerA"
+}, {
+  "attributes": {
+    "id": "leftIcon",
+    "class": "ic icon arrow circle left"
+  },
+  "nodeName": "i",
+  "parent": "#iconHolder"
+}, {
+  "attributes": {
+    "id": "rightIcon",
+    "class": "ic icons icon arrow circle right"
+  },
+  "nodeName": "i",
+  "parent": "#iconHolder"
+}, {
+  "attributes": {
+    "id": "readyArrow",
+    "class": "chevron circle right icon"
+  },
+  "nodeName": "i",
+  "parent": "#readyButton"
+}, {
+  "attributes": {
+    "id": "mask1"
+  },
+  "nodeName": "mask",
+  "parent": "#videoCircle"
+}, {
+  "attributes": {
+    "id": "circleG",
+    "mask": "url(#mask1)"
+  },
+  "nodeName": "g",
+  "parent": "#videoCircle"
+}, {
+  "attributes": {
+    "id": "circleRect",
+    "x": "0",
+    "y": "0",
+    "width": "500",
+    "height": "500",
+    "fill": "white"
+  },
+  "nodeName": "rect",
+  "parent": "#mask1"
+}, {
+  "attributes": {
+    "id": "vidCircleSVG",
+    "cx": "230",
+    "cy": "180",
+    "r": "130",
+    "fill": "black"
+  },
+  "nodeName": "circle",
+  "parent": "#mask1"
+}, {
+  "attributes": {
+    "id": "testSound",
+    "cx": "230",
+    "cy": "180",
+    "r": "130",
+    "fill": "#ffffff"
+  },
+  "nodeName": "circle",
+  "parent": "#circleG"
+}];
+
+for (var i = 0; i < data.length; i++) {
+  createModalItem(data[i]);
+}
+
+function createModalItem(data) {
+  var ele = $('<'+data.nodeName+'/>').
+  appendTo($(data.parent));
+  if (data.text){
+    ele.text(data.text);
+  }
+  for (var property in data.attributes) {
+    ele.attr(property, data.attributes[property]);
+  }
+}
+
+
+
+
+
+// var t = -1;
+// var b = -1;
+// var data = [];
+// var queue = [];
+// var start = $('#videoModal')[0];
+// queue[++t] = start;
+// var counter = -1;
+// while (b !== t && counter < 50) {
+//   var current = queue[++b];
+//   counter++;
+//   setArttributes(counter, current.attributes);
+//   setNodeName(counter, current.nodeName.toLowerCase());
+//   setparent(counter, current.parentNode.attributes.id);
+//   for (var i = 0; i < $(current).children().length; i++) {
+//     var a = $(current).children()[i];
+//     queue[++t] = a;
+//   }
+// }
+// function setArttributes(counter, attributes) {
+//   data[counter] = {};
+//   data[counter].attributes = {};
+//   for (var i = 0; i < attributes.length; i++) {
+//     if (attributes[i].name == "style") {
+//       continue;
+//     } else {
+//       data[counter].attributes[attributes[i].name] = attributes[i].value;
+//     }
+//   }
+// }
+// function setNodeName(counter, nodeName) {
+//   data[counter]["nodeName"] = nodeName;
+// }
+// function setparent(counter, value) {
+//   if (value == undefined) {
+//
+//   } else {
+//     data[counter]["parent"] = value.value;
+//   }
+// }
+
+// $('<div/>')
+//   .attr("id", "videoModal")
+//   .addClass("ui modal")
+//   .appendTo("body");
+//
+// var videoModal = $('<div/>')
+//   .attr("id", "videoModal")
+//   .addClass("ui modal")
+//   .appendTo("body");
+//
+// $('<i/>')
+//   .addClass("close icon")
+//   .attr('id', 'closeButton')
+//   .appendTo(videoModal)
+//
+// var card = $('<div/>')
+//   .addClass("ui card")
+//   .attr('id', 'card')
+//   .appendTo(videoModal)
+//
+// var cardOverlay = $('<div/>')
+//   .addClass("image")
+//   .attr('id', 'cardOverlay')
+//   .appendTo(card)
+//
+// $('<canvas/>')
+//   .addClass("image")
+//   .attr('id', 'waveform')
+//   .attr('width', '460')
+//   .attr('height', '242')
+//   .appendTo(card)
+//
+// var content = $('<div/>')
+//   .addClass("image")
+//   .attr('id', 'content')
+//   .appendTo(card)
+//
+// var extraContent = $('<div/>')
+//   .addClass("extra content")
+//   .attr('id', 'extra')
+//   .appendTo(card)
+//
+// var warningOverlay = $('<div/>')
+//   .attr('id', 'warningOverlay')
+//   .appendTo(cardOverlay)
+//
+// $('<div/>')
+//   .attr('id', 'videoLiveness')
+//   .appendTo(cardOverlay)
+//
+// $('<img/>')
+//   .attr('id', 'wait2')
+//   .addClass("svg")
+//   .attr('src', 'assets/images/bars.svg')
+//   .appendTo(warningOverlay)
+//
+//
+// $('<span/>')
+//   .attr('id', 'warnText')
+//   .addClass("ui header")
+//   .html("Reenrollment will delete all previous enrollments<br>Proceed?")
+//   .appendTo(warningOverlay)
+//
+// var icons = $('<div/>')
+//   .appendTo(warningOverlay)
+//
+// $("<i/>")
+//   .addClass("ic icon arrow circle left")
+//   .appendTo(icons)
+//
+// $("<i/>")
+//   .addClass("ic icons icon arrow circle right")
+//   .appendTo(icons)
+//
+// $('<h4/>')
+//   .attr('id', 'livenessText')
+//   .html("Please move closer to the camera. You'll be performing a predetermined number of liveness challanges. You'll have 2 seconds to perform each test, selected randomly from the following 5:")
+//   .appendTo(warningOverlay)
+//
+// $('<img/>')
+//   .attr('id', 'livenessTutorial')
+//   .attr('src', 'assets/images/livenessTutorial.svg')
+//   .appendTo(warningOverlay)
+//
+// $('<a/>')
+//   .attr('id', 'skipButton')
+//   .html("Skip")
+//   .addClass("ui basic label")
+//   .appendTo(warningOverlay)
+//
+// var overlayHolder = $('<div/>')
+//   .attr('id', 'overlayHolder')
+//   .appendTo(cardOverlay)
+//
+// $('<div/>')
+//   .attr('id', 'overlay2')
+//   .appendTo(overlayHolder)
+//
+// $('<canvas/>')
+//   .attr(width)

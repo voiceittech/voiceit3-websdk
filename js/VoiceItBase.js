@@ -234,7 +234,6 @@ module.exports = function(config, server) {
         if (smileFactor > 1.0) {
           smileFactor = 1.0;
         }
-
         var timeNew = new Date().getTime();
         if ((timeNew - testTimer) > 700) {
           if (smileFactor > 0.55) {
@@ -704,7 +703,7 @@ module.exports = function(config, server) {
           }
         }
         face = faceObject;
-        doLiveness(currTest, faceObj);
+        doLiveness(currTest, face);
         if (passed.value) {
           passedTests++;
           testIndex += 1;

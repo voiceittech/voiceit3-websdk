@@ -535,7 +535,7 @@ function voiceIt2(){
               if (!main.setupVJS){
                 main.setupListners();
               }
-            }
+        }
 
     //ready up animations and stuff for video enroll/verific.
     this.handleVideoSetup = function(){
@@ -550,7 +550,7 @@ function voiceIt2(){
                 $("button[title='Device']").eq(0).click();
               }, 500);
               main.createVideo();
-      main.circlej.css('display','block');
+              main.circlej.css('display','block');
               main.overlayj.css('opacity', '1.0');
               $('#videoModal').modal('show');
               main.wavej.css('display', 'none');
@@ -567,14 +567,14 @@ function voiceIt2(){
                 }
                 if (!main.setupVJS){
                   main.setupListners();
-                }
               }
+        }
 
     this.initFaceLiv = function(){
       if ($('#video3').length == 0){
-       var audio = $('<audio />').appendTo('body');
-       audio.attr('id','video3');
-       audio.attr('class','video-js vjs-default-skin');
+       var video = $('<video />').appendTo('body');
+       video.attr('id','video3');
+       video.attr('class','video-js vjs-default-skin');
       }
        main.player = videojs('video3', {
        controls: true,
@@ -670,11 +670,11 @@ function voiceIt2(){
     //set up video JS for viideo
     this.initVideoRecord = function () {
      if ($('#video2').length == 0){
-      var audio = $('<video />').appendTo('body');
+      var video = $('<video />').appendTo('body');
       video.attr('id','video2');
       video.attr('class','video-js vjs-default-skin');
      }
-        main.player = videojs('video2', {
+      main.player = videojs('video2', {
          controls: true,
            width: 640,
            height: 480,
@@ -696,6 +696,7 @@ function voiceIt2(){
            var msg = 'Using video.js ' + videojs.VERSION;
            videojs.log(msg);
        });
+       console.log(11111111);
     }
 
     //set up video JS for face
@@ -753,9 +754,11 @@ function voiceIt2(){
             }
             main.socket2.emit('recording', obj);
           } else {
+            console.log(4542353454);
             if (main.type.biometricType == "voice"){
               main.wavej.fadeTo(300,0.3);
             } else if (main.type.biometricType == "video") {
+              console.log(999999);
               main.vidCirclej.fadeTo(300,0.3);
               main.overlayj.fadeTo(300,1.0);
             } else {
@@ -770,7 +773,7 @@ function voiceIt2(){
                });
           }
          //to ensure one-time assignment to the listeners
-         main.setupVJS = true;
+         //main.setupVJS = true;
        });
      }
 

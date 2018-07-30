@@ -94,7 +94,6 @@ $(document)
           if (http.readyState === 4) {
             //get response here.
             var response = JSON.parse(http.responseText.trim());
-            console.log(response);
             if (response.responseCode == "SUCC") {
               $('#authenticate').fadeTo(400, 0.0, function() {
                 $('#verifyHolder').css('display', 'flex');
