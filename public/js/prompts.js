@@ -41,7 +41,7 @@ function prompts () {
   GET_ENROLLED : "There you are, let's get you enrolled",
   GET_VERIFIED : "There you are, let's get you verified",
   READY_FOR_VOICE_VERIFICATION : "Please get ready to verify your voice",
-  VERIFY : "Please say \"" +this.phrases[0] +"\"",
+  VERIFY : "Please say \"" + this.phrases[0] +"\"",
   VERIFY_FACE : "Please wait while we run verification",
   ENROLL_FACE: "Please wait while we run enrollment",
   VERIFY_FACE_FAILED : "Failed face verification",
@@ -55,10 +55,10 @@ function prompts () {
   WAITING: "Please wait",
   WAIT_FOR_FACE_VERIFICATION : "Please wait while we verify your face",
   TOO_MANY_ATTEMPTS : "Sorry! you failed too many times!! Try again later.",
-  SUCC_E_1 : "First enrollment has been successful",
-  SUCC_E_2: "Second enrollment has been successful",
-  SUCC_E_3: "You've been successfully enrolled",
-  SUCC_V: "You've been successfully verified",
+  SUCC_ENROLLMENT_1 : "First enrollment has been successful",
+  SUCC_ENROLLMENT_2: "Second enrollment has been successful",
+  SUCC_ENROLLMENT_3: "You've been successfully enrolled",
+  SUCC_VERIFICATION: "You've been successfully verified",
   SUCC: "You've been successfully verified",
   /* Response Code Based Prompts */
   PDNM: "Please make sure you are saying the correct phrase: \"" + this.phrases[0] + "\"" ,
@@ -79,16 +79,17 @@ function prompts () {
   GERR: "Sorry, something went wrong.\nPlease try again.",
   CONTACT_DEVELOPER : "Error:\n Please contact app developer with response code \"MESSAGE_HERE\".",
   UNFD: "User not found. Pease make sure you have the right user ID",
+  MAX_ATTEMPTS: "Exceeded maximum attempts allowed. Please try later",
   /* Liveness Prompts */
   SMILE : "Please smile broadly",
-  YAWN: "Please yawn broadly",
-  FACE_DOWN: "Please slightly turn your face down and back",
+  YAWN: "Please yawn widely",
+  FACE_DOWN: "Please turn your face slightly down and back",
   BLINK : "Please blink three times",
-  FACE_LEFT : "Please slightly turn your face to the left and back",
-  FACE_RIGHT : "Please slightly turn your face to the right and back ",
+  FACE_LEFT : "Please turn your face slightly to the left and back",
+  FACE_RIGHT : "Please turn your face slightly to the right and back ",
   LIVENESS_SUCCESS : "You've successfully passed liveness",
   LIVENESS_TIMEDOUT: "Sorry, liveness timed out. Please perform the liveness tests quickly",
   LIVENESS_FAILED: "Sorry, liveness test failed",
-  LIVENESS_TRY_AGAIN: "test failed, please try again"
+  LIVENESS_TRY_AGAIN: "Test failed, please try again"
 };
 }

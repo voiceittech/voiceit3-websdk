@@ -5,7 +5,6 @@ let fs = require('fs');
 module.exports = function(apk, tok){
     this.apiKey = apk;
     this.authToken = tok;
-    const basicAuthString = `${apk}:${tok}`;
     this.authHeader = {
       user : apk,
       pass : tok,
@@ -13,7 +12,6 @@ module.exports = function(apk, tok){
     };
 
     /* User API Calls */
-
     this.getAllUsers = (callback) =>{
       unirest.get(`${BASE_URL}/users`)
       .auth(this.authHeader)
@@ -118,7 +116,6 @@ module.exports = function(apk, tok){
     };
 
     /* Enrollment API Calls */
-
     this.getAllEnrollmentsForUser = (options, callback) => {
       unirest.get(`${BASE_URL}/enrollments/${options.userId}`)
       .auth(this.authHeader)
@@ -224,7 +221,7 @@ module.exports = function(apk, tok){
 
     this.voiceVerification = (options, callback) => {
       var stats = fs.statSync(options.audioFilePath);
-      var fileSizeInBytes = stats.size; 
+      var fileSizeInBytes = stats.size;
       unirest.post(`${BASE_URL}/verification`)
       .auth(this.authHeader)
       .headers({'Content-Length': fileSizeInBytes})
@@ -251,7 +248,7 @@ module.exports = function(apk, tok){
 
     this.faceVerificationLiv = (options, callback) => {
       var stats = fs.statSync(options.photo);
-      var fileSizeInBytes = stats.size; 
+      var fileSizeInBytes = stats.size;
       unirest.post(`${BASE_URL}/verification/face`)
       .headers({'Content-Length': fileSizeInBytes})
       .auth(this.authHeader)
@@ -282,6 +279,24 @@ module.exports = function(apk, tok){
       .field('contentLanguage', options.contentLanguage)
       .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
       .attach('video', options.videoFilePath)
+      .end(function (httpResponse) {
+        callback(httpResponse.body);
+      });
+    };
+
+        this.videoVerificationLiv = (options, callback) => {
+      var picSize = fs.statSync(options.photoFilePath);
+      var audioSize = fs.statSync(options.audioFilePath);
+      var len = audioSize + picSize;
+      unirest.post(`${BASE_URL}/verification/video`)
+      .auth(this.authHeader)
+      .headers({'Content-Length': len})
+      .field('userId', options.userId)
+      .field('phrase', options.phrase)
+      .field('contentLanguage', options.contentLanguage)
+      .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
+      .attach('photo', options.photoFilePath)
+      .attach('audio', options.audioFilePath)
       .end(function (httpResponse) {
         callback(httpResponse.body);
       });
