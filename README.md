@@ -1,6 +1,3 @@
-[Headers](#headers)     
-<a name="headers"/>
-
 # VoiceIt2 Web Login Kit
 The repository contains an example web demonstration of VoiceIt's API 2.0 use-cases. Scroll below for instructions on implementing parts of the demo into your own projects.
 
@@ -29,4 +26,3 @@ Parts of the demo can be incorporated for specific use-cases. For any such use-c
 
 ### Back End Implementation
 
-## Headers
