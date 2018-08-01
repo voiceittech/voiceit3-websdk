@@ -29,9 +29,9 @@ app.post('/authenticate', (req, res) => {
           userId: user.id,
           apiKey: config.VOICEIT_API_KEY,
           apiToken: config.VOICEIT_API_TOKEN,
-          contentLanguage: 'en-US',
-          phrase: 'Never forget tomorrow is a new day',
-          numLivTests: 3
+          contentLanguage: config.contentLanguage,
+          phrase: config.phrase,
+          numLivTests: config.numLivTests
         }, server);
       },150);
       res.status(200).send(data);

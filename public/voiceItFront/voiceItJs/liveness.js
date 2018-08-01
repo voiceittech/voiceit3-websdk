@@ -4,7 +4,7 @@ function Liveness(){
 	this.livPrompts = new prompts();
 	this.animationID;
 
-	this.brfv4BaseURL = "js/brf-js/libs/brf_wasm/";
+	this.brfv4BaseURL = "voiceItFront/voiceItJs/brf-js/libs/brf_wasm/";
 	this.support = (typeof WebAssembly === 'object');
 	this.oldCircles = [];
 	this.socket;
@@ -34,7 +34,7 @@ function Liveness(){
 			}
 		}
 
-		if (!main.support) { main.brfv4BaseURL = "js/brf-js/libs/brf_asmjs/"; }
+		if (!main.support) { main.brfv4BaseURL = "voiceItFront/voiceItJs/brf-js/libs/brf_asmjs/"; }
 
 		var script	= document.createElement("script");
 		script.setAttribute("type", "text/javascript");
@@ -109,6 +109,7 @@ function Liveness(){
 	}
 
 	this.assignSocketEvents = function() {
+		main.socket.emit('initLiveness', 1);
 		main.socket.on('initiated', function(s){
 			test = s;
 			main.createLivenessCircle();
@@ -168,6 +169,7 @@ function Liveness(){
 								$('#header').text(main.livPrompts.getPrompt("LIVENESS_SUCCESS"));
 							});
 					window.cancelAnimationFrame(main.animationID);
+					main.exitOut();
 					break;
 					case 2:
 					//failed face, but passed liveness
@@ -178,6 +180,7 @@ function Liveness(){
 						$('#header').text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
 					});
 					window.cancelAnimationFrame(main.animationID);
+					main.exitOut();
 					break;
 					case 1:
 					//failed, give more tries
@@ -201,6 +204,7 @@ function Liveness(){
 						$('#header').fadeTo(300,1.0);
 					});
 					window.cancelAnimationFrame(main.animationID);
+					main.exitOut();
 				break;
 				default:
 			}
@@ -388,4 +392,11 @@ function Liveness(){
 			default:
 		}
 	  }
+
+		//exit the modal post completion of task
+		this.exitOut = () => {
+			setTimeout(() => {
+				$('#voiceItModal').modal("hide");
+			},3000);
+		}
 	}

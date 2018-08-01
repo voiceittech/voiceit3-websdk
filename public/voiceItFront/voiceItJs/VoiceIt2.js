@@ -1,4 +1,4 @@
-function voiceIt2(){
+function voiceIt2ClientSide(){
     var main = this;
     this.video;
     this.player;
@@ -124,12 +124,14 @@ function voiceIt2(){
             $('#circle').fadeTo(200,0.0,function(){
             });
           },300);
+          main.overlayj.fadeTo(300,1.0);
           $('#header').fadeTo(300,0,function(){
             $('#header').css('display','none');
             $('#wait').css('display','inline-block');
             $('#wait').css('opacity','0');
             $('#wait').fadeTo(300,1.0, function(){
               setTimeout(function(){
+                main.overlayj.fadeTo(300,0.3);
                 $('#wait').fadeTo(300,0.0,function(){
                   $(this).css('display','none');
                   $('#header').css('display','inline-block');
@@ -179,6 +181,7 @@ function voiceIt2(){
                     main.headerj.fadeTo(500,1.0);
                   });
                   main.headerj.text(main.prompt.getPrompt("MAX_ATTEMPTS"));
+                  //main.exitOut();
                 } else {
                  main.continueEnrollment(response);
                     }
@@ -186,6 +189,7 @@ function voiceIt2(){
                 }
                else if (main.type.action == "Verification") {
                     if (response.responseCode == "SUCC"){
+                    main.exitOut();
                     main.handleResponse(response);
                     //do something after successful. Right now it just stays there
                     } else {
@@ -199,6 +203,7 @@ function voiceIt2(){
                       main.headerj.fadeTo(500,1.0);
                       });
                       main.headerj.text(main.prompt.getPrompt("MAX_ATTEMPTS"));
+                      //main.exitOut();
                        }
                     else {
                       main.handleResponse(response);
@@ -261,7 +266,7 @@ function voiceIt2(){
               });
            });
 
-         $('#videoModal')
+         $('#voiceItModal')
         .modal({
           onHide: function() {
               main.destroy();
@@ -377,6 +382,7 @@ function voiceIt2(){
             }
              main.enrollmentNeededVoice = false;
              main.headerj.text(main.prompt.getPrompt("SUCC_ENROLLMENT_3"));
+             main.exitOut();
             }
           }
             else {
@@ -497,7 +503,7 @@ function voiceIt2(){
                    main.circlej.css("display","none");
                    main.vidFramej.css('display', 'none');
                    //   $("#waveform").fadeTo(2000, 0.6);
-                   $('#videoModal').modal('show');
+                   $('#voiceItModal').modal('show');
       }
 
     //ready up animations and stuff for face enroll/verific.
@@ -516,7 +522,7 @@ function voiceIt2(){
               main.createOverlay();
               main.vidCirclej.css('display','none');
               main.overlayj.css('opacity', '1.0');
-              $('#videoModal').modal('show');
+              $('#voiceItModal').modal('show');
               main.readyButtonj.css('opacity',0.0);
               main.readyButtonj.fadeTo(550,1.0);
               main.vidFramej.css('opacity','0.0');
@@ -552,7 +558,7 @@ function voiceIt2(){
               main.createVideo();
               main.circlej.css('display','block');
               main.overlayj.css('opacity', '1.0');
-              $('#videoModal').modal('show');
+              $('#voiceItModal').modal('show');
               main.wavej.css('display', 'none');
               if (main.liveness && main.type.action !== "Enrollment"){
                 main.initFaceLiv();
@@ -571,12 +577,12 @@ function voiceIt2(){
         }
 
     this.initFaceLiv = function(){
-      if ($('#video3').length == 0){
+      if ($('#videoRecord').length == 0){
        var video = $('<video />').appendTo('body');
-       video.attr('id','video3');
+       video.attr('id','videoRecord');
        video.attr('class','video-js vjs-default-skin');
       }
-       main.player = videojs('video3', {
+       main.player = videojs('videoRecord', {
        controls: true,
          width: 640,
          height: 480,
@@ -601,6 +607,10 @@ function voiceIt2(){
     }
 
     this.createVideo = function() {
+      if ($('#myVideo').length == 0){
+       var video = $('<video/>').appendTo('body');
+       video.attr('id','myVideo');
+      }
       var webcam = document.querySelector('#myVideo');
       var imageData		= document.getElementById("imageData");
       main.imageDataCtx		= imageData.getContext("2d");
@@ -669,12 +679,12 @@ function voiceIt2(){
 
     //set up video JS for viideo
     this.initVideoRecord = function () {
-     if ($('#video2').length == 0){
+     if ($('#videoRecord').length == 0){
       var video = $('<video />').appendTo('body');
-      video.attr('id','video2');
+      video.attr('id','videoRecord');
       video.attr('class','video-js vjs-default-skin');
      }
-      main.player = videojs('video2', {
+      main.player = videojs('videoRecord', {
          controls: true,
            width: 640,
            height: 480,
@@ -696,17 +706,16 @@ function voiceIt2(){
            var msg = 'Using video.js ' + videojs.VERSION;
            videojs.log(msg);
        });
-       console.log(11111111);
     }
 
     //set up video JS for face
     this.initFaceRecord = function () {
-     if ($('#video3').length == 0){
+     if ($('#videoRecord').length == 0){
       var video = $('<video/>').appendTo('body');
-      video.attr('id','video3');
+      video.attr('id','videoRecord');
       video.attr('class','video-js vjs-default-skin');
      }
-      main.player = videojs('video3', {
+      main.player = videojs('videoRecord', {
       controls: true,
         width: 640,
         height: 480,
@@ -746,6 +755,11 @@ function voiceIt2(){
           if (main.liveness && main.type.action !== "Enrollment" && main.type.biometricType !== "voice"){
             var obj;
             if (main.livenessType == "voice"){
+              main.headerj.fadeTo(300, 0.0, function() {
+                 $(this).css('display', 'none');
+                 main.waitj.css('display', 'inline-block');
+                 main.waitj.fadeTo(300,1.0);
+                });
               obj = {recording: main.player.recordedData, kind: "voice" };
               main.vidCirclej.fadeTo(300,0.3);
               main.overlayj.fadeTo(300,1.0);
@@ -754,11 +768,9 @@ function voiceIt2(){
             }
             main.socket2.emit('recording', obj);
           } else {
-            console.log(4542353454);
             if (main.type.biometricType == "voice"){
               main.wavej.fadeTo(300,0.3);
             } else if (main.type.biometricType == "video") {
-              console.log(999999);
               main.vidCirclej.fadeTo(300,0.3);
               main.overlayj.fadeTo(300,1.0);
             } else {
@@ -773,7 +785,7 @@ function voiceIt2(){
                });
           }
          //to ensure one-time assignment to the listeners
-         //main.setupVJS = true;
+         main.setupVJS = true;
        });
      }
 
@@ -906,18 +918,25 @@ function voiceIt2(){
      }
     }
 
+    //exit the modal post completion of task
+    this.exitOut = () => {
+      setTimeout(() => {
+        $('#voiceItModal').modal("hide");
+      },3000);
+    }
+
     //create the surrounding
     this.createCircle = function () {
       var overlayHolder = $('#overlayHolder')[0];
       var imageData = $('#imageData')[0];
       var circle = $('#circle')[0];
-
       if ((!$('#circle > canvas')[0] == undefined)){
         var canvas = $('#circle > canvas')[0];
         canvas.getContext('2d').clearRect(0,0,canvas.width, canvas.height);
         canvas = undefined;
       }
       overlayHolder.removeChild(circle);
+      console.log('removing circle');
       $("<div id='circle'></div>").insertBefore(imageData);
       //$('#circle').css('transform','rotate(-90deg)');
         $('#circle').circleProgress({
@@ -938,8 +957,8 @@ function voiceIt2(){
       if (!main.setupWaveForm){
           var colors =  ['#fb6d6b', '#c10056',' #a50053', '#51074b'];
           var canvas = document.querySelector('#waveform');
-          if (typeof main.audioVisualizer == "undefined"){
-          main.audioVisualizer = new audioVisualizer(canvas, {
+          if (main.audioVisualizer == undefined){
+          main.audioVisualizer = new Vudio(canvas, {
           effect: 'waveform',
           accuracy: 512,
           width: 512,
@@ -952,10 +971,13 @@ function voiceIt2(){
       }
       main.setupWaveForm = true;
     }
-      }
+  }
 
-    //destroy video,canvas, and other objects
+    //destroy video, canvas, and other objects
     this.destroy = function (){
+      if ($('#myVideo').length !== 0) {
+        $('#myVideo').remove();
+      }
       var imageData = $('#imageData')[0];
       var overlayHolder = $('#overlayHolder')[0];
       $('#skipButton').css('display','none');
@@ -965,25 +987,29 @@ function voiceIt2(){
         var circle = $('#circle')[0];
         canvas.getContext('2d').clearRect(0,0,canvas.width, canvas.height);
         canvas = undefined;
-        overlayHolder.removeChild(circle);
+        circle.remove();
         $("<div id='circle'></div>").insertBefore(imageData);
       }
 
       if(main.type.biometricType !== "voice"){
-        overlayHolder.removeChild(imageData);
+        imageData.remove();
         var a = $('#videoCircle')[0];
         $("<canvas id='imageData'></canvas>").insertBefore(a);
       }
 
-      if(main.player !== undefined){
+      if (main.videoCircleStream !== undefined){
+        main.videoCircleStream.stop();
+        main.videoCircleStream = undefined;
+      }
+
+      if (main.player !== undefined){
           main.player.record().destroy();
           main.player = undefined;
-        } else {
+          main.setupVJS = false;
+      }
 
-        }
-        $("#circle").css('display','none');
-        main.readyButtonj.css('display','none');
-        main.destroyed = true;
+      $("#circle").css('display','none');
+      main.readyButtonj.css('display','none');
 
       if (main.livenessObj !== undefined){
           window.cancelAnimationFrame(main.livenessObj.getTracking());
@@ -992,21 +1018,22 @@ function voiceIt2(){
       }
 
       setTimeout(function(){
-          if(main.type.biometricType !== "voice"){
-            $('#myVideo')[0].srcObject.getTracks()[0].stop();
-            var canvas = $('#imageData')[0];
-            var ctx = canvas.getContext('2d');
-            ctx.clearRect(0,0,canvas.width,canvas.height);
+        if(main.type.biometricType !== "voice"){
+          var canvas = $('#imageData')[0];
+          var ctx = canvas.getContext('2d');
+          ctx.clearRect(0,0,canvas.width,canvas.height);
 
-            canvas = $('#cv')[0];
-            ctx = $('#cv')[0].getContext('2d');
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-          } else {
-            var canvas = $('#waveform')[0];
-            var ctx = canvas.getContext('2d');
-            ctx.clearRect(0,0,canvas.width,canvas.height);
+          canvas = $('#cv')[0];
+          ctx = $('#cv')[0].getContext('2d');
+          ctx.clearRect(0,0,canvas.width,canvas.height);
+        } else {
+          var canvas = $('#waveform')[0];
+          var ctx = canvas.getContext('2d');
+          ctx.clearRect(0,0,canvas.width,canvas.height);
+          //$('#myAudio')[0].remove();
           }
         },100);
+        main.destroyed = true;
     }
 
     this.createOverlay = function(){
@@ -1024,10 +1051,7 @@ function voiceIt2(){
             var analyser;
             var amp;
             var vol2;
-            if (!main.vidCircle){
-            main.vidCircle =  $("#testSound").eq(0);
-
-
+            var vidCircle =  $("#testSound").eq(0);
             navigator.mediaDevices.getUserMedia({audio: true, video: false})
             .then(function(stream) {
               var context = new AudioContext();
@@ -1050,7 +1074,7 @@ function voiceIt2(){
             }
             vol = (vol * 2 )/ 5;
             vol = (vol + 130); //fit to the overlay
-            main.vidCircle.attr('r',vol);
+            vidCircle.attr('r',vol);
             window.requestAnimationFrame(draw);
             }
 
@@ -1064,6 +1088,5 @@ function voiceIt2(){
             rms = Math.sqrt(rms);
             return rms;
            }
-            }
           }
 }

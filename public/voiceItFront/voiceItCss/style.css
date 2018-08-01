@@ -1,14 +1,22 @@
-body {
-  background-color: #DADADA;
-}
-body > .grid {
-  width:100%;
-  height: 100%;
+#headerA {
+  color: #000000 !important;
+  height:2em;
 }
 
 .ui.card>.content, .ui.cards>.card>.content {
   border-top: none;
 }
+
+#authenticate {
+  color: black;
+  background-color: rgb(251,193,50);
+}
+
+#verify {
+  color: black;
+  background-color: rgb(251,193,50);
+}
+
 .ui.teal.image.header {
   padding-bottom: 10px !important;
 }
@@ -21,6 +29,7 @@ body > .grid {
 }
 
 #skipButton{
+  color: #000000 !important;
   position: absolute;
   bottom: 0px;
 }
@@ -167,6 +176,7 @@ display: none !important;
    opacity:1.0 !important;
    z-index: 13;
  }
+
  .ui.card {
    padding-top: 10%;
    background-color: black;
@@ -202,9 +212,10 @@ display: none !important;
   opacity: 0;
 }
 
-#video2, #video3 {
+#videoRecord {
   display: none;
 }
+
 .vjs-record .vjs-device-button.vjs-control {
   display: none !important;
 }
@@ -228,6 +239,7 @@ display: none !important;
 }
 
 #headingHolder {
+  margin-bottom: 7%;
   display: flex;
   justify-content: center;
 }
@@ -326,7 +338,7 @@ align-items: center;
   padding: 2px !important;
   text-align: end !important;
 }
-#videoModal {
+#voiceItModal {
   margin-bottom: 15%;
   background: transparent;
 }
@@ -386,13 +398,6 @@ left: 21%;
   background: rgba(34,36,38,.15) !important;
 }
 
-td {
-  padding: 0px !important;
-}
-tr {
-    padding: 0px !important;
-}
-
 .customButton {
   margin: auto !important;
   font-weight: 600 !important;
@@ -403,7 +408,6 @@ tr {
 #videoCircle {
   position: absolute;
   z-index:11;
-  display: none;
   top:-9.3%;
   opacity: 0.0;
 }
@@ -462,8 +466,4 @@ tr {
 
 .large.ui.buttons {
   width: 100%;
-}
-
-a {
-  color: #000000 !important;
 }

@@ -4,8 +4,10 @@ function authenticationAPICall() {
   http.setRequestHeader('Content-Type', 'application/json');
   http.send(JSON.stringify(values));
 }
+
 $(document)
   .ready(function() {
+    var voiceItHTML = new voiceIt2HTML();
     var init = false;
     var myVoiceIt;
 
@@ -85,7 +87,6 @@ $(document)
         $('#emailField').removeClass('error');
       }
       if (pass.length >= 6 && isValidEmailAddress(em)) {
-
         var http = new XMLHttpRequest();
         http.open("POST", "/authenticate", true);
         http.setRequestHeader('Content-Type', 'application/json');
@@ -105,8 +106,9 @@ $(document)
                 $('#authenticate').css('display', 'none');
                 $('#options').fadeTo(400, 1.0);
                 if (!init) {
-                  myVoiceIt = new voiceIt2();
+                  voiceItHTML.init();
                   setTimeout(function() {
+                    myVoiceIt = new voiceIt2ClientSide();
                     myVoiceIt.init();
                     $("#voiceEnrollmentBtn").click(function() {
                       myVoiceIt.encapsulatedVoiceEnrollment();
@@ -131,7 +133,7 @@ $(document)
                     $("#videoEnrollmentBtn").click(function() {
                       myVoiceIt.encapsulatedVideoEnrollment();
                     });
-                  }, 400);
+                  }, 500);
                   init = true;
                 }
               });

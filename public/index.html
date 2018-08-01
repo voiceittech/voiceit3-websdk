@@ -1,78 +1,59 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
 
   <title>VoiceIt Web Demo</title>
-  <script src="js/socket.io-client/dist/socket.io.js">
-  </script>
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <link rel="stylesheet" href="css/style.css">
-  <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css' />
-  <script src="js/bufferloader.js"></script>
-
-  <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
-  <script src="semantic/dist/semantic.min.js"></script>
-  <!--  VideoJs/WebRTC stuff  -->
-  <link href="js/video.js/dist/video-js.min.css" rel="stylesheet">
-  <link href="js/videojs-record/dist/css/videojs.record.css" rel="stylesheet">
-  <script src="js/video.js/dist/video.min.js"></script>
-  <script src="js/recordrtc/RecordRTC.js"></script>
-  <script src="js/webrtc-adapter/out/adapter.js"></script>
-  <script src="js/videojs-record/dist/videojs.record.min.js"></script>
-
-  <script src="js/wavesurfer.js/dist/wavesurfer.min.js"></script>
-  <script src="js/wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js"></script>
-  <script src="js/videojs-wavesurfer/dist/videojs.wavesurfer.js"></script>
-
-  <script src="js/circle-progress.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="voiceItFront/semantic/dist/semantic.min.css">
+  <script src="voiceItFront/semantic/dist/semantic.min.js"></script>
+  <script src="index.js"></script>
+  <script src="voiceItFront/voiceIt2.js"></script>
+  <link rel="stylesheet" type="text/css" href="voiceItFront/voiceItCss/style.css" />
 </head>
 
-<body>
-  <div id="mainColumn" class="ui middle aligned center aligned grid">
-
-
+<body style="background-color:#DADADA;">
+  <div id="mainColumn" class="ui middle aligned center aligned grid" style="width:100%;height:100%;">
     <div id="mainForm" class="ui large form">
       <div id="headingHolder">
-        <h2 class="ui teal image header">
-      <img src="assets/images/logo.png" class="image"/>
+        <h2 class="ui image header">
+      <img src="voiceItFront/voiceItAssets/images/logo.png" class="image"/>
          <div class="content content2">
-          <a>
+          <a style="color: #000000 !important;">
           Log-in to your account
         </a>
         </div>
           </h2>
       </div>
 
-            <div id="formOverlay">
-      <div class="ui segment">
-        <div class="field" id="emailField">
-          <div class="ui left icon input">
-            <i class="user icon"></i>
-            <input type="text" name="email" placeholder="E-mail address">
+      <div id="formOverlay">
+        <div class="ui segment">
+          <div class="field" id="emailField">
+            <div class="ui left icon input">
+              <i class="user icon"></i>
+              <input type="text" name="email" placeholder="E-mail address">
+            </div>
+          </div>
+          <div class="field" id="passwordField">
+            <div class="ui left icon input">
+              <i class="lock icon"></i>
+              <input type="password" name="password" placeholder="Password">
+            </div>
           </div>
         </div>
-        <div class="field" id="passwordField">
-          <div class="ui left icon input">
-            <i class="lock icon"></i>
-            <input type="password" name="password" placeholder="Password">
-          </div>
+      </div>
+
+      <div id="authenticate" class="ui fluid large button">
+        Authenticate
+      </div>
+
+      <div id="verifyHolder">
+        <div id="verify" class="ui large label">
+          Please Verify
         </div>
       </div>
-      </div>
-
-        <div id="authenticate" class="ui fluid large teal button">
-          Authenticate
-        </div>
-
-        <div id="verifyHolder">
-        <div id="verify" class="ui teal large label">
-         Please Verify
-      </div>
-    </div>
-
-
 
       <div id="options" class="column">
         <div id="toggleHolder" class="toggleHolder">
@@ -82,125 +63,53 @@
           </div>
         </div>
         <div id="optionsHolder">
-        <div class="ui compact menu">
-          <div class="ui simple dropdown item">
-            Voice
-            <i class="dropdown "></i>
-            <div class="menu">
-              <div class="item voice" id="voiceEnrollmentBtn">Enrollment</div>
-              <div class="item voice" id="voiceVerificationBtn">
-                <span>Verification</span>
-                 <div id="enrollVoice" class="ui left pointing label">
-                   Please Enroll First
-                 </div>
+          <div class="ui compact menu">
+            <div class="ui simple dropdown item">
+              Voice
+              <i class="dropdown "></i>
+              <div class="menu">
+                <div class="item voice" id="voiceEnrollmentBtn">Enrollment</div>
+                <div class="item voice" id="voiceVerificationBtn">
+                  <span>Verification</span>
+                  <div id="enrollVoice" class="ui left pointing label">
+                    Please Enroll First
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ui compact menu">
+            <div class="ui simple dropdown item">
+              Face
+              <i class="dropdown"></i>
+              <div class="menu">
+                <div class="item face" id="faceEnrollmentBtn">Enrollment</div>
+                <div class="item face" id="faceVerificationBtn">
+                  <span>Verification</span>
+                  <div id="enrollFace" class="ui left pointing label">
+                    Please Enroll First
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ui compact menu">
+            <div class="ui simple dropdown item">
+              Video
+              <i class="dropdown"></i>
+              <div class="menu">
+                <div class="item video" id="videoEnrollmentBtn">Enrollment</div>
+                <div class="item video" id="videoVerificationBtn">
+                  <span>Verification</span>
+                  <div id="enrollVideo" class="ui right pointing label">
+                    Please Enroll First
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="ui compact menu">
-          <div class="ui simple dropdown item">
-            Face
-            <i class="dropdown"></i>
-            <div class="menu">
-              <div class="item face" id="faceEnrollmentBtn">Enrollment</div>
-              <div class="item face" id="faceVerificationBtn">
-                <span>Verification</span>
-                 <div id="enrollFace" class="ui left pointing label">
-                   Please Enroll First
-                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="ui compact menu">
-          <div class="ui simple dropdown item">
-            Video
-            <i class="dropdown"></i>
-            <div class="menu">
-              <div class="item video" id="videoEnrollmentBtn">Enrollment</div>
-              <div class="item video" id="videoVerificationBtn">
-                <span>Verification</span>
-                 <div id="enrollVideo" class="ui right pointing label">
-                   Please Enroll First
-                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      </div>
-
-    <div></div>
-
-  </div>
-</div>
-
-  <div class="ui modal" id="videoModal">
-    <i class="close icon" id="closeButton"></i>
-    <div class="ui card" id="card">
-      <div class="image" id="cardOverlay">
-        <div id="warningOverlay">
-          <img id="wait2" class="svg" src="assets/images/bars.svg"></img>
-          <span id="warnText" class="ui header">Reenrollment will delete all previous enrollments<br>Proceed?</span>
-          <div>
-            <i class="ic icon arrow circle left"></i>
-            <i class="ic icons icon arrow circle right"></i>
-          </div>
-          <h4 id="livenessText">Please move closer to the camera. You'll be performing a predetermined number of liveness challanges. You'll have 2 seconds to perform each test, selected randomly from the following 5:</h4>
-          <img id="livenessTutorial" src="assets/images/livenessTutorial.svg"/>
-          <a id="skipButton" class="ui basic label">Skip</a>
-        </div>
-
-        <div id="overlayHolder">
-          <div id="overlay2"></div>
-          <canvas width="460" height="345" id="cv">
-      </canvas>
-          <button id="readyButton" class="small ui customButton inverted basic button">
-          Ready?
-          <i class="chevron circle right icon"></i>
-      </button>
-          <div id="circle"></div>
-          <canvas id="imageData"></canvas>
-
-          <svg height="460" width="465" id="videoCircle">
-        <mask id="mask1">
-            <rect x="0" y="0" width="500" height="500" fill="white" />
-            <circle cx="230" cy="180" r="130" fill="black"/>
-        </mask>
-      <g mask="url(#mask1)">
-      <circle id="testSound" cx="230" cy="180" r="130" fill="#ffffff"/>
-      </g>
-      </svg>
-
-        </div>
-        <video id="videoLiveness" autoplay playsinline></video>
-      </div>
-      <canvas id="waveform" width="460" height="242"></canvas>
-      <div class="content" id="content">
-
-        <a class="header" style="height:2em;">
-      <span id="header"> </span>
-          <img id="wait" class="svg" src="assets/images/bars.svg"></img>
-    </a>
-      </div>
-      <div class="extra content" id="extra">
-        <img id="powered-by" src="assets/images/powered-by.png">
-        </img>
       </div>
     </div>
   </div>
-
-
-  <video id="video2" class="video-js vjs-default-skin"></video>
-  <video id="video3" class="video-js vjs-default-skin"></video>
-  <audio id="myAudio" class="video-js vjs-default-skin"></audio>
-  <audio id="myAudio2" class="video-js vjs-default-skin"></audio>
-  <video id="myVideo"></video>
-
-  <script src="js/prompts.js"></script>
-  <script src="js/VoiceIt2.js"></script>
-  <script src="js/vudio.js"></script>
-  <script src="js/liveness.js"></script>
-  <script src="js/index.js"></script>
-  <link rel="stylesheet" type="text/css" href="css/style.css" />
 </body>

@@ -7,14 +7,7 @@ function prompts () {
     var a = this.phrases;
     return a[int];
   }
-
-
-  // this.setPhrases = function(array){
-  // for(var i = 0; i < array.length; i++){
-  //   this.phrases[i] = array[i];
-  //  }
-  // }
-
+  
   this.getPrompt = function(promptName){
     var s  = this.prompts[promptName];
     return s;
@@ -87,7 +80,7 @@ function prompts () {
   BLINK : "Please blink three times",
   FACE_LEFT : "Please turn your face slightly to the left and back",
   FACE_RIGHT : "Please turn your face slightly to the right and back ",
-  LIVENESS_SUCCESS : "You've successfully passed liveness",
+  LIVENESS_SUCCESS : "You've been successfully verified",
   LIVENESS_TIMEDOUT: "Sorry, liveness timed out. Please perform the liveness tests quickly",
   LIVENESS_FAILED: "Sorry, liveness test failed",
   LIVENESS_TRY_AGAIN: "Test failed, please try again"

@@ -1,4 +1,4 @@
-const voiceit2 = require('./voiceit-client');
+const voiceit2 = require('./voiceItApiWrapper');
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
 const path = require('path');
@@ -8,6 +8,9 @@ module.exports = function(config, server) {
   let io = require('socket.io')(server);
   var userID = config.userId;
   const rootAbsPath = path.resolve(__dirname, '../');
+
+  var socket1Id;
+  var socket2Id;
 
   //test stuff
   var tests = [0, 1, 2, 3, 4];
@@ -39,7 +42,7 @@ module.exports = function(config, server) {
   var livFaceRecord;
   var livVoiceRecord;
   var timePassed;
-  const maxScreenShots = (numTests < 2) ? 1 : 2;;
+  const maxScreenShots = (numTests < 2) ? 1 : 2;
 
 
   //counters
@@ -632,7 +635,11 @@ module.exports = function(config, server) {
 
   //Handle client-server communication
   io.on('connection', function(socket) {
+    socket.on('initLiveness', function(){
+      socket2Id = socket.id;
+    });
     socket.on('requestEnrollmentDetails', function(request){
+      socket1Id = socket.id;
       myVoiceIt.getAllEnrollmentsForUser({
         userId: userID
       }, (jsonResponse) => {
