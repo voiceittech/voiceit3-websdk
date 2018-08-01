@@ -181,7 +181,7 @@ function voiceIt2ClientSide(){
                     main.headerj.fadeTo(500,1.0);
                   });
                   main.headerj.text(main.prompt.getPrompt("MAX_ATTEMPTS"));
-                  //main.exitOut();
+                  main.exitOut();
                 } else {
                  main.continueEnrollment(response);
                     }
@@ -203,7 +203,7 @@ function voiceIt2ClientSide(){
                       main.headerj.fadeTo(500,1.0);
                       });
                       main.headerj.text(main.prompt.getPrompt("MAX_ATTEMPTS"));
-                      //main.exitOut();
+                      main.exitOut();
                        }
                     else {
                       main.handleResponse(response);
