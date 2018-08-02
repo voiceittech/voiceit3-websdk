@@ -2,23 +2,24 @@ function Liveness(){
 
 	this.brfv4Example = { stats: {} };
 	this.livPrompts = new prompts();
-	this.animationID;
+	this.cancel = false;
+	this.animationFrameId = undefined;
 
 	this.brfv4BaseURL = "voiceItFront/voiceItJs/brf-js/libs/brf_wasm/";
 	this.support = (typeof WebAssembly === 'object');
 	this.oldCircles = [];
 	this.socket;
+	this.setup = false;
 
-	var webcam			= document.getElementById("myVideo");		// our webcam video
-	var imageData		= document.getElementById("imageData");	// image data for BRFv4
-	var imageDataCtx	= null;
-	var brfv4			= null;
-	this.brfmanager		= null;
-	var resolution		= null;
-	var ua				= navigator.userAgent;
-	var isIOS11			= (ua.indexOf("iPad") > 0 || ua.indexOf("iPhone") > 0) && ua.indexOf("OS 11_") > 0;
-	var test;
-	var stats;
+	this.webcam			= document.getElementById("myVideo");		// our this.webcam video
+	this.imageData		= document.getElementById("imageData");	// image data for BRFv4
+	this.imageDataCtx	= this.imageData.getContext('2d');
+	this.brfv4			= null;
+	this.brfmanager		= undefined;
+	this.resolution		= null;
+	this.ua	= navigator.userAgent;
+	this.test;
+	this.stats;
 
 	var main = this;
 
@@ -43,78 +44,51 @@ function Liveness(){
 		document.getElementsByTagName("head")[0].appendChild(script);
 
 	this.init = function(type) {
-		main.socket = io.connect('http://localhost:8000',{reconnection:true, reconnectionDelay: 1, randomizationFactor: 0, reconnectionDelayMax: 1});
-
-		stats	= main.brfv4Example.stats;
-		if(stats.init) { stats.init(60); }
-		main.startCamera();
-	}
-
-	this.getTracking = function(){
-		return main.animationID;
-	}
-
-	this.startCamera = function() {
-      navigator.mediaDevices.getUserMedia({ audio: false, video: {
-				width: { min: 640, ideal: 640, max: 640 },
-				height: { min: 480, ideal: 480, max: 480 }
-			}})
-      	.then(onStreamFetched).catch(function (err) {
-			console.log("No camera available: " + err);
-		});
+		main.cancel = false;
+		main.stats	= main.brfv4Example.stats;
+		if(main.stats.init) {
+			main.stats.init(60);
 		}
+		main.waitForBRF();
+	}
 
-		function onStreamFetched (mediaStream) {
-		      webcam.srcObject = mediaStream;
-		      webcam.play();
-		      function onStreamDimensionsAvailable () {
-		        if(webcam.videoWidth === 0) {
-		          setTimeout(onStreamDimensionsAvailable, 100);
-		        } else {
-		          // Resize the canvas to match the webcam video size.
-		          imageData.width = webcam.videoWidth;
-		          imageData.height = webcam.videoHeight;
-		          imageDataCtx = imageData.getContext("2d");
-		          waitForBRF();
-		        }
-		      }
-
-		      if(imageDataCtx === null) {
-		  			onStreamDimensionsAvailable();
-		      } else {
-		        main.trackFaces();
-		      }
-		    }
-
-	function waitForBRF() {
-			if(brfv4 === null) {
-				brfv4 = {
+	this.waitForBRF = function() {
+			if(main.brfv4 === null) {
+				main.brfv4 = {
 				 locateFile: function(fileName) {
 				 	 return main.brfv4BaseURL+fileName;
 				 	}
 				 };
-				initializeBRF(brfv4);
+				 setTimeout(()=>{
+					 initializeBRF(main.brfv4);
+				 },100);
 			}
-			if(brfv4.sdkReady) {
+			if(main.brfv4.sdkReady) {
 				main.initSDK();
 			} else {
-				setTimeout(waitForBRF, 100);
+				setTimeout(main.waitForBRF, 100);
 			}
 		}
 
 	this.initSDK = function() {
-			resolution	= new brfv4.Rectangle(0, 0, imageData.width, imageData.height);
-			main.brfmanager	= new brfv4.BRFManager();
-			main.brfmanager.init(resolution, resolution, "com.tastenkunst.brfv4.js.examples.minimal.webcam");
+			main.resolution	= new main.brfv4.Rectangle(0, 0, main.imageData.width, main.imageData.height);
+			main.brfmanager	= new main.brfv4.BRFManager();
+			main.brfmanager.init(main.resolution, main.resolution, "com.tastenkunst.brfv4.js.examples.minimal.webcam");
+			main.brfmanager.setMode('BRFMode.FACE_TRACKING');
+			if (main.setup == false){
+				main.socket = io.connect('http://localhost:8000',{reconnection:true, reconnectionDelay: 1, randomizationFactor: 0, reconnectionDelayMax: 1});
+				main.assignSocketEvents();
+			}
 	}
 
 	this.assignSocketEvents = function() {
 		main.socket.emit('initLiveness', 1);
 		main.socket.on('initiated', function(s){
-			test = s;
+			main.test = s;
 			main.createLivenessCircle();
 			main.trackfaces();
-			main.drawCircle(test);
+			window.requestAnimationFrame(main.trackfaces);
+			main.drawCircle(main.test);
 		});
 		main.socket.on('test', function(test){
 			main.redrawCircle(test);
@@ -140,7 +114,7 @@ function Liveness(){
 							$('#circle').css('display','none');
 						});
 					},300);
-					window.cancelAnimationFrame(main.animationID);
+					main.cancel = true;
 				break;
 				case 4:
 					//show waiting for response, passed liveness tests
@@ -158,7 +132,7 @@ function Liveness(){
 						$('#wait').css('opacity','0');
 						$('#wait').fadeTo(300,1.0);
 					});
-					window.cancelAnimationFrame(main.animationID);
+					main.cancel = true;
 					break;
 					case 3:
 					//passed liveness and face identification
@@ -168,7 +142,7 @@ function Liveness(){
 								$('#header').fadeTo(300,1.0);
 								$('#header').text(main.livPrompts.getPrompt("LIVENESS_SUCCESS"));
 							});
-					window.cancelAnimationFrame(main.animationID);
+					main.cancel = true;
 					main.exitOut();
 					break;
 					case 2:
@@ -179,7 +153,8 @@ function Liveness(){
 						$('#header').fadeTo(300,1.0);
 						$('#header').text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
 					});
-					window.cancelAnimationFrame(main.animationID);
+
+					main.cancel = true;
 					main.exitOut();
 					break;
 					case 1:
@@ -203,7 +178,7 @@ function Liveness(){
 						$(this).text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
 						$('#header').fadeTo(300,1.0);
 					});
-					window.cancelAnimationFrame(main.animationID);
+					main.cancel = true;
 					main.exitOut();
 				break;
 				default:
@@ -212,24 +187,52 @@ function Liveness(){
 	}
 
 	this.trackfaces = function () {
-
-			if (stats.start) stats.start();
-			imageDataCtx.setTransform(-1.0, 0, 0, 1, resolution.width, 0); // mirrored for draw of video
-			imageDataCtx.drawImage(webcam, 0, 0, resolution.width, resolution.height);
-			imageDataCtx.setTransform( 1.0, 0, 0, 1, 0, 0); // unmirrored for draw of results
-			main.brfmanager.update(imageDataCtx.getImageData(0,0, resolution.width, resolution.height).data);
+			if (main.stats.start) main.stats.start();
+			// imageDataCtx.setTransform(-1.0, 0, 0, 1, resolution.width, 0); // mirrored for draw of video
+			// imageDataCtx.drawImage(this.webcam, 0, 0, resolution.width, resolution.height);
+			// imageDataCtx.setTransform( 1.0, 0, 0, 1, 0, 0); // unmirrored for draw of results
+			main.brfmanager.update(main.imageDataCtx.getImageData(0,0, main.resolution.width, main.resolution.height).data);
 			// Data.push(data);
 
 	 		var faces = main.brfmanager.getFaces();
-      		var face = faces[0];
+      var face = faces[0];
 
-			if (face.state === brfv4.BRFState.FACE_TRACKING_START ||
-			face.state === brfv4.BRFState.FACE_TRACKING) {
+			if (face.state === main.brfv4.BRFState.FACE_TRACKING_START ||
+			face.state === main.brfv4.BRFState.FACE_TRACKING) {
 					main.socket.emit('data', face);
 			}
-			if (stats.end) stats.end();
-			main.animationID = requestAnimationFrame(main.trackfaces);
+			if (main.stats.end) {
+				main.stats.end();
+			}
+			if(!main.cancel){
+				main.animationFrameId = window.requestAnimationFrame(main.trackfaces);
+			} else {
+			}
 		}
+
+	this.stop = () => {
+		main.cancel = true;
+		setTimeout(() => {
+			main.brfv4Example = { stats: {} };
+			main.animationFrameId = null;
+			main.oldCircles = [];
+			main.webcam	= document.getElementById("myVideo");
+			main.imageData = document.getElementById("imageData");
+			main.imageDataCtx	= main.imageData.getContext('2d');
+			main.brfv4 = null;
+			main.brfmanager = null;
+			main.resolution = null;
+			main.ua	= null;
+			main.test = null;
+			main.stats = null;
+		},200);
+	}
+
+	this.resume = function (){
+		main.setup = true;
+		main.cancel = false;
+		main.init();
+	}
 
 	this.createLivenessCircle = function() {
 		$('#circle').circleProgress({
@@ -245,7 +248,6 @@ function Liveness(){
 	 animation: false
 		});
 	}
-
 
 	this.drawCircle = function(int){
 	switch (int) {

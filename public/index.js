@@ -9,7 +9,6 @@ $(document)
   .ready(function() {
     var voiceItHTML = new voiceIt2HTML();
     var init = false;
-    var myVoiceIt;
 
     $('#mainForm').keydown(function(event) {
       if (event.keyCode == 13) {
@@ -108,32 +107,30 @@ $(document)
                 if (!init) {
                   voiceItHTML.init();
                   setTimeout(function() {
-                    myVoiceIt = new voiceIt2ClientSide();
-                    myVoiceIt.init();
                     $("#voiceEnrollmentBtn").click(function() {
-                      myVoiceIt.encapsulatedVoiceEnrollment();
+                      voiceItHTML.initVoiceEnrollment();
                     });
 
                     $("#voiceVerificationBtn").click(function() {
-                      myVoiceIt.encapsulatedVoiceVerification();
+                      voiceItHTML.initVoiceVerification();
                     });
 
                     $("#faceVerificationBtn").click(function() {
-                      myVoiceIt.encapsulatedFaceVerification();
+                      voiceItHTML.initFaceVerification();
                     });
 
                     $("#faceEnrollmentBtn").click(function() {
-                      myVoiceIt.encapsulatedFaceEnrollment();
+                      voiceItHTML.initFaceEnrollment();
                     });
 
                     $("#videoVerificationBtn").click(function() {
-                      myVoiceIt.encapsulatedVideoVerification();
+                      voiceItHTML.initVideoVerification();
                     });
 
                     $("#videoEnrollmentBtn").click(function() {
-                      myVoiceIt.encapsulatedVideoEnrollment();
+                      voiceItHTML.initVideoEnrollment();
                     });
-                  }, 500);
+                  }, 1200);
                   init = true;
                 }
               });

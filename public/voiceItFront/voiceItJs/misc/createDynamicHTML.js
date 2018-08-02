@@ -1,4 +1,4 @@
-function modalHtmlStructure() {
+function voiceItHtmlStructure() {
   this.modalStructure = [{
     "attributes": {
       "class": "ui modal",
@@ -290,7 +290,7 @@ function modalHtmlStructure() {
     'voiceItFront/voiceItJs/webrtc-adapter/out/adapter.js',
     'voiceItFront/voiceItJs/misc/circle-progress.min.js',
     'voiceItFront/voiceItJs/prompts.js',
-    'voiceItFront/voiceItJs/VoiceIt2.js',
+    'voiceItFront/voiceItJs/VoiceIt2Obj.js',
     'voiceItFront/voiceItJs/vudio.js',
     'voiceItFront/voiceItJs/liveness.js',
   ];
@@ -342,6 +342,23 @@ function modalHtmlStructure() {
     }
   }
 
+  this.appendScripts = function(count){
+    if (count == this.scriptsStructure.length) {
+      return;
+    } else {
+      var timeOut = 50;
+      if (this.scriptsStructure[count] == "http://code.jquery.com/jquery-1.11.0.min.js"){
+        timeOut = 200;
+      }
+        var script = document.createElement('script');
+        script.src = this.scriptsStructure[count];
+        document.head.appendChild(script);
+      setTimeout(() => {
+        return this.appendScripts(++count);
+      }, timeOut);
+    }
+  }
+
   this.appendModal = function() {
     var svgns = "http://www.w3.org/2000/svg";
     for (var i = 0; i < this.modalStructure.length; i++) {
@@ -377,11 +394,7 @@ function modalHtmlStructure() {
     }
 
     //append the script voiceIt dependecies to the DOM
-    for (var j = 0; j < this.scriptsStructure.length; j++) {
-      var script = document.createElement('script');
-      script.src = this.scriptsStructure[j];
-      document.head.appendChild(script);
-    }
+    this.appendScripts(0);
 
     //append video-js dependecies
     this.appendVideoJs(0);
