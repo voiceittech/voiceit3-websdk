@@ -41,8 +41,28 @@ In the email input, type: 'demo@voiceit.io'. In the password input, type: 'voice
 Parts of the demo can be incorporated for any specific use-case, for instance, voice-only verification, or face-only verification with liveness, or video and voice enrollment, etc. For any such use-case, a backend and fronted implementation is required:
 
 ### Back End Implementation
+Please copy the folder voiceit2-web-login-example/vocieItbackEnd to you project root.
+The base module for the back end will be voiceit2-web-login-example/vocieItbackEnd/js/voiceItBase.js. This module is responsibple for post-recording processing, doing liveness math, socket communication with client, and Api Calls, done through voiceit2-web-login-example/vocieItbackEnd/js/voiceItApiWrapper.js-a tweaked version of our Node Wrapper.
 
-The base module for the back end will be voiceit2-web-login-example/js/voiceItBase.js. This module is responsibple for post-recording processing, doing liveness math, socket communication with client, and Api Calls, done through voiceit2-web-login-example/js/voiceItApiWrapper.js-a tweaked version of our Node Wrapper.
+Before implemention voiceItBase, please add the following dependecies to your project's package.json, under the dependecies section:
+```
+...
+..
+  "dependencies": {
+  ...
+  ..
+    "atob": "^2.1.1",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "fluent-ffmpeg": "^2.1.2",
+    "socket.io": "^2.1.1",
+    "unirest": "^0.5.1",
+    "ws": "^5.2.1"
+  }
+...
+..
+```
+Make sure to run ```npm install``` after this.
 
 To implement voiceItBase, either pass it a config file, such as voiceit2-web-login-example/config.js:
 ```
