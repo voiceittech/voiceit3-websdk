@@ -103,7 +103,8 @@ voiceItBackEnd = new voiceItModule({
       numLivTests: NUM_OF_LIVENESS_TESTS
     }, server);
 ```
-This will set up your server to communicate with the front end.
+Please make sure to use ```server.listen(....)``` rather than ```app.listen(...)```
+Your server is now set up to communicate with the front end.
 
 ### Front End Implementation
 The front end can be implemented in a modular fashion- each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently.
@@ -114,11 +115,12 @@ The gateway to front-end implementation is voiceit2-web-login-example/public/voi
 To incorporate the Front End, please copy the folder voiceit2-web-login-example/public/voiceItFront to your project directory.
 Include voiceItFront/voiceIt2.js into your html:
 ```
-<script src='YOU_PROJECT_ROOT/voiceItFront/voiceIt2.js'>
+<script src='YOU_PROJECT_ROOT/voiceItFront/voiceIt2.js'/>
 ```
 Now we can instansiate the voiceItFrontEndBase class:
 ```
 var myVocieIt = new voiceIt2FrontEndBase();
+myVoiceIt.init()
 ``` 
 This will gather fron-end dependecies (script and link tags), and create the html structure. This will also instansiate voiceIt2Obj as mentioned above.
 
