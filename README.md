@@ -1,5 +1,5 @@
 # VoiceIt2 Web Login Example and Kit
-The repository contains an example web demonstration of VoiceIt's API 2.0 use-cases. Scroll below for instructions to implementing parts of the demo into your own projects.
+The repository contains an example web demonstration of VoiceIt's API 2.0 use-cases. Scroll further below for instructions to implementing parts of the demo into your own projects.
 
 ## Prerequisets 
 <ul>
@@ -13,8 +13,8 @@ The repository contains an example web demonstration of VoiceIt's API 2.0 use-ca
 ## Web Demo 
 
 #### Getting the Credentials 
-Before unpacking the repo. plese make sure to create a Developer account at https://voiceit.io/signup. Upon completion, 
-login and navigate to the "Settings tab" at the bottom lower left corner. Click "Activate API 2" to get the Api Key and Token, both of which will be needed later on. Also, navigate to "User Management" tab and click "Create a User". This will create a User ID which will be needed later on. 
+Before unpacking the repo, plese make sure to create a Developer account at https://voiceit.io/signup. Upon completion, 
+login and navigate to the "Settings tab" at the bottom lower left corner. Click "Activate API 2" to get the Api Key and Token, both of which will be needed later on. Also, navigate to "User Management" tab and click "Create a User". This will create a user with a User ID- this will be needed later on. 
 
 #### Getting the Dependecies 
 Please clone or download this repository. First, make sure you have node JS installed:
@@ -32,7 +32,7 @@ npm install
 This will get the required dependecies for the demo.
 
 #### The Config File 
-Before starting the demo, please navigate to voiceit2-web-login-example/config.js. The config file hosts options that initiate the voiceIt Back-End module with the given options. Please replace the 'API_KEY_HERE' with your API Key, and 'API_TOKEN_HERE' with your API Token. Change other options as per your preferences.
+Before starting the demo, please navigate to voiceit2-web-login-example/config.js. The config file hosts options that initiate the voiceIt Back-End module. Please replace the 'API_KEY_HERE' with your API Key, and 'API_TOKEN_HERE' with your API Token. Change other options as per your preferences.
 
 #### The User Id
 A userId will be needed for most API calls. For the demo, we've created a Users file that has a simple object of User Email to User Details. In a real scenario, a voiceIt User ID could be fetched from a database, a session, etc. 
@@ -47,15 +47,15 @@ This will start the server at http://localhost:8000. Please navigate to http://l
 In the email input, type: 'demo@voiceit.io'. In the password input, type: 'voiceit123'. After submitting the form, further verification/enrollment methods will appear that you can test out. 
 
 ## Incorporating the Kit
-Parts of the demo can be incorporated for any specific use-case, for instance, voice-only verification, or face-only verification with liveness, or video and voice enrollment, etc. For any such use-case, a backend and fronted implementation is required:
+Parts of the demo can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently, providing a total of 27 use-cases (such as voice-only verification, or face and voice enrollment, or video-only verification w/ Liveness, to name a few). For any such use-case, a backend and fronted implementation is required:
 
 ### Back End Implementation
 Please copy the folder voiceit2-web-login-example/vocieItbackEnd to you project root.
-The base module for the back end will be voiceit2-web-login-example/vocieItbackEnd/js/voiceItBase.js. This module is responsibple for post-recording processing, doing liveness math, socket communication with client, and Api Calls, done through voiceit2-web-login-example/vocieItbackEnd/js/voiceItApiWrapper.js-a tweaked version of our Node Wrapper.
+The base module for the back end will be voiceit2-web-login-example/vocieItbackEnd/js/voiceItBase.js. This module is responsible for post-recording processing, liveness math, handling socket communication with client, and making Api Calls, all done through voiceit2-web-login-example/vocieItbackEnd/js/voiceItApiWrapper.js-a tweaked version of our Node Wrapper.
 
 #### Gathering Back End Dependecies
 
-Before implemention voiceItBase, please add the following dependecies to your project's package.json, under the dependecies section:
+Before implementing voiceItBase, please add the following dependecies to your project's package.json, under the dependecies section:
 ```
 ...
 ..
@@ -85,7 +85,7 @@ const config = require('./config.js');
 voiceItBackEnd = new voiceItModule(config, server);
 ```
 
-Or initialise it by passing it options directly:
+Or pass it options directly:
 
 ```
 const server = require('http').Server(app);
@@ -115,16 +115,16 @@ Now we can instansiate the voiceItFrontEndBase class:
 ```
 var myVocieIt = new voiceIt2FrontEndBase();
 ``` 
-This will gather fron-end dependecies (script and link tags), and create the html structure. This will also instansiate voiceIt2Obj as mentioned above. You can proceede to connect the voiceIt2Obj to your UI. 
+This will gather fron-end dependecies (script and link tags), and create the html structure. This will also instansiate voiceIt2Obj as mentioned above.
 
 #### Connecting to your UI
 
-For any of the use-case mentioned above, you need to call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness. 
-For instance, to start a face verification w/liveness process, you'd have to call:
+For any of the use-cases mentioned above, you need to call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness, false by default. 
+For instance, to start a face verification w/wo liveness process, you'd have to call:
 ```
 myVoiceIt.init_Face_Verification(LIVENESS_BOOL);
 ```
-This will reveal the ui Modal (the pop-up box), ready to start the face verification w/liveness process.
+This will reveal the ui Modal (the pop-up box), ready to start the face verification w/liveness.
 Similarly: 
 ```
 //Reveal the ui Modal, ready to start the vocie Enrollment process
