@@ -12,6 +12,11 @@ The repository contains an example web demonstration of VoiceIt's API 2.0 use-ca
 
 ## Web Demo 
 
+### SnapShots 
+
+
+### Getting Started
+
 #### Getting the Credentials 
 Before unpacking the repo, plese make sure to create a Developer account at https://voiceit.io/signup. Upon completion, 
 login and navigate to the "Settings tab" at the bottom lower left corner. Click "Activate API 2" to get the Api Key and Token, both of which will be needed later on. Also, navigate to "User Management" tab and click "Create a User". This will create a user with a User ID- this will be needed later on. 
