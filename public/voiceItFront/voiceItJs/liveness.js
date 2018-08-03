@@ -188,11 +188,7 @@ function Liveness(){
 
 	this.trackfaces = function () {
 			if (main.stats.start) main.stats.start();
-			// imageDataCtx.setTransform(-1.0, 0, 0, 1, resolution.width, 0); // mirrored for draw of video
-			// imageDataCtx.drawImage(this.webcam, 0, 0, resolution.width, resolution.height);
-			// imageDataCtx.setTransform( 1.0, 0, 0, 1, 0, 0); // unmirrored for draw of results
 			main.brfmanager.update(main.imageDataCtx.getImageData(0,0, main.resolution.width, main.resolution.height).data);
-			// Data.push(data);
 
 	 		var faces = main.brfmanager.getFaces();
       var face = faces[0];

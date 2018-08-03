@@ -1,4 +1,4 @@
-function voiceIt2HTML() {
+function voiceIt2FrontEndBase() {
   var script = document.createElement('script');
   script.src = 'voiceItFront/voiceItJs/misc/createDynamicHTML.js';
   document.head.appendChild(script);
@@ -13,34 +13,34 @@ function voiceIt2HTML() {
   this.init = function() {
     var voiceInitiator = new voiceItHtmlStructure();
     voiceInitiator.init();
-    setTimeout( ()=>{
+    setTimeout(()=>{
       this.myVoiceIt = new voiceIt2Obj();
       this.myVoiceIt.init();
     },800);
   }
 
-  this.initVoiceEnrollment = function(){
+  this.init_Voice_Enrollment = function(){
     this.myVoiceIt.encapsulatedVoiceEnrollment();
   }
 
-  this.initVoiceVerification = function(){
+  this.init_Voice_Verification = function(){
     this.myVoiceIt.encapsulatedVoiceVerification();
   }
 
-  this.initFaceVerification = function(){
-    this.myVoiceIt.encapsulatedFaceVerification();
+  this.init_Face_Verification = function(liveness){
+    this.myVoiceIt.encapsulatedFaceVerification(liveness);
   }
 
-  this.initFaceEnrollment = function(){
+  this.init_Face_Enrollment = function(){
     this.myVoiceIt.encapsulatedFaceEnrollment();
   }
 
-  this.initVideoEnrollment = function(){
+  this.init_Video_Enrollment = function(){
     this.myVoiceIt.encapsulatedVideoEnrollment();
   }
 
-  this.initVideoVerification = function(){
-    this.myVoiceIt.encapsulatedVideoVerification();
+  this.init_Video_Verification = function(liveness){
+    this.myVoiceIt.encapsulatedVideoVerification(liveness);
   }
 
 }

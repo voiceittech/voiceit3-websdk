@@ -7,7 +7,12 @@ function authenticationAPICall() {
 
 $(document)
   .ready(function() {
-    var voiceItHTML = new voiceIt2HTML();
+    var liveness =false;
+    $('#livenessToggle').eq(0).click(function() {
+      liveness = !liveness;
+    });
+
+    var voiceItHTML = new voiceIt2FrontEndBase();
     var init = false;
 
     $('#mainForm').keydown(function(event) {
@@ -108,27 +113,27 @@ $(document)
                   voiceItHTML.init();
                   setTimeout(function() {
                     $("#voiceEnrollmentBtn").click(function() {
-                      voiceItHTML.initVoiceEnrollment();
+                      voiceItHTML.init_Voice_Enrollment();
                     });
 
                     $("#voiceVerificationBtn").click(function() {
-                      voiceItHTML.initVoiceVerification();
+                      voiceItHTML.init_Voice_Verification();
                     });
 
                     $("#faceVerificationBtn").click(function() {
-                      voiceItHTML.initFaceVerification();
+                      voiceItHTML.init_Face_Verification(liveness);
                     });
 
                     $("#faceEnrollmentBtn").click(function() {
-                      voiceItHTML.initFaceEnrollment();
+                      voiceItHTML.init_Face_Enrollment();
                     });
 
                     $("#videoVerificationBtn").click(function() {
-                      voiceItHTML.initVideoVerification();
+                      voiceItHTML.init_Video_Verification(liveness);
                     });
 
                     $("#videoEnrollmentBtn").click(function() {
-                      voiceItHTML.initVideoEnrollment();
+                      voiceItHTML.init_Video_Enrollment();
                     });
                   }, 1200);
                   init = true;

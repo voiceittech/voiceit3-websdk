@@ -60,7 +60,8 @@ function voiceIt2Obj() {
     }
   }
 
-  this.encapsulatedFaceVerification = function() {
+  this.encapsulatedFaceVerification = function(liveness) {
+    main.liveness = liveness;
     main.type.biometricType = 'face';
     main.type.action = 'Verification';
     if (!main.enrollmentNeededFace) {
@@ -79,7 +80,8 @@ function voiceIt2Obj() {
     main.initiate();
   }
 
-  this.encapsulatedVideoVerification = function() {
+  this.encapsulatedVideoVerification = function(liveness) {
+    main.liveness = liveness;
     main.type.biometricType = 'video';
     main.type.action = 'Verification';
     if (!main.enrollmentNeededVoice) {
@@ -280,11 +282,6 @@ function voiceIt2Obj() {
           main.destroy();
         }
       });
-
-    //liveness
-    $('#livenessToggle').eq(0).click(function() {
-      main.liveness = !main.liveness;
-    });
 
   }
   //called by the the start up buttons
@@ -534,13 +531,15 @@ function voiceIt2Obj() {
     main.vidFramej.fadeTo(550, 1.0);
     if (main.liveness && main.type.action !== "Enrollment") {
       main.initFaceLiv();
-      if (!main.assignedLivEvents){
-      main.livenessObj = new Liveness();
-      main.livenessObj.init();
-      main.assignedLivEvents = true;
-    } else {
-      main.livenessObj.resume();
-      }
+      setTimeout(() => {
+        if (!main.assignedLivEvents){
+        main.livenessObj = new Liveness();
+        main.livenessObj.init();
+        main.assignedLivEvents = true;
+      } else {
+        main.livenessObj.resume();
+        }
+      },150);
     } else {
       main.initFaceRecord();
     }
@@ -568,14 +567,15 @@ function voiceIt2Obj() {
     main.wavej.css('display', 'none');
     if (main.liveness && main.type.action !== "Enrollment") {
       main.initFaceLiv();
-      if (!main.assignedLivEvents){
-      main.livenessObj = new Liveness();
-      main.livenessObj.init();
-      main.assignedLivEvents = true;
-      }
-    else {
-      main.livenessObj.resume();
-      }
+      setTimeout(() => {
+        if (!main.assignedLivEvents){
+        main.livenessObj = new Liveness();
+        main.livenessObj.init();
+        main.assignedLivEvents = true;
+      } else {
+        main.livenessObj.resume();
+        }
+      },150);
     } else {
       main.initVideoRecord();
     }
