@@ -44,6 +44,8 @@ Parts of the demo can be incorporated for any specific use-case, for instance, v
 Please copy the folder voiceit2-web-login-example/vocieItbackEnd to you project root.
 The base module for the back end will be voiceit2-web-login-example/vocieItbackEnd/js/voiceItBase.js. This module is responsibple for post-recording processing, doing liveness math, socket communication with client, and Api Calls, done through voiceit2-web-login-example/vocieItbackEnd/js/voiceItApiWrapper.js-a tweaked version of our Node Wrapper.
 
+#### Gathering Back End Dependecies
+
 Before implemention voiceItBase, please add the following dependecies to your project's package.json, under the dependecies section:
 ```
 ...
@@ -64,6 +66,7 @@ Before implemention voiceItBase, please add the following dependecies to your pr
 ```
 Make sure to run ```npm install``` after this.
 
+#### Initializing the base module
 To implement voiceItBase, either pass it a config file, such as voiceit2-web-login-example/config.js:
 ```
 const server = require('http').Server(app);
@@ -91,6 +94,8 @@ This will set up your server to communicate with the front end.
 ### Front End Implementation
 The front end can be implemented in a modular fashion- each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently, providing a total of 27 use-cases (such as voice-only verification, or face and voice enrollment, or video-only verification w/ Liveness, to name a few).
 
+#### Creating the HTML
+
 The gateway to front-end implementation is voiceit2-web-login-example/public/voiceItFront/voiceIt2.js. This is an initializer class that will gather and append all the dependecies to the DOM, create the required HTML structure for the main UI Modal (the pop-up Box from the Demo), and instansiate the voiceIt2Obj- this module is responsible for communicating with the server, and controlling the flow of the verification(s)/enrollment(s) processes. 
 To incorporate the Front End, please copy the folder voiceit2-web-login-example/public/voiceItFront to your project directory.
 Include voiceIt2.js into your html:
@@ -100,9 +105,11 @@ Include voiceIt2.js into your html:
 Now we can instansiate the voiceItFrontEndBase class:
 ```
 var myVocieIt = new voiceIt2FrontEndBase();
-```
-This will also instansiate voiceIt2Obj as mentioned above. 
-You are now set up to connect the voiceIt2Obj to your UI. 
+``` 
+This will gather fron-end dependecies (script and link tags), and create the html structure. This will also instansiate voiceIt2Obj as mentioned above. You can proceede to connect the voiceIt2Obj to your UI. 
+
+#### Connecting to your UI
+
 For any of the use-case mentioned above, you need to call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness. 
 For instance, to start a face verification w/liveness process, you'd have to call:
 ```
