@@ -283,8 +283,9 @@ function voiceItHtmlStructure() {
   ];
 
   this.scriptsStructure = [
+    'voiceItFront/voiceItJs/jquery.min.js',
+    'voiceItFront/voiceItJs/misc/bufferloader.js',
     'voiceItFront/voiceItJs/socket.io-client/dist/socket.io.js',
-    'http://code.jquery.com/jquery-1.11.0.min.js',
     'voiceItFront/voiceItJs/misc/bufferloader.js',
     'voiceItFront/semantic/dist/semantic.min.js',
     'voiceItFront/voiceItJs/webrtc-adapter/out/adapter.js',
@@ -347,9 +348,6 @@ function voiceItHtmlStructure() {
       return;
     } else {
       var timeOut = 50;
-      if (this.scriptsStructure[count] == "http://code.jquery.com/jquery-1.11.0.min.js"){
-        timeOut = 200;
-      }
         var script = document.createElement('script');
         script.src = this.scriptsStructure[count];
         document.head.appendChild(script);
@@ -402,11 +400,10 @@ function voiceItHtmlStructure() {
     //append the Modal html to the DOM
     setTimeout(() => {
       this.appendModal();
-    }, 200);
+    }, 500);
   }
 
-  //destroy the modal, scripts, and links, from the DOM
+  //TODO: destroy the modal, scripts, and links, from the DOM
   this.remove = function() {
-
   }
 }
