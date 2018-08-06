@@ -21,7 +21,7 @@ The repository contains an example web demonstration of VoiceIt's API 2.0 use-ca
 Before unpacking the repo, plese make sure to create a Developer account at https://voiceit.io/signup. Upon completion, 
 login and navigate to the "Settings tab" at the bottom lower left corner. Click "Activate API 2" to get the Api Key and Token, both of which will be needed later on. Also, navigate to "User Management" tab and click "Create a User". This will create a user with a User ID- this will be needed later on. 
 
-#### Getting the Dependecies 
+#### Getting the Dependencies
 Please clone or download this repository. First, make sure you have node JS installed;
 
 OSX:
@@ -46,7 +46,7 @@ Finally, unpack the contents, and cd into the root. Run:
 ```
 npm install
 ```
-This will get the required dependecies for the demo.
+This will get the required dependencies for the demo.
 
 #### The Config File 
 Before starting the demo, please navigate to voiceit2-web-login-example/config.js. The config file hosts options that initiate the voiceIt Back-End module. Please replace the 'API_KEY_HERE' with your API Key, and 'API_TOKEN_HERE' with your API Token. Change other options as per your preferences.
@@ -70,9 +70,9 @@ Parts of the demo can be incorporated for any specific use-case. Each type (voic
 Please copy the folder voiceit2-web-login-example/vocieItBackEnd to you project root.
 The base module for the back end is voiceit2-web-login-example/vocieItBackEnd/js/voiceItBase.js. This module is responsible for post-recording processing, liveness math, handling socket communication with client, and making Api Calls, all done through voiceit2-web-login-example/vocieItbackEnd/js/voiceItApiWrapper.js-a tweaked version of our Node Wrapper.
 
-#### Gathering Back End Dependecies
+#### Gathering Back End Dependencies
 
-Before implementing voiceItBase, please add the following dependecies to your project's package.json, under the dependecies section:
+Before implementing voiceItBase, please add the following dependencies to your project's package.json, under the dependencies section:
 ```
 ...
 ..
@@ -123,7 +123,7 @@ The front end can be implemented in a modular fashion- each type (voice, face, a
 
 #### Creating the HTML
 
-The gateway to front-end implementation is voiceit2-web-login-example/public/voiceItFront/voiceIt2.js. This is an initializer class that will gather and append all the dependecies to the DOM, create the required HTML structure for the main UI Modal (the pop-up Box from the Demo), and instansiate the voiceIt2Obj- this module is responsible for communicating with the server, and controlling the flow of the verification(s)/enrollment(s) processes. 
+The gateway to front-end implementation is voiceit2-web-login-example/public/voiceItFront/voiceIt2.js. This is an initializer class that will gather and append all the dependencies to the DOM, create the required HTML structure for the main UI Modal (the pop-up Box from the Demo), and instansiate the voiceIt2Obj- this module is responsible for communicating with the server, and controlling the flow of the verification(s)/enrollment(s) processes. 
 To incorporate the Front End, please copy the folder voiceit2-web-login-example/public/voiceItFront to your project directory.
 Include voiceItFront/voiceIt2.js into your html:
 ```
@@ -134,7 +134,7 @@ Now we can instansiate the voiceItFrontEndBase class:
 var myVocieIt = new voiceIt2FrontEndBase();
 myVoiceIt.init()
 ``` 
-This will gather fron-end dependecies (script and link tags), and create the html structure. This will also instansiate voiceIt2Obj as mentioned above.
+This will gather fron-end dependencies (script and link tags), and create the html structure. This will also instansiate voiceIt2Obj as mentioned above.
 
 #### Connecting to your UI
 
