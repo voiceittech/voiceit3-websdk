@@ -60,8 +60,12 @@ function Liveness(){
 				 	}
 				 };
 				 setTimeout(()=>{
-					 initializeBRF(main.brfv4);
-				 },200);
+					 if (initializeBRF == undefined){
+						 main.waitForBRF();
+					 } else {
+							initializeBRF(main.brfv4);
+					 }
+				 },100);
 			}
 			if(main.brfv4.sdkReady) {
 				main.initSDK();

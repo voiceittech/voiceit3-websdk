@@ -48,7 +48,7 @@ app.post('/authenticate', (req, res) => {
           apiToken: config.VOICEIT_API_TOKEN,
           contentLanguage: config.contentLanguage,
           phrase: config.phrase,
-          numLivTests: 5
+          numLivTests: 2
         }, server);
       },150);
       res.status(200).send(data);

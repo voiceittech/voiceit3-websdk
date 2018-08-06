@@ -87,4 +87,5 @@ function voiceIt2FrontEndBase() {
       this.myVoiceIt.encapsulatedVideoVerification(liveness);
     }
   }
+  
 }

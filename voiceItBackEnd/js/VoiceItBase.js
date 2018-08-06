@@ -42,7 +42,7 @@ module.exports = function(config, server) {
   var livFaceRecord;
   var livVoiceRecord;
   var timePassed;
-  const maxScreenShots = (numTests < 2) ? 1 : 2;
+  const maxScreenShots = 1;
 
 
   //counters
@@ -443,10 +443,11 @@ module.exports = function(config, server) {
   function handleFaceLivenessCompletion(data) {
     //convert milliseconds stamps to in-video time
     stampToVidSeconds(successTimeStamps, timeStamps);
+    console.log(data);
     fs.appendFileSync(rootAbsPath + "/tempAssets/vid.mp4", new Buffer.alloc(data.recording.length, data.recording));
     var reducedStamps = [];
     //round off to 2 significant figures
-    for (var j = 0; j < maxScreenShots; j++) {
+    for (var j = 0; j < 1; j++) {
       reducedStamps[j] = Math.round(successTimeStamps[j] * 10) / 10;
     }
     //take screenshots
@@ -454,7 +455,7 @@ module.exports = function(config, server) {
       .on('end', function(stdout, stderr) {
         doLivenessFaceCalls(data.recording);
       }).takeScreenshots({
-        count: 2,
+        count: 1,
         filename: 'pic.png',
         timemarks: reducedStamps
       }, rootAbsPath + '/tempAssets', function(err) {
@@ -527,11 +528,11 @@ module.exports = function(config, server) {
     var fails = 0;
     var curr = 0;
     var emitted = false;
-    for (var i = 1; i <= maxScreenShots; i++) {
+    for (var i = 1; i <= 1; i++) {
       myVoiceIt.faceVerificationLiv({
         userId: userID,
         contentLanguage: config.contentLanguage,
-        photo: rootAbsPath + "/tempAssets/pic_" + i + ".png"
+        photo: rootAbsPath + "/tempAssets/pic.png"
       }, (jsonResponse) => {
         curr++;
         console.log(jsonResponse);
@@ -599,7 +600,7 @@ module.exports = function(config, server) {
 
   function removeFiles(num) {
     for (var i = 1; i <= maxScreenShots; i++) {
-      fs.unlink(rootAbsPath + "/tempAssets/pic_" + i + ".png", (err) => {
+      fs.unlink(rootAbsPath + "/tempAssets/pic.png", (err) => {
         if (err) throw err;
       });
     }

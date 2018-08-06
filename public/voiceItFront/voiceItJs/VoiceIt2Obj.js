@@ -782,6 +782,7 @@ function voiceIt2Obj() {
           main.vidCirclej.fadeTo(300, 0.3);
           main.overlayj.fadeTo(300, 1.0);
         } else {
+            console.log(main.player.recordedData);
           obj = {
             recording: main.player.recordedData,
             kind: "face"
