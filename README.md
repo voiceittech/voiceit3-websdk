@@ -30,7 +30,7 @@ brew install node
 ```
 Linux:
 ```
-sudo apt-get install node
+sudo apt-get install nodejs
 ```
 Also, make sure you have ffmpeg installed;
 
