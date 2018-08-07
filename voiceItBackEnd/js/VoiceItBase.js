@@ -113,7 +113,7 @@ module.exports = function(config, server) {
       case 0:
         var face = faceObj.rotationX;
         var timeNew = new Date().getTime();
-        if ((timeNew - testTimer) > 700) {
+        if ((timeNew - testTimer) > 850) {
           if (face >= 0.25) {
             facedDownCounter++;
             if (facedDownCounter > 1) {
@@ -148,10 +148,10 @@ module.exports = function(config, server) {
       case 1:
         var face = faceObj.rotationY;
         var timeNew = new Date().getTime();
-        if ((timeNew - testTimer) > 700) {
+        if ((timeNew - testTimer) > 850) {
           if (face < -0.40) {
             turnedRightCounter++;
-            if (turnedRightCounter > 0) {
+            if (turnedRightCounter > 1) {
               passed.test = 1;
               passed.value = true;
               testTimer = Date.now();
@@ -165,8 +165,7 @@ module.exports = function(config, server) {
               doingLiveness = false;
               io.emit('completeLiveness', 1);
               testIndex += 1;
-
-              if (testIndex > 4) {
+              if (testIndex > 2) {
                 testIndex = 0;
               }
               currTest = tests[testIndex];
@@ -182,7 +181,7 @@ module.exports = function(config, server) {
       case 2:
         var face = faceObj.rotationY;
         var timeNew = new Date().getTime();
-        if ((timeNew - testTimer) > 700) {
+        if ((timeNew - testTimer) > 850) {
           if (face > 0.40) {
             turnedLeftCounter++;
             if (turnedLeftCounter > 1) {
@@ -200,7 +199,7 @@ module.exports = function(config, server) {
               io.emit('completeLiveness', 1);
               testIndex += 1;
 
-              if (testIndex > 4) {
+              if (testIndex > 2) {
                 testIndex = 0;
               }
               currTest = tests[testIndex];
@@ -238,7 +237,7 @@ module.exports = function(config, server) {
           smileFactor = 1.0;
         }
         var timeNew = new Date().getTime();
-        if ((timeNew - testTimer) > 700) {
+        if ((timeNew - testTimer) > 850) {
           if (smileFactor > 0.55) {
             smileCounter++;
             if (smileCounter > 1) {
@@ -278,7 +277,7 @@ module.exports = function(config, server) {
         }
 
         var timeNew = new Date().getTime();
-        if ((timeNew - testTimer) > 700) {
+        if ((timeNew - testTimer) > 850) {
           if (yawnFactor > 0.3) {
             yawnCounter++;
             if (yawnCounter > 1) {
@@ -554,9 +553,7 @@ module.exports = function(config, server) {
             io.emit('completeLiveness', 2);
           }
         }
-        if (curr >= responses) {
           removeFiles(responses);
-        }
       });
     }
   }
@@ -700,8 +697,7 @@ module.exports = function(config, server) {
             doingLiveness = false;
             socket.emit('completeLiveness', 1);
             testIndex += 1;
-
-            if (testIndex > 4) {
+            if (testIndex > 2) {
               testIndex = 0;
             }
             currTest = tests[testIndex];
@@ -717,7 +713,7 @@ module.exports = function(config, server) {
         if (passed.value) {
           passedTests++;
           testIndex += 1;
-          if (testIndex > 4) {
+          if (testIndex > 2) {
             testIndex = 0;
           }
           oldTest = currTest;
@@ -762,7 +758,9 @@ module.exports = function(config, server) {
 
         //wait for face back
         if (checkForFaceStraight) {
-          if (face.rotationY < 0.1 && face.rotationY > -0.1 && face.rotationX < 0.10 || Date.now() - timePassed > 1200) {
+          var a = Date.now();
+          if ((face.rotationY < 0.1 && face.rotationY > -0.1 && face.rotationX < 0.10 ) || (a - timePassed > 1000)) {
+            testTimer = Date.now();
             if (successTimeStamps.length < numTests) {
               successTimeStamps.push(timeStamps[timeStamps.length - 1]);
             }
@@ -778,13 +776,14 @@ module.exports = function(config, server) {
                 setTimeout(function() {
                   io.emit('completeLiveness', 5);
                 }, 100);
-              } else {}
+              } else {
+
+              }
               doingLiveness = false;
             } else {
               resetCounters();
             }
             checkForFaceStraight = false;
-            timePassed = 0;
           }
         }
       }
