@@ -13,7 +13,7 @@ module.exports = function(config, server) {
   var socket2Id;
 
   //test stuff
-  var tests = [0, 1, 2];
+  var tests = [0, 1, 2, 3, 4];
   var currTest;
   var time;
   var testIndex = 0;
@@ -132,7 +132,7 @@ module.exports = function(config, server) {
               io.emit('completeLiveness', 1);
               testIndex += 1;
 
-              if (testIndex > 2) {
+              if (testIndex > 4) {
                 testIndex = 0;
               }
               currTest = tests[testIndex];
@@ -165,7 +165,7 @@ module.exports = function(config, server) {
               doingLiveness = false;
               io.emit('completeLiveness', 1);
               testIndex += 1;
-              if (testIndex > 2) {
+              if (testIndex > 4) {
                 testIndex = 0;
               }
               currTest = tests[testIndex];
@@ -199,7 +199,7 @@ module.exports = function(config, server) {
               io.emit('completeLiveness', 1);
               testIndex += 1;
 
-              if (testIndex > 2) {
+              if (testIndex > 4) {
                 testIndex = 0;
               }
               currTest = tests[testIndex];
@@ -697,7 +697,7 @@ module.exports = function(config, server) {
             doingLiveness = false;
             socket.emit('completeLiveness', 1);
             testIndex += 1;
-            if (testIndex > 2) {
+            if (testIndex > 4) {
               testIndex = 0;
             }
             currTest = tests[testIndex];
@@ -713,7 +713,7 @@ module.exports = function(config, server) {
         if (passed.value) {
           passedTests++;
           testIndex += 1;
-          if (testIndex > 2) {
+          if (testIndex > 4) {
             testIndex = 0;
           }
           oldTest = currTest;
