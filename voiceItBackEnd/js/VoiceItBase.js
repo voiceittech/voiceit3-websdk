@@ -607,7 +607,7 @@ module.exports = function(config, server) {
   }
 
   function resetAll(data) {
-    tests = shuffle(tests);
+    // tests = shuffle(tests);
     testTimer = Date.now();
     testIndex = 0;
     currTest = tests[testIndex];
