@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 var server = http.Server(app);
 
 server.listen(8000, () => {
-  console.log('Listening on *:5000');
+  console.log('Listening on *:8000');
 });
 
 //initiate the base voiceit Module
@@ -36,11 +36,12 @@ app.post('/authenticate', (req, res) => {
       setTimeout(() => {
         voiceItBackEnd = new voiceItModule({
           userId: user.id,
-          apiKey: config.VOICEIT_API_KEY,
-          apiToken: config.VOICEIT_API_TOKEN,
+          apiKey: 'API_KEY_HERE',
+          apiToken: 'API_TOKEN_HERE',
           contentLanguage: config.contentLanguage,
           phrase: config.phrase,
-          numLivTests: 2
+          numLivTests: 3,
+          maxLivTries: 2
         }, server);
       },150);
       res.status(200).send(data);

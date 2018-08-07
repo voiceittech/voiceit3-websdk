@@ -34,7 +34,7 @@ module.exports = function(config, server) {
   var currTime;
   var type;
   var livTries = 0;
-  const MAX_TRIES = 2;
+  const MAX_TRIES = config.maxLivTries;
   var doingLiveness = false;
   var checkForFaceStraight = false;
   var verificationTries = 0;
@@ -634,6 +634,7 @@ module.exports = function(config, server) {
     resetCounters();
   }
 
+
   //Handle client-server communication
   io.on('connection', function(socket) {
     socket.on('initLiveness', function(){
@@ -686,6 +687,7 @@ module.exports = function(config, server) {
 
     //date event from client
     socket.on('data', function(faceObject) {
+      //TODO: Add timeOut when face isn't detected!
       if (doingLiveness) {
         currTime = Date.now();
         //liveness test timed out
@@ -811,7 +813,6 @@ module.exports = function(config, server) {
     //timestamps of the recording
     socket.on('timestamp', function(c) {
       initTimeStamps();
-      testTimer = Date.now();
     });
     socket.on('terminate', function() {
       doingLiveness = false;

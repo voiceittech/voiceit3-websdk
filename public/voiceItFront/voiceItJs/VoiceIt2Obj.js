@@ -128,6 +128,7 @@ function voiceIt2Obj() {
     });
     main.socket2.on('completeLiveness', function(response) {
       if (response == 5) {
+        main.livenessObj.stop();
         main.livenessType = "voice";
         setTimeout(function() {
           $('#circle').fadeTo(200, 0.0, function() {});
@@ -782,6 +783,7 @@ function voiceIt2Obj() {
           main.vidCirclej.fadeTo(300, 0.3);
           main.overlayj.fadeTo(300, 1.0);
         } else {
+          main.livenessObj.stop();
             console.log(main.player.recordedData);
           obj = {
             recording: main.player.recordedData,
@@ -1027,8 +1029,17 @@ function voiceIt2Obj() {
     }
 
     if (main.videoCircleStream !== undefined) {
-      main.videoCircleStream.stop();
+      main.videoCircleStream.getTracks()[0].stop();
       main.videoCircleStream = undefined;
+    }
+
+    if (main.audioVisualizer !== undefined && main.audioVisualizer.getStream()!== undefined) {
+      main.audioVisualizer.getStream().getTracks()[0].stop();
+    }
+
+    if (main.videoStream !== undefined) {
+      main.videoStream.getTracks()[0].stop();
+      main.videoStream = undefined;
     }
 
     if (main.player !== undefined) {

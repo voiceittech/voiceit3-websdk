@@ -7,9 +7,10 @@ function authenticationAPICall() {
 
 $(document)
   .ready(function() {
-    var liveness = false;
+    var liveness = $('#livenessToggle').is(':checked') ? true: false;
+
     $('#livenessToggle').eq(0).click(function() {
-      liveness = !liveness;
+      liveness = $(this).is(':checked')? true: false;
     });
 
     var voiceItHTML = new voiceIt2FrontEndBase();

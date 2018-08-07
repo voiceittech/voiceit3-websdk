@@ -5,6 +5,8 @@ function Liveness(){
 	this.cancel = false;
 	this.animationFrameId = undefined;
 
+	this.startTime = undefined;
+
 	this.brfv4BaseURL = "voiceItFront/voiceItJs/brf-js/libs/brf_wasm/";
 	this.support = (typeof WebAssembly === 'object');
 	this.oldCircles = [];
@@ -84,6 +86,7 @@ function Liveness(){
 	this.assignSocketEvents = function() {
 		main.socket.emit('initLiveness', 1);
 		main.socket.on('initiated', function(s){
+			main.startTime = Date.now();
 			main.test = s;
 			main.createLivenessCircle();
 			main.trackfaces();
@@ -91,9 +94,11 @@ function Liveness(){
 			main.drawCircle(main.test);
 		});
 		main.socket.on('test', function(test){
+			main.startTime = Date.now();
 			main.redrawCircle(test);
 		});
 		main.socket.on('reTest', function(test){
+			main.startTime = Date.now();
 			setTimeout(function(){
 			$('#overlay2').fadeTo(300,0.3);
 			},300);
@@ -153,11 +158,11 @@ function Liveness(){
 						$('#header').fadeTo(300,1.0);
 						$('#header').text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
 					});
-
 					main.cancel = true;
 					main.exitOut();
 					break;
 					case 1:
+					main.startTime = Date.now();
 					//failed, give more tries
 					$('#circle').fadeTo(300,0.0,function(){
 						$(this).css('display','none');
@@ -187,6 +192,20 @@ function Liveness(){
 	}
 
 	this.trackfaces = function () {
+		var currTime = Date.now();
+		  if ((currTime - main.startTime) > 5000){
+				main.stop();
+				$('#circle').fadeTo(300,0.0,function(){
+					$(this).css('display','none');
+				});
+				$('#overlay2').fadeTo(300,1.0);
+				$('#header').fadeTo(300,0,function(){
+					$(this).text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
+					$('#header').fadeTo(300,1.0);
+				});
+				main.cancel = true;
+				main.exitOut();
+			}
 			if (main.stats.start) main.stats.start();
 			main.brfmanager.update(main.imageDataCtx.getImageData(0,0, main.resolution.width, main.resolution.height).data);
 
@@ -195,6 +214,7 @@ function Liveness(){
 
 			if (face.state === main.brfv4.BRFState.FACE_TRACKING_START ||
 			face.state === main.brfv4.BRFState.FACE_TRACKING) {
+				console.log(234234);
 					main.socket.emit('data', face);
 			}
 			if (main.stats.end) {
@@ -221,7 +241,7 @@ function Liveness(){
 			main.ua	= null;
 			main.test = null;
 			main.stats = null;
-		},200);
+		},100);
 	}
 
 	this.resume = function (){

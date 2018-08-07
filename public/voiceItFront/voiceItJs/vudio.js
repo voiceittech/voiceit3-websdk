@@ -122,6 +122,10 @@
 
     Vudio.prototype = {
 
+      getStream : function() {
+        return this.stream;
+      },
+
         __init : function() {
 
             this.freqByteData = new Uint8Array(this.analyser.frequencyBinCount);
