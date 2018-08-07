@@ -112,6 +112,7 @@ voiceItBackEnd = new voiceItModule({
       contentLanguage: "CONTENT_LANG",
       phrase: "PHRASE",
       numLivTests: NUM_OF_LIVENESS_TESTS
+      maxLivTries: MAX_FAILED_LIVENESS_TEST_ATTEMPTS
     }, server);
 ```
 Please make sure to use ```server.listen(....)``` rather than ```app.listen(...)```
