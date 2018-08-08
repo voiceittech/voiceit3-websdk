@@ -41,58 +41,6 @@ function voiceIt2Obj() {
   this.enrollmentNeededFace = false;
   this.enrollmentNeededVoice = false;
 
-  //browser ID
-  this.getBrowser = function() {
-    var nVer = navigator.appVersion;
-    var nAgt = navigator.userAgent;
-    var browserName = navigator.appName;
-    var fullVersion = '' + parseFloat(navigator.appVersion);
-    var majorVersion = parseInt(navigator.appVersion, 10);
-    var nameOffset, verOffset, ix;
-    if ((verOffset = nAgt.indexOf("Opera")) != -1) {
-      browserName = "Opera";
-      fullVersion = nAgt.substring(verOffset + 6);
-      if ((verOffset = nAgt.indexOf("Version")) != -1)
-        fullVersion = nAgt.substring(verOffset + 8);
-    } else if ((verOffset = nAgt.indexOf("MSIE")) != -1) {
-      browserName = "Microsoft Internet Explorer";
-      fullVersion = nAgt.substring(verOffset + 5);
-    } else if ((verOffset = nAgt.indexOf("Chrome")) != -1) {
-      browserName = "Chrome";
-      fullVersion = nAgt.substring(verOffset + 7);
-    } else if ((verOffset = nAgt.indexOf("Safari")) != -1) {
-      browserName = "Safari";
-      fullVersion = nAgt.substring(verOffset + 7);
-      if ((verOffset = nAgt.indexOf("Version")) != -1)
-        fullVersion = nAgt.substring(verOffset + 8);
-    } else if ((verOffset = nAgt.indexOf("Firefox")) != -1) {
-      browserName = "Firefox";
-      fullVersion = nAgt.substring(verOffset + 8);
-    } else if ((nameOffset = nAgt.lastIndexOf(' ') + 1) <
-      (verOffset = nAgt.lastIndexOf('/'))) {
-      browserName = nAgt.substring(nameOffset, verOffset);
-      fullVersion = nAgt.substring(verOffset + 1);
-      if (browserName.toLowerCase() == browserName.toUpperCase()) {
-        browserName = navigator.appName;
-      }
-    }
-
-    // trim the fullVersion string at semicolon/space if present
-    if ((ix = fullVersion.indexOf(";")) != -1)
-      fullVersion = fullVersion.substring(0, ix);
-    if ((ix = fullVersion.indexOf(" ")) != -1)
-      fullVersion = fullVersion.substring(0, ix);
-
-    majorVersion = parseInt('' + fullVersion, 10);
-    if (isNaN(majorVersion)) {
-      fullVersion = '' + parseFloat(navigator.appVersion);
-      majorVersion = parseInt(navigator.appVersion, 10);
-    }
-    return browserName;
-  }
-
-  this.browser = this.getBrowser();
-
   this.encapsulatedVoiceEnrollment = function() {
     main.type.biometricType = 'voice';
     main.type.action = 'Enrollment';
@@ -159,9 +107,7 @@ function voiceIt2Obj() {
       reconnection: true,
       reconnectionDelay: 100,
       randomizationFactor: 0,
-      reconnectionDelayMax: 100,
-      transports: ['websocket'],
-      secure: true
+      reconnectionDelayMax: 100 ,
     });
     main.socket2.emit('requestEnrollmentDetails', 1);
     main.assignClicks();
@@ -176,8 +122,8 @@ function voiceIt2Obj() {
       }
     });
     main.socket2.on('stopRecording', function(response) {
-      if (main.player !== undefined) {
-        main.player.record().stop();
+      if (main.player !== undefined){
+            main.player.record().stop();
       }
     });
     main.socket2.on('completeLiveness', function(response) {
@@ -587,14 +533,14 @@ function voiceIt2Obj() {
     if (main.liveness && main.type.action !== "Enrollment") {
       main.initFaceLiv();
       setTimeout(() => {
-        if (!main.assignedLivEvents) {
-          main.livenessObj = new Liveness();
-          main.livenessObj.init();
-          main.assignedLivEvents = true;
-        } else {
-          main.livenessObj.resume();
+        if (!main.assignedLivEvents){
+        main.livenessObj = new Liveness();
+        main.livenessObj.init();
+        main.assignedLivEvents = true;
+      } else {
+        main.livenessObj.resume();
         }
-      }, 150);
+      },150);
     } else {
       main.initFaceRecord();
     }
@@ -623,14 +569,14 @@ function voiceIt2Obj() {
     if (main.liveness && main.type.action !== "Enrollment") {
       main.initFaceLiv();
       setTimeout(() => {
-        if (!main.assignedLivEvents) {
-          main.livenessObj = new Liveness();
-          main.livenessObj.init();
-          main.assignedLivEvents = true;
-        } else {
-          main.livenessObj.resume();
+        if (!main.assignedLivEvents){
+        main.livenessObj = new Liveness();
+        main.livenessObj.init();
+        main.assignedLivEvents = true;
+      } else {
+        main.livenessObj.resume();
         }
-      }, 150);
+      },150);
     } else {
       main.initVideoRecord();
     }
@@ -699,7 +645,7 @@ function voiceIt2Obj() {
 
     function drawFrames() {
       //mirror the video by drawing it onto the canvas
-      main.imageDataCtx.clearRect(0, 0, webcam.videoWidth, webcam.videoHeight);
+      main.imageDataCtx.clearRect( 0, 0, webcam.videoWidth, webcam.videoHeight);
       main.imageDataCtx.setTransform(-1.0, 0, 0, 1, webcam.videoWidth, 0);
       main.imageDataCtx.drawImage(webcam, 0, 0, webcam.videoWidth, webcam.videoHeight);
       window.requestAnimationFrame(drawFrames);
@@ -713,7 +659,7 @@ function voiceIt2Obj() {
       var audio = $('<audio />').appendTo('body');
       audio.attr('id', 'myAudio');
       audio.attr('class', 'video-js vjs-default-skin');
-    }
+  }
     main.player = videojs('myAudio', {
       controls: true,
       width: 200,
@@ -818,11 +764,10 @@ function voiceIt2Obj() {
       console.log('error:', error);
     });
     // user this.type the record button and started recording
-    main.player.on('startRecord', function() {});
+    main.player.on('startRecord', function() {
+
+    });
     main.player.on('finishRecord', function() {
-      if (main.player.recordedData.video !== undefined) {
-        main.player.recordedData = main.player.recordedData.video;
-      }
       if (main.liveness && main.type.action !== "Enrollment" && main.type.biometricType !== "voice") {
         var obj;
         if (main.livenessType == "voice") {
@@ -839,6 +784,7 @@ function voiceIt2Obj() {
           main.overlayj.fadeTo(300, 1.0);
         } else {
           main.livenessObj.stop();
+            console.log(main.player.recordedData);
           obj = {
             recording: main.player.recordedData,
             kind: "face"
@@ -1087,7 +1033,7 @@ function voiceIt2Obj() {
       main.videoCircleStream = undefined;
     }
 
-    if (main.audioVisualizer !== undefined && main.audioVisualizer.getStream() !== undefined) {
+    if (main.audioVisualizer !== undefined && main.audioVisualizer.getStream()!== undefined) {
       main.audioVisualizer.getStream().getTracks()[0].stop();
     }
 
@@ -1186,11 +1132,4 @@ function voiceIt2Obj() {
       return rms;
     }
   }
-
-  $(window).on('beforeunload', function(){
-    main.socket2.disconnect(true);
-    main.socket2.close();
-    main.socket2 = null;
-  });
-
 }
