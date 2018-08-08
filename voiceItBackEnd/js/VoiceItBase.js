@@ -113,7 +113,7 @@ module.exports = function(config, server) {
       case 0:
         var face = faceObj.rotationX;
         var timeNew = new Date().getTime();
-        if ((timeNew - testTimer) > 850) {
+        if ((timeNew - testTimer) > 1000) {
           if (face >= 0.25) {
             facedDownCounter++;
             if (facedDownCounter > 1) {
@@ -148,7 +148,7 @@ module.exports = function(config, server) {
       case 1:
         var face = faceObj.rotationY;
         var timeNew = new Date().getTime();
-        if ((timeNew - testTimer) > 850) {
+        if ((timeNew - testTimer) > 1000) {
           if (face < -0.40) {
             turnedRightCounter++;
             if (turnedRightCounter > 1) {
@@ -181,7 +181,7 @@ module.exports = function(config, server) {
       case 2:
         var face = faceObj.rotationY;
         var timeNew = new Date().getTime();
-        if ((timeNew - testTimer) > 850) {
+        if ((timeNew - testTimer) > 1000) {
           if (face > 0.40) {
             turnedLeftCounter++;
             if (turnedLeftCounter > 1) {
@@ -688,7 +688,7 @@ module.exports = function(config, server) {
       if (doingLiveness) {
         currTime = Date.now();
         //liveness test timed out
-        if ((currTime - testTimer) > 3000) {
+        if ((currTime - testTimer) > 3500) {
           livTries++;
           if (livTries > MAX_TRIES) {
             socket.emit('completeLiveness', 0);
@@ -759,7 +759,7 @@ module.exports = function(config, server) {
         //wait for face back
         if (checkForFaceStraight) {
           var a = Date.now();
-          if ((face.rotationY < 0.1 && face.rotationY > -0.1 && face.rotationX < 0.10 ) || (a - timePassed > 1000)) {
+          if ((face.rotationY < 0.1 && face.rotationY > -0.1 && face.rotationX < 0.10 ) || (a - timePassed > 1300)) {
             testTimer = Date.now();
             if (successTimeStamps.length < numTests) {
               successTimeStamps.push(timeStamps[timeStamps.length - 1]);
