@@ -105,9 +105,9 @@ function voiceIt2Obj() {
     var init = false;
     main.socket2 = io.connect('/', {
       reconnection: true,
-      reconnectionDelay: 1,
+      reconnectionDelay: 100,
       randomizationFactor: 0,
-      reconnectionDelayMax: 1,
+      reconnectionDelayMax: 100 ,
     });
     main.socket2.emit('requestEnrollmentDetails', 1);
     main.assignClicks();
