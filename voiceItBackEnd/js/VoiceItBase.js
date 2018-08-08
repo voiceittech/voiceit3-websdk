@@ -5,7 +5,7 @@ const path = require('path');
 
 module.exports = function(config, server) {
   const myVoiceIt = new voiceit2(config.apiKey, config.apiToken);
-  let io = require('socket.io').listen(server);
+  let io = require('socket.io').listen(server,{ wsEngine: 'ws' });
   var userID = config.userId;
   const rootAbsPath = path.resolve(__dirname, '../');
 
@@ -371,7 +371,7 @@ module.exports = function(config, server) {
         });
         break;
       case "videoEnrollment":
-        var recording = options.recording.video;
+        var recording = options.recording;
         fs.appendFileSync(rootAbsPath + "/tempAssets/video.mov", new Buffer.alloc(recording.length, recording));
         myVoiceIt.createVideoEnrollment({
           userId: userID,
@@ -391,7 +391,7 @@ module.exports = function(config, server) {
         });
         break;
       case "videoVerification":
-        options.recording = options.recording.video;
+        options.recording = options.recording;
         fs.appendFileSync(rootAbsPath + "/tempAssets/video.mov", new Buffer.alloc(options.recording.length, options.recording));
         myVoiceIt.videoVerification({
           userId: userID,
@@ -796,7 +796,7 @@ module.exports = function(config, server) {
 
     //recorded data from client
     socket.on('recording', function(data) {
-      data.recording = data.recording.video;
+      data.recording = data.recording;
       if (data.kind !== "voice") {
         clearInterval(timeStampId);
       }
