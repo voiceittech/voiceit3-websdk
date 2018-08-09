@@ -174,7 +174,7 @@ myVoiceIt.init_Video_Verification(LIVENESS_BOOL)
 The init_ACTION_TYPE() method(s) can be called dynamically from any action/event per your implementation. For instance, in the Example, the respective button clicks call the respective init_ACTION_TYPE() method, and the LIVENESS_BOOL is set by the UI toggle button.
 
 ## Getting Help 
-Need implementation help? Found a bug? Please contact support@voiceit.io.
+Need implementation help? Found a bug? Please contact hassan@voiceit.io.
 
 ### Disclaimer
 Please note this is a Beta verison- Feel free to document any errors/bugs in the issues section of the repository.
