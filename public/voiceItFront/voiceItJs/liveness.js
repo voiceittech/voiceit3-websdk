@@ -5,9 +5,8 @@ function Liveness() {
   };
   this.livPrompts = new prompts();
   this.cancel = false;
-  this.animationFrameId = undefined;
-
-  this.startTime = undefined;
+	this.stopped = false;
+  //this.hidden = true;
 
   this.brfv4BaseURL = "voiceItFront/voiceItJs/brf-js/libs/brf_wasm/";
   this.support = (typeof WebAssembly === 'object');
@@ -58,6 +57,10 @@ function Liveness() {
     main.waitForBRF();
   }
 
+	this.doingLiveness = function () {
+		return main.stopped;
+	}
+
   this.waitForBRF = function() {
     if (main.brfv4 === null) {
       main.brfv4 = {
@@ -80,43 +83,47 @@ function Liveness() {
     main.resolution = new main.brfv4.Rectangle(0, 0, main.imageData.width, main.imageData.height);
     main.brfmanager = new main.brfv4.BRFManager();
     main.brfmanager.init(main.resolution, main.resolution, "com.tastenkunst.brfv4.js.examples.minimal.webcam");
-    main.brfmanager.setMode('BRFMode.FACE_TRACKING');
-    if (main.setup == false) {
-      main.socket = io.connect('/', {
-        reconnection: true,
-        reconnectionDelay: 10,
-        randomizationFactor: 0,
-        reconnectionDelayMax: 10
-      });
-      main.assignSocketEvents();
-    }
+		main.socket = io.connect('/', {
+			reconnection: true,
+			reconnectionDelay: 1,
+			randomizationFactor: 0,
+			reconnectionDelayMax: 1,
+			transports: ['websocket'],
+			secure: true,
+			// forceNew: true
+		});
+		main.assignSocketEvents();
   }
 
   this.assignSocketEvents = function() {
     main.socket.emit('initLiveness', 1);
     main.socket.on('initiated', function(s) {
-      main.startTime = Date.now();
       main.test = s;
       main.createLivenessCircle();
-      main.trackfaces();
       window.requestAnimationFrame(main.trackfaces);
       main.drawCircle(main.test);
     });
     main.socket.on('test', function(test) {
-      main.startTime = Date.now();
+			if (main.cancel){
+				main.cancel = false;
+				window.requestAnimationFrame(main.trackfaces);
+			}
       main.redrawCircle(test);
     });
     main.socket.on('reTest', function(test) {
-      main.startTime = Date.now();
-      setTimeout(function() {
-        $('#overlay2').fadeTo(300, 0.3);
-      }, 300);
-      $('#circle').css('display', 'block');
-      main.redrawCircle(test);
+			setTimeout(()=>{
+				$('#circle').css('display', 'block');
+				main.redrawCircle(test);
+				setTimeout(function() {
+					$('#overlay2').fadeTo(300, 0.3);
+				}, 300);
+			},200);
     });
     main.socket.on('completeLiveness', function(code) {
       switch (code) {
         case 7:
+				main.cancel = true;
+				//show waiting, post liveness success
           $('#circle').circleProgress({
             value: main.oldCircles[0],
             fill: {
@@ -127,6 +134,8 @@ function Liveness() {
           $('#circle > canvas').css('transform', main.oldCircles[1]);
           break;
         case 6:
+				main.cancel = true;
+				//show waiting, ready to start video verification post liveness success
           $('#circle').circleProgress({
             value: main.oldCircles[0],
             fill: {
@@ -136,11 +145,10 @@ function Liveness() {
           });
           $('#circle > canvas').css('transform', main.oldCircles[1]);
           setTimeout(function() {
-            $('#circle').fadeTo(200, 0.0, function() {
+            $('#circle').fadeTo(300, 0.0, function() {
               $('#circle').css('display', 'none');
             });
           }, 300);
-          main.cancel = true;
           break;
         case 4:
           //show waiting for response, passed liveness tests
@@ -153,7 +161,7 @@ function Liveness() {
           });
           $('#circle > canvas').css('transform', main.oldCircles[1]);
           setTimeout(function() {
-            $('#circle').fadeTo(200, 0.0, function() {
+            $('#circle').fadeTo(300, 0.0, function() {
               $('#circle').css('display', 'none');
             });
           }, 300);
@@ -164,32 +172,48 @@ function Liveness() {
             $('#wait').css('opacity', '0');
             $('#wait').fadeTo(300, 1.0);
           });
-          main.cancel = true;
+					main.cancel = true;
           break;
         case 3:
           //passed liveness and face identification
-          $('#wait').fadeTo(300, 0.0, function() {
-            $(this).css('display', 'none');
-            $('#header').css('display', 'inline-block');
-            $('#header').fadeTo(300, 1.0);
-            $('#header').text(main.livPrompts.getPrompt("LIVENESS_SUCCESS"));
-          });
-          main.cancel = true;
-          main.exitOut();
+          $('#header').text(main.livPrompts.getPrompt("LIVENESS_SUCCESS"));
+					setTimeout(()=> {
+						$('#wait').fadeTo(300, 0.0, function() {
+							$(this).css('display', 'none');
+							$('#header').css('display', 'inline-block');
+							$('#header').fadeTo(300, 1.0);
+						});
+					},200);
+					if (!main.stopped){
+					main.stop();
+					}
+					//main.exitOut();
           break;
         case 2:
-          //failed face, but passed liveness
+          //failed verification, but passed liveness
+				  $('#header').text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
           $('#wait').fadeTo(300, 0.0, function() {
             $('#wait').css('display', 'none');
             $('#header').css('display', 'inline-block');
             $('#header').fadeTo(300, 1.0);
-            $('#header').text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
           });
-          main.cancel = true;
-          main.exitOut();
+					if (!main.stopped){
+					main.stop();
+					}
+					//main.exitOut();
           break;
+				//failed a right, left, down test
+				case 1.5:
+				$('#circle').fadeTo(300, 0.0, function() {
+					$(this).css('display', 'none');
+				});
+				$('#overlay2').fadeTo(300, 1.0);
+				$('#header').fadeTo(300, 0, function() {
+					$(this).text(main.livPrompts.getPrompt("LIVENESS_TRY_AGAIN_AND_TURN_BACK"));
+					$('#header').fadeTo(300, 1.0);
+				});
+				break;
         case 1:
-          main.startTime = Date.now();
           //failed, give more tries
           $('#circle').fadeTo(300, 0.0, function() {
             $(this).css('display', 'none');
@@ -202,6 +226,7 @@ function Liveness() {
           break;
         case 0:
           //failed liveness
+          $('#wait').css('display', 'none');
           $('#circle').fadeTo(300, 0.0, function() {
             $(this).css('display', 'none');
           });
@@ -210,65 +235,55 @@ function Liveness() {
             $(this).text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
             $('#header').fadeTo(300, 1.0);
           });
-          main.cancel = true;
-          main.exitOut();
+					if (!main.stopped){
+					main.stop();
+					}
+					//main.exitOut();
           break;
         default:
       }
     });
+		// $('#readyButton').click(
+		// 	function() {
+		// 	main.hidden = false;
+		// });
   }
 
   this.trackfaces = function() {
-    var currTime = Date.now();
-    if ((currTime - main.startTime) > 5000) {
-      main.stop();
-      $('#circle').fadeTo(300, 0.0, function() {
-        $(this).css('display', 'none');
-      });
-      $('#overlay2').fadeTo(300, 1.0);
-      $('#header').fadeTo(300, 0, function() {
-        $(this).text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
-        $('#header').fadeTo(300, 1.0);
-      });
-      main.cancel = true;
-      main.exitOut();
-    }
     if (main.stats.start) main.stats.start();
     main.brfmanager.update(main.imageDataCtx.getImageData(0, 0, main.resolution.width, main.resolution.height).data);
-
     var faces = main.brfmanager.getFaces();
     var face = faces[0];
-
-    if (face.state === main.brfv4.BRFState.FACE_TRACKING_START ||
-      face.state === main.brfv4.BRFState.FACE_TRACKING) {
-      main.socket.emit('data', face);
-    }
+    main.socket.emit('data', face);
     if (main.stats.end) {
       main.stats.end();
     }
     if (!main.cancel) {
-      main.animationFrameId = window.requestAnimationFrame(main.trackfaces);
-    } else {}
+      window.requestAnimationFrame(main.trackfaces);
+    } else {
+
+		}
   }
 
   this.stop = () => {
+		main.stopped = true;
+		main.socket.emit('terminateLiveness',1);
     main.cancel = true;
-    setTimeout(() => {
-      main.brfv4Example = {
-        stats: {}
-      };
-      main.animationFrameId = null;
-      main.oldCircles = [];
-      main.webcam = document.getElementById("myVideo");
-      main.imageData = document.getElementById("imageData");
-      main.imageDataCtx = main.imageData.getContext('2d');
-      main.brfv4 = null;
-      main.brfmanager = null;
-      main.resolution = null;
-      main.ua = null;
-      main.test = null;
-      main.stats = null;
-    }, 100);
+		setTimeout(()=>{
+			main.brfv4Example = {
+	      stats: {}
+	    };
+			main.oldCircles = [];
+	    main.webcam = document.getElementById("myVideo");
+	    main.imageData = document.getElementById("imageData");
+	    main.imageDataCtx = main.imageData.getContext('2d');
+	    main.brfv4 = null;
+	    main.brfmanager = null;
+	    main.resolution = null;
+	    main.ua = null;
+	    main.test = null;
+	    main.stats = null;
+		},50);
   }
 
   this.resume = function() {
@@ -394,7 +409,7 @@ function Liveness() {
             $('#header').text(main.livPrompts.getPrompt('FACE_DOWN'));
           });
           $('#header').fadeTo(500, 1.0);
-          $('#circle').fadeTo(200, 0.0, function() {
+          $('#circle').fadeTo(300, 0.0, function() {
             $('#circle').circleProgress({
               value: 0.25,
               fill: {
@@ -406,7 +421,7 @@ function Liveness() {
             $('#circle').css('opacity', 1.0);
             main.oldCircles[0] = 0.25;
             main.oldCircles[1] = 'rotate(0deg)';
-            $('#circle').fadeTo(200, 1.0);
+            $('#circle').fadeTo(300, 1.0);
           });
         }, 300);
         break;
@@ -424,7 +439,7 @@ function Liveness() {
             $('#header').text(main.livPrompts.getPrompt('FACE_RIGHT'));
           });
           $('#header').fadeTo(500, 1.0);
-          $('#circle').fadeTo(200, 0.0, function() {
+          $('#circle').fadeTo(300, 0.0, function() {
             $('#circle').circleProgress({
               value: 0.25,
               fill: {
@@ -435,7 +450,7 @@ function Liveness() {
             $('#circle > canvas').css('transform', 'rotate(-90deg)');
             main.oldCircles[0] = 0.25;
             main.oldCircles[1] = 'rotate(-90deg)';
-            $('#circle').fadeTo(200, 1.0);
+            $('#circle').fadeTo(300, 1.0);
           });
         }, 300);
         break;
@@ -453,7 +468,7 @@ function Liveness() {
             $('#header').text(main.livPrompts.getPrompt('FACE_LEFT'));
           });
           $('#header').fadeTo(500, 1.0);
-          $('#circle').fadeTo(200, 0.0, function() {
+          $('#circle').fadeTo(300, 0.0, function() {
             $('#circle').circleProgress({
               value: 0.25,
               fill: {
@@ -464,7 +479,7 @@ function Liveness() {
             $('#circle > canvas').css('transform', 'rotate(90deg)');
             main.oldCircles[0] = 0.25;
             main.oldCircles[1] = 'rotate(90deg)';
-            $('#circle').fadeTo(200, 1.0);
+            $('#circle').fadeTo(300, 1.0);
           });
         }, 300);
         break;
@@ -482,7 +497,7 @@ function Liveness() {
             $('#header').text(main.livPrompts.getPrompt('SMILE'));
           });
           $('#header').fadeTo(500, 1.0);
-          $('#circle').fadeTo(200, 0.0, function() {
+          $('#circle').fadeTo(300, 0.0, function() {
             $('#circle').circleProgress({
               value: 1.0,
               fill: {
@@ -492,7 +507,7 @@ function Liveness() {
             });
             main.oldCircles[0] = 1.0;
             main.oldCircles[1] = 'rotate(0deg)';
-            $('#circle').fadeTo(200, 1.0);
+            $('#circle').fadeTo(300, 1.0);
           });
         }, 300);
         break;
@@ -510,7 +525,7 @@ function Liveness() {
             $('#header').text(main.livPrompts.getPrompt('YAWN'));
           });
           $('#header').fadeTo(500, 1.0);
-          $('#circle').fadeTo(200, 0.0, function() {
+          $('#circle').fadeTo(300, 0.0, function() {
             $('#circle').circleProgress({
               value: 1.0,
               fill: {
@@ -520,7 +535,7 @@ function Liveness() {
             });
             main.oldCircles[0] = 1.0;
             main.oldCircles[1] = 'rotate(0deg)';
-            $('#circle').fadeTo(200, 1.0);
+            $('#circle').fadeTo(300, 1.0);
           });
         }, 300);
         break;
@@ -529,9 +544,18 @@ function Liveness() {
   }
 
   //exit the modal post completion of task
-  this.exitOut = () => {
-    setTimeout(() => {
-      $('#voiceItModal').modal("hide");
-    }, 3000);
-  }
+// 	this.exitOut = () => {
+//     if (!main.hidden){
+//     setTimeout(() => {
+//       if ($('#voiceItModal').hasClass('visible')){
+//           $('#voiceItModal').modal("hide");
+//         }
+//     }, 3000);
+//   }
+// }
+
+  $(window).on('beforeunload', function() {
+    // main.socket.disconnect(true);
+    // main.socket = null;
+  });
 }

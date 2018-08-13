@@ -7,6 +7,7 @@ function authenticationAPICall() {
 
 $(document)
   .ready(function() {
+    $('#loading').css('opacity', '0.0');
     var liveness = $('#livenessToggle').is(':checked') ? true: false;
 
     $('#livenessToggle').eq(0).click(function() {
@@ -14,6 +15,7 @@ $(document)
     });
 
     var voiceItHTML = new voiceIt2FrontEndBase();
+
     var init = false;
 
     $('#mainForm').keydown(function(event) {
@@ -102,15 +104,12 @@ $(document)
             var response = JSON.parse(http.responseText.trim());
             if (response.responseCode == "SUCC") {
               $('#authenticate').fadeTo(400, 0.0, function() {
-                $('#verifyHolder').css('display', 'flex');
-                $('#verifyHolder').css('justify-content', 'center');
-                $('#verify').text('Please Verify');
-                $('#formOverlay').fadeTo(400, 0.4);
-                $('#verify').css('display', 'block');
-                $('#verify').fadeTo(500, 1.0);
-                $('#authenticate').css('display', 'none');
-                $('#options').fadeTo(400, 1.0);
+                $('#loading').fadeTo(250, 0.6);
+                $('#formOverlay').fadeTo(350,0.6);
                 if (!init) {
+                  $(voiceItHTML).on('test2', (e, resultObj) => {
+                      console.log(3443);
+                  });
                   voiceItHTML.init();
                   setTimeout(function() {
                     $("#voiceEnrollmentBtn").click(function() {
@@ -135,6 +134,16 @@ $(document)
 
                     $("#videoEnrollmentBtn").click(function() {
                       voiceItHTML.init_Video_Enrollment();
+                    });
+                    $('#verifyHolder').css('display', 'flex');
+                    $('#verifyHolder').css('justify-content', 'center');
+                    $('#verify').text('Please Verify');
+                    $('#verify').css('display', 'block');
+                    $('#verify').fadeTo(500, 1.0);
+                    $('#authenticate').css('display', 'none');
+                    $('#options').fadeTo(400, 1.0);
+                    $('#loading').fadeTo(250, 0.0, function(){
+                      $(this).css('display','none');
                     });
                   }, 1200);
                   init = true;

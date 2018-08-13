@@ -10,6 +10,14 @@ module.exports = function(apk, tok){
       pass : tok,
       sendImmediately: true
     };
+    /* User API Calls */
+    this.getAllPhrases = (options, callback) =>{
+      unirest.get(`${BASE_URL}/phrases/${options.contentLanguage}`)
+      .auth(this.authHeader)
+      .end(function (httpResponse) {
+        callback(httpResponse.body);
+      });
+    };
 
     /* User API Calls */
     this.getAllUsers = (callback) =>{

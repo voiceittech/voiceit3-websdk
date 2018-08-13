@@ -7,20 +7,20 @@ function voiceIt2FrontEndBase() {
   var voiceInitiator;
 
   //TODO: when VoiceIt2 Obj has loaded, and the HTML has been appended.
-  this.onLoad = function() {
-    return;
-  }
 
-  this.init = function() {
-    setTimeout(() => {
+  var main = this;
+
+  this.init = () => {
+    setTimeout(()=>{
       voiceInitiator = new voiceItHtmlStructure();
       voiceInitiator.init();
-      setTimeout(() => {
+      setTimeout(()=>{
         this.myVoiceIt = new voiceIt2Obj();
         this.myVoiceIt.init();
-      }, 800);
+      }, 500);
     }, 100);
   }
+
 
   this.init_Voice_Enrollment = () => {
     if (this.myVoiceIt == undefined) {
@@ -87,5 +87,5 @@ function voiceIt2FrontEndBase() {
       this.myVoiceIt.encapsulatedVideoVerification(liveness);
     }
   }
-  
+
 }

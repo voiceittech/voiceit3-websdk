@@ -1,13 +1,27 @@
 function prompts () {
-  this.phrases = ["Never forget tomorrow is a new day",
-                  "My face and my voice identify me"
+  var main = this;
+  this.phrases = ["Never forget tomorrow is a new day"
                   ];
 
-  this.getPhrase = function(int){
-    var a = this.phrases;
-    return a[int];
+  this.currPhrase = this.phrases[0];
+
+  this.getPhrase = (int) => {
+    return this.phrases[int];
   }
-  
+
+  this.setCurrPhrase = (phrase) => {
+    main.currPhrase = phrase;
+    this.prompts.PDNM = "Please make sure you are saying the correct phrase: \"" + main.currPhrase + "\"";
+    this.prompts.ENROLL_0 = "Please say: \"" + main.currPhrase + "\'";
+    this.prompts.ENROLL_1 = "Please say: \"" + main.currPhrase +"\" again";
+    this.prompts.ENROLL_2 = "Please say: \""+ main.currPhrase +"\" once more";
+    this.prompts.VERIFY = "Please say \"" + main.currPhrase +"\"";
+  }
+
+  this.addPhrase = (phrase) => {
+    this.phrases.push(phrase);
+  }
+
   this.getPrompt = function(promptName){
     var s  = this.prompts[promptName];
     return s;
@@ -34,16 +48,15 @@ function prompts () {
   GET_ENROLLED : "There you are, let's get you enrolled",
   GET_VERIFIED : "There you are, let's get you verified",
   READY_FOR_VOICE_VERIFICATION : "Please get ready to verify your voice",
-  VERIFY : "Please say \"" + this.phrases[0] +"\"",
+  VERIFY : "Please say \"" + main.currPhrase +"\"",
   VERIFY_FACE : "Please wait while we run verification",
   ENROLL_FACE: "Please wait while we run enrollment",
   VERIFY_FACE_FAILED : "Failed face verification",
   VERIFY_FACE_FAILED_TRY_AGAIN : "Failed face verification. Please Try again.",
   VIDEO_VERIFY_FAILED : "Failed video verification",
-  VRIFY: "Please say: " + this.phrases[0],
-  ENROLL_0: "Please say: \"" + this.phrases[0] + "\'",
-  ENROLL_1: "Please say: \"" + this.phrases[0] +"\" again",
-  ENROLL_2: "Please say: \""+ this.phrases[0] +"\" once more",
+  ENROLL_0: "Please say: \"" + main.currPhrase + "\'",
+  ENROLL_1: "Please say: \"" + main.currPhrase +"\" again",
+  ENROLL_2: "Please say: \""+ main.currPhrase +"\" once more",
   FACE_ENROLL: "Please wait for your face to be enrolled",
   WAITING: "Please wait",
   WAIT_FOR_FACE_VERIFICATION : "Please wait while we verify your face",
@@ -54,7 +67,7 @@ function prompts () {
   SUCC_VERIFICATION: "You've been successfully verified",
   SUCC: "You've been successfully verified",
   /* Response Code Based Prompts */
-  PDNM: "Please make sure you are saying the correct phrase: \"" + this.phrases[0] + "\"" ,
+  PDNM: "Please make sure you are saying the correct phrase: \"" + main.currPhrase + "\"" ,
   FNFD : "Sorry, I couldn't quite see your face.\nPlease try again.",
   DDNE : "Sorry, something went wrong.\nPlease try again.",
   FAIL : "Failed.\nPlease try again.",
@@ -83,6 +96,7 @@ function prompts () {
   LIVENESS_SUCCESS : "You've been successfully verified",
   LIVENESS_TIMEDOUT: "Sorry, liveness timed out. Please perform the liveness tests quickly",
   LIVENESS_FAILED: "Sorry, liveness test failed",
-  LIVENESS_TRY_AGAIN: "Test failed, please try again"
+  LIVENESS_TRY_AGAIN: "Test failed, please try again",
+  LIVENESS_TRY_AGAIN_AND_TURN_BACK: "Test failed, please turn your face back straight quickly"
 };
 }

@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const users = require('./users.js');
 var http = require('http');
+const phrases = require('./phrases.js');
 
 //the config file
 const config = require('./config.js');
@@ -13,11 +14,27 @@ var voiceItBackEnd;
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-
 var server = http.Server(app);
 
 server.listen(8000, () => {
   console.log('Listening on *:8000');
+});
+
+
+//The voiceitBackBnd module must be initialized only once
+voiceItBackEnd = new voiceItModule({
+  userId: "",
+  apiKey: config.VOICEIT_API_KEY,
+  apiToken: config.VOICEIT_API_TOKEN,
+  contentLanguage: config.contentLanguage,
+  phrase: config.phrase,
+  numLivTests: 3,
+  maxLivTries: 2
+}, server);
+
+
+voiceItBackEnd.on('result', function(result){
+  console.dir(result);
 });
 
 //initiate the base voiceit Module
@@ -34,15 +51,8 @@ app.post('/authenticate', (req, res) => {
         UserId: user.id,
       };
       setTimeout(() => {
-        voiceItBackEnd = new voiceItModule({
-          userId: user.id,
-          apiKey: config.VOICEIT_API_KEY,
-          apiToken: config.VOICEIT_API_TOKEN,
-          contentLanguage: config.contentLanguage,
-          phrase: config.phrase,
-          numLivTests: 3,
-          maxLivTries: 2
-        }, server);
+          //Update the user that the module should deal with
+          voiceItBackEnd.updateUser(user.id);
       },150);
       res.status(200).send(data);
     } else {

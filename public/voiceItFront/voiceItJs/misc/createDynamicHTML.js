@@ -291,9 +291,9 @@ function voiceItHtmlStructure() {
     'voiceItFront/voiceItJs/webrtc-adapter/out/adapter.js',
     'voiceItFront/voiceItJs/misc/circle-progress.min.js',
     'voiceItFront/voiceItJs/prompts.js',
-    'voiceItFront/voiceItJs/VoiceIt2Obj.js',
     'voiceItFront/voiceItJs/vudio.js',
     'voiceItFront/voiceItJs/liveness.js',
+    'voiceItFront/voiceItJs/VoiceIt2Obj.js',
   ];
 
   this.linksStructure = [
@@ -347,11 +347,11 @@ function voiceItHtmlStructure() {
     if (count == this.scriptsStructure.length) {
       return;
     } else {
-      var timeOut = 50;
+      var timeOut = 20;
+      setTimeout(() => {
         var script = document.createElement('script');
         script.src = this.scriptsStructure[count];
         document.head.appendChild(script);
-      setTimeout(() => {
         return this.appendScripts(++count);
       }, timeOut);
     }

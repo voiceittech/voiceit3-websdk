@@ -262,7 +262,7 @@ display: none !important;
 align-items: center;
 }
 
-#mainForm {
+#mainForm  {
   min-width: 450px;
   height: max-content;
 }
