@@ -183,18 +183,18 @@ After the completion of any action, the result event will be triggered. For non-
 ```
 {
 response: {.....json response of the api call....},
-type: {TYPE_ACTION}
+type: TYPE_ACTION
 }
 ```
 
 For Liveness related tasks, the response will be of the following structure:
 ```
 {
-type: type,
-liveness: true,
+type: TYPE,
 livenessOutcome: "OUTCOME"
 }
 ```
+The outcome can be "passed" or "failed".
 
 <a name="front"></a>
 ### Frontend Implementation
