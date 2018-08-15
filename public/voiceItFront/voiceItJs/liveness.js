@@ -49,7 +49,6 @@ function Liveness() {
   this.brfv4 = null;
   this.brfmanager = undefined;
   this.resolution = null;
-  this.ua = navigator.userAgent;
   this.test;
 
   var main = this;
@@ -317,21 +316,26 @@ function Liveness() {
 		main.socket.emit('terminateLiveness',1);
     main.cancel = true;
     window.cancelAnimationFrame(animationId);
-		// setTimeout(()=>{
-		// 	main.brfv4Example = {
-	  //     stats: {}
-	  //   };
-		// 	main.oldCircles = [];
-	  //   main.webcam = document.getElementById("myVideo");
-	  //   main.imageData = document.getElementById("imageData");
-    //   console.log(main.imageData.height);
-	  //   main.imageDataCtx = main.imageData.getContext('2d');
-	  //   main.brfv4 = null;
-	  //   main.brfmanager = undefined;
-	  //   main.resolution = null;
-	  //   main.ua = null;
-	  //   main.test = null;
-		// },50);
+		setTimeout(()=>{
+			main.brfv4Example = null;
+      delete main.brfv4Example;
+			main.oldCircles = null;
+      delete 	main.oldCircle;
+	    main.webcam = null;
+      delete main.webcam;
+	    main.imageData =null;
+      delete main.imageData;
+	    main.imageDataCtx = null;
+      delete main.imageDataCtx;
+	    main.brfv4 = null;
+      delete main.brfv4;
+	    main.brfmanager = null;
+      delete main.brfmanager;
+	    main.resolution = null;
+      delete main.resolution;
+	    main.test = null;
+      delete main.test;
+		},50);
   }
 
   this.resume = function() {
