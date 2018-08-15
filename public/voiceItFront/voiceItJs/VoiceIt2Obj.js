@@ -641,11 +641,11 @@ function voiceIt2Obj() {
     main.vidFramej.fadeTo(550, 1.0);
     if (main.liveness && main.type.action !== "Enrollment") {
       main.initFaceLiv();
-      if (main.livenessObj == undefined && !main.livenessInit){
+      // if (main.livenessObj == undefined && !main.livenessInit){
         main.initLiveness();
-      } else {
-        main.livenessObj.resume();
-      }
+      // } else {
+      //   main.livenessObj.resume();
+      // }
     } else {
       main.initFaceRecord();
     }
@@ -673,11 +673,11 @@ function voiceIt2Obj() {
     main.wavej.css('display', 'none');
     if (main.liveness && main.type.action !== "Enrollment") {
       main.initFaceLiv();
-      if (main.livenessObj == undefined && !main.livenessInit){
+      // if (main.livenessObj == undefined && !main.livenessInit){
         main.initLiveness();
-      } else {
-        main.livenessObj.resume();
-      }
+      // } else {
+      //   main.livenessObj.resume();
+      // }
     } else {
       main.initVideoRecord();
     }
@@ -1151,8 +1151,10 @@ function voiceIt2Obj() {
     $("#circle").css('display', 'none');
     main.readyButtonj.css('display', 'none');
 
-    if (main.livenessObj !== undefined && main.livenessObj !== null) {
+    if (main.livenessObj !== undefined && main.livenessObj !== null && main.livenessObj.doingLiveness()) {
       main.livenessObj.stop();
+      main.livenessObj = null;
+      delete main.livenessObj;
     }
 
     setTimeout(function() {
