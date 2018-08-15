@@ -3,7 +3,7 @@ const app = express();
 const crypto = require('crypto');
 const fs = require('fs');
 const users = require('./users.js');
-var http = require('https');
+var http = require('http');
 const phrases = require('./phrases.js');
 
 //the config file
@@ -15,12 +15,12 @@ app.use(express.static('public'));
 express.static.mime.types["wasm"] = "application/wasm";
 app.use(bodyParser.json());
 
-var options = {
-  key: fs.readFileSync('/etc/apache2/ssl/localhost.key'),
-  cert: fs.readFileSync('/etc/apache2/ssl/localhost.crt')
-};
+// var options = {
+//   key: fs.readFileSync('/etc/apache2/ssl/localhost.key'),
+//   cert: fs.readFileSync('/etc/apache2/ssl/localhost.crt')
+// };
 
-var server = http.Server(options,app);
+var server = http.Server(app);
 
 server.listen(8000, () => {
   console.log('Listening on *:8000');
