@@ -126,7 +126,6 @@ function Liveness() {
     main.resolution = new main.brfv4.Rectangle(0, 0, main.imageData.width, main.imageData.height);
     main.brfmanager = new main.brfv4.BRFManager();
     main.brfmanager.init(main.resolution, main.resolution, "vocieitBRFTracking");
-    console.log(main.resolution);
 		main.assignSocketEvents();
     setTimeout(()=>{
       main.trackfaces();
@@ -229,9 +228,6 @@ function Liveness() {
 							$('#header').fadeTo(300, 1.0);
 						});
 					},200);
-					if (!main.stopped){
-					main.stop();
-					}
 					//main.exitOut();
           break;
         case 2:
@@ -242,9 +238,6 @@ function Liveness() {
             $('#header').css('display', 'inline-block');
             $('#header').fadeTo(300, 1.0);
           });
-					if (!main.stopped){
-					main.stop();
-					}
 					//main.exitOut();
           break;
 				//failed a right, left, down test
@@ -280,9 +273,6 @@ function Liveness() {
             $(this).text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
             $('#header').fadeTo(300, 1.0);
           });
-					if (!main.stopped){
-					main.stop();
-					}
 					//main.exitOut();
           break;
         default:
@@ -295,28 +285,30 @@ function Liveness() {
   }
 
   this.trackfaces = function() {
-    if (main.brfv4Example.stats.start) {
-      main.brfv4Example.stats.start();
-    }
-    main.brfmanager.update(main.imageDataCtx.getImageData(0, 0, main.resolution.width, main.resolution.height).data);
-    var faces = main.brfmanager.getFaces();
-    var face = faces[0];
-    console.log(face.rotationX);
-    main.socket.emit('data', face);
-    if (main.brfv4Example.stats.end) {
-      main.brfv4Example.stats.end();
-    }
     if (!main.cancel){
+      if (main.brfv4Example.stats.start) {
+        main.brfv4Example.stats.start();
+      }
+      main.brfmanager.update(main.imageDataCtx.getImageData(0, 0, main.resolution.width, main.resolution.height).data);
+      var faces = main.brfmanager.getFaces();
+      var face = faces[0];
+      main.socket.emit('data', face);
+      if (main.brfv4Example.stats.end) {
+        main.brfv4Example.stats.end();
+      }
       animationId = window.requestAnimationFrame(main.trackfaces);
     }
   }
 
   this.stop = () => {
-		main.stopped = true;
+    console.log(23432);
+		// main.stopped = true;
 		main.socket.emit('terminateLiveness',1);
     main.cancel = true;
     window.cancelAnimationFrame(animationId);
 		setTimeout(()=>{
+      main.socket = null;
+      delete main.socket;
 			main.brfv4Example = null;
       delete main.brfv4Example;
 			main.oldCircles = null;

@@ -1151,10 +1151,12 @@ function voiceIt2Obj() {
     $("#circle").css('display', 'none');
     main.readyButtonj.css('display', 'none');
 
-    if (main.livenessObj !== undefined && main.livenessObj !== null && main.livenessObj.doingLiveness()) {
+    if (main.livenessObj !== undefined && main.livenessObj !== null) {
       main.livenessObj.stop();
-      main.livenessObj = null;
-      delete main.livenessObj;
+      setTimeout(()=>{
+        main.livenessObj = null;
+        delete main.livenessObj;
+      },200);
     }
 
     setTimeout(function() {
