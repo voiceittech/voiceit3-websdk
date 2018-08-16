@@ -41,6 +41,7 @@ The repository contains an example web demonstration of VoiceIt's API 2.0 use-ca
 
 <a name="webexample"></a>
 ## Web Example 
+Please refer to [this video](https://vimeo.com/285173131) for a walkthrough example
 
 <a name="ui"></a>
 #### UI Snapshot 
