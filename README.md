@@ -3,6 +3,7 @@ The repository contains an example [web demonstration](https://vimeo.com/2851731
 
 - [Prerequisites](#prereq)
 - [Recommeded Platform](#platform)
+- [Compatible Platforms](#platform)
 - [Web Example](#webexample)
 	- [UI SnapShots](#ui)
 	- [Getting Started](#start)
@@ -38,6 +39,9 @@ The repository contains an example [web demonstration](https://vimeo.com/2851731
 <a name="platform"></a>
 #### Recommended Platform
 <img width="35px" src="http://pngimg.com/uploads/chrome_logo/chrome_logo_PNG17.png" alt="Google Chrome"/>
+
+#### Compatible Platforms
+<img style="display: inline-block" width="35px" src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Mozilla_Firefox_3.5_logo_256.png" alt="Firefox"/>    <img style="display: inline-block" width="35px" src="https://upload.wikimedia.org/wikipedia/commons/d/d4/Opera_browser_logo_2013.png" alt="Google Chrome"/>
 
 <a name="webexample"></a>
 ## Web Example 
@@ -272,7 +276,7 @@ Full support for Safari and Firefox coming soon.
 - [x] Test on Chrome
 - [x] Firefox Compatibility
 - [x] Test on Firefox
-- [ ] Test on Opera
+- [x] Test on Opera
 - [ ] Test on Windows 10
 
 
