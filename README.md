@@ -267,10 +267,8 @@ Full support for Safari and Firefox coming soon.
 ### TODO
 
 - [x] Test on Chrome
-- [ ] Safari Compatibility
-- [ ] Test on Safari
-- [ ] Firefox Compatibility
-- [ ] Test on Firefox
+- [x] Firefox Compatibility
+- [x] Test on Firefox
 - [ ] Test on Mobile Chrome
 - [ ] Mobile Safari Compatibility
 - [ ] Test on Mobile Safari
