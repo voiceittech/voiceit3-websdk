@@ -120,8 +120,10 @@ Before implementing voiceItBase, please add the following dependencies to your p
   "dependencies": {
   ...
   ..
+    "EventEmitter": "^1.0.0",
     "atob": "^2.1.1",
     "ejs": "^2.6.1",
+    "events": "^3.0.0",
     "express": "^4.16.3",
     "fluent-ffmpeg": "^2.1.2",
     "socket.io": "^2.1.1",
