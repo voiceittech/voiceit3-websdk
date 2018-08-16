@@ -1,4 +1,5 @@
 function Liveness() {
+  var animationId = 0;
 
   var manyfaces = false;
 
