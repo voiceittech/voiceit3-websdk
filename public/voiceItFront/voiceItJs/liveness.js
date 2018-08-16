@@ -290,6 +290,7 @@ function Liveness() {
       main.brfmanager.update(main.imageDataCtx.getImageData(0, 0, main.resolution.width, main.resolution.height).data);
       var faces = main.brfmanager.getFaces();
       var face = faces[0];
+      console.log(face);
       main.socket.emit('data', face);
       if (main.brfv4Example.stats.end) {
         main.brfv4Example.stats.end();
@@ -299,7 +300,9 @@ function Liveness() {
   }
 
   this.stop = () => {
-		main.socket.emit('terminateLiveness',1);
+    if (main.socket !== undefined){
+    main.socket.emit('terminateLiveness',1);
+    }
     main.cancel = true;
     window.cancelAnimationFrame(animationId);
 		setTimeout(()=>{
@@ -331,7 +334,7 @@ function Liveness() {
       delete main.resolution;
 	    main.test = null;
       delete main.test;
-		},50);
+		},200);
   }
 
   this.resume = function() {
