@@ -38,7 +38,7 @@ function voiceIt2Obj() {
   this.attempts = 0;
   this.setupWaveForm = false;
   this.destroyed = false;
-  this.errorCodes = ["TVER", "PNTE", "NFEF", "UNAC"];
+  this.errorCodes = ["TVER", "PNTE", "NFEF", "UNAC", "UNFD"];
 
   this.livenessObj;
   this.enrollmentNeededFace = false;
@@ -323,6 +323,8 @@ function voiceIt2Obj() {
                   setTimeout(function() {
                     main.continueVerification(response);
                   }, 100);
+                } else {
+                  main.exitOut();
                 }
               }
             }
