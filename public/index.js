@@ -142,7 +142,7 @@ $(document)
                     $('#loading').fadeTo(250, 0.0, function(){
                       $(this).css('display','none');
                     });
-                  }, 1600);
+                  }, 2000);
                   init = true;
                 }
               });

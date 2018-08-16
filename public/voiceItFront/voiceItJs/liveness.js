@@ -164,6 +164,7 @@ function Liveness() {
 			},200);
     });
     main.socket.on('completeLiveness', function(code) {
+      console.log(code);
       switch (code) {
         case 7:
 				main.cancel = true;
@@ -278,10 +279,6 @@ function Liveness() {
         default:
       }
     });
-		// $('#readyButton').click(
-		// 	function() {
-		// 	main.hidden = false;
-		// });
   }
 
   this.trackfaces = function() {
@@ -301,8 +298,6 @@ function Liveness() {
   }
 
   this.stop = () => {
-    console.log(23432);
-		// main.stopped = true;
 		main.socket.emit('terminateLiveness',1);
     main.cancel = true;
     window.cancelAnimationFrame(animationId);
@@ -315,12 +310,20 @@ function Liveness() {
       delete 	main.oldCircle;
 	    main.webcam = null;
       delete main.webcam;
-	    main.imageData =null;
+	    main.imageData = null;
       delete main.imageData;
 	    main.imageDataCtx = null;
       delete main.imageDataCtx;
+      for (var key in main.brfv4 ){
+	      main.brfv4[key] = null;
+	      delete main.brfv4[key];
+      }
 	    main.brfv4 = null;
       delete main.brfv4;
+      for (var key in main.brfmanager ){
+        main.brfmanager[key] = null;
+        delete main.brfmanager[key];
+      }
 	    main.brfmanager = null;
       delete main.brfmanager;
 	    main.resolution = null;

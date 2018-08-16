@@ -80,7 +80,7 @@
                           // obj.analyser.smoothingTimeConstant = 0.85;
 
                           if (typeof window.webkitAudioContext == "undefined") {
-                            obj.analyser.minDecibels = -105;
+                            obj.analyser.minDecibels = -95;
                           };
 
                           obj.source.connect(obj.analyser);

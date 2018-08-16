@@ -1077,7 +1077,6 @@ function voiceIt2Obj() {
 
   //create the audio waveform
   this.createWaveform = function() {
-    if (!main.setupWaveForm) {
       var colors = ['#fb6d6b', '#c10056', ' #a50053', '#51074b'];
       var canvas = document.querySelector('#waveform');
       if (main.audioVisualizer == undefined || main.audioVisualizer == null) {
@@ -1092,8 +1091,6 @@ function voiceIt2Obj() {
           }
         });
       }
-      main.setupWaveForm = true;
-    }
   }
 
   this.initLiveness = function () {
@@ -1133,7 +1130,7 @@ function voiceIt2Obj() {
       main.videoCircleStream = undefined;
     }
 
-    if (main.audioVisualizer !== undefined && main.audioVisualizer.getStream() !== undefined) {
+    if (main.audioVisualizer !== null && main.audioVisualizer !== undefined && main.audioVisualizer.getStream() !== undefined) {
       main.audioVisualizer.getStream().getTracks()[0].stop();
     }
 
@@ -1172,10 +1169,18 @@ function voiceIt2Obj() {
         var canvas = $('#waveform')[0];
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.remove();
+        var a = $('#content')[0];
+        $("<canvas id='waveform' height='242' width='460'></canvas>").insertBefore(a);
+
+        for (var key in main.audioVisualizer){
+          main.audioVisualizer[key] = null;
+          delete main.audioVisualizer[key];
+        }
         main.audioVisualizer = null;
         //$('#myAudio')[0].remove();
       }
-    }, 100);
+    }, 200);
     main.destroyed = true;
   }
 
