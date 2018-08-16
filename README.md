@@ -1,8 +1,9 @@
 # VoiceIt2 Web Login Example and Kit
-The repository contains an example web demonstration of VoiceIt's API 2.0 use-cases. Please navigate to [Incorporating the kit](#kit) for instructions on how to integrate parts of the Example into your own projects.
+The repository contains an example [web demonstration](https://vimeo.com/285173131) of VoiceIt's API 2.0 use-cases. Please navigate to [Incorporating the kit](#kit) for instructions on how to integrate parts of the Example into your own projects.
 
 - [Prerequisites](#prereq)
 - [Recommeded Platform](#platform)
+- [Compatible Platforms](#platform)
 - [Web Example](#webexample)
 	- [UI SnapShots](#ui)
 	- [Getting Started](#start)
@@ -39,8 +40,12 @@ The repository contains an example web demonstration of VoiceIt's API 2.0 use-ca
 #### Recommended Platform
 <img width="35px" src="http://pngimg.com/uploads/chrome_logo/chrome_logo_PNG17.png" alt="Google Chrome"/>
 
+#### Compatible Platforms
+<img style="display: inline-block" width="35px" src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Mozilla_Firefox_3.5_logo_256.png" alt="Firefox"/>    <img style="display: inline-block" width="35px" src="https://upload.wikimedia.org/wikipedia/commons/d/d4/Opera_browser_logo_2013.png" alt="Google Chrome"/>
+
 <a name="webexample"></a>
 ## Web Example 
+Please refer to [this video](https://vimeo.com/285173131) for a walkthrough example
 
 <a name="ui"></a>
 #### UI Snapshot 
@@ -119,8 +124,10 @@ Before implementing voiceItBase, please add the following dependencies to your p
   "dependencies": {
   ...
   ..
+    "EventEmitter": "^1.0.0",
     "atob": "^2.1.1",
     "ejs": "^2.6.1",
+    "events": "^3.0.0",
     "express": "^4.16.3",
     "fluent-ffmpeg": "^2.1.2",
     "socket.io": "^2.1.1",
@@ -267,13 +274,9 @@ Full support for Safari and Firefox coming soon.
 ### TODO
 
 - [x] Test on Chrome
-- [ ] Safari Compatibility
-- [ ] Test on Safari
-- [ ] Firefox Compatibility
-- [ ] Test on Firefox
-- [ ] Test on Mobile Chrome
-- [ ] Mobile Safari Compatibility
-- [ ] Test on Mobile Safari
+- [x] Firefox Compatibility
+- [x] Test on Firefox
+- [x] Test on Opera
 - [ ] Test on Windows 10
 
 
