@@ -17,7 +17,7 @@ function voiceIt2FrontEndBase() {
       setTimeout(()=>{
         this.myVoiceIt = new voiceIt2Obj();
         this.myVoiceIt.init();
-      }, 1000);
+      }, 1600);
     }, 100);
   }
 

@@ -158,8 +158,8 @@ function voiceItHtmlStructure() {
   }, {
     "attributes": {
       "id": "imageData",
-      "height": "480",
-      "width": "640"
+      "height": "240",
+      "width": "320"
     },
     "nodeName": "canvas",
     "parent": "#overlayHolder"
@@ -341,7 +341,7 @@ function voiceItHtmlStructure() {
       }
       setTimeout(() => {
         return this.appendVideoJs(++count);
-      }, 100);
+      }, 160);
     }
   }
 
