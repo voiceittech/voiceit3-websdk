@@ -207,7 +207,6 @@ The outcome can be "passed" or "failed".
 ### Frontend Implementation
 The frontend can be implemented in a modular fashion- each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently.
 
-
 <a name="html"></a>
 #### Creating the HTML
 
@@ -221,11 +220,17 @@ Now we can instansiate the voiceItFrontEndBase class:
 var myVoiceIt = new voiceIt2FrontEndBase();
 myVoiceIt.init()
 ``` 
-This will gather fron-end dependencies (script and link tags), and create the html structure. This will also instansiate voiceIt2Obj as mentioned above.
+This will gather fron-end dependencies (script and link tags), and create the html structure. But this will not instansiate the voiceIt2Obj. 
 
+#### Creating the voiceit front end object
+After initializing the base myVoiceIt object as above, it is necessary to wait at least 2 seconds for the dependecies to load, and the html structure to be appended. Hencforth, please call the createVoiceItObj() method:
+```
+myVoiceIt.createVoiceItObj();
+```
+This will create the main object responsible for interacting with the back end. 
 
 <a name="connect"></a>
-#### Connecting to your UI
+#### Connecting your UI to the Backend
 
 For any of the use-cases mentioned above, you need to call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness (false by default). 
 
