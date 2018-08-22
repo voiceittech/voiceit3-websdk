@@ -285,8 +285,6 @@ Need implementation help? Found a bug? Please contact hassan@voiceit.io.
 ### Disclaimer
 Please note this is a Beta verison- Feel free to document any errors/bugs in the issues section of the repository.
 
-Full support for Safari and Firefox coming soon.
-
 <a name="todo"></a>
 ### TODO
 
