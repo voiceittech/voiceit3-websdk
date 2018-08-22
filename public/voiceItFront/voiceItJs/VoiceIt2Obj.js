@@ -1,4 +1,11 @@
 function voiceIt2Obj() {
+  var main = this;
+  this.mobile = false;
+  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+      main.mobile = true;
+      $('#livenessBox').css('display', 'none');
+  }
+  this.skipped = false;
   this.video;
   this.player;
   this.enrollCounter = 0;
@@ -7,6 +14,7 @@ function voiceIt2Obj() {
     biometricType: "",
     action: ""
   };
+  this.assignedEvents = false;
   this.setupVJS = false;
   this.MAX_ATTEMPTS = 3;
   this.liveness = false;
@@ -46,7 +54,6 @@ function voiceIt2Obj() {
 
   this.passedLiveness = false;
 
-  var main = this;
   //browser ID
   this.getBrowser = function() {
     var nVer = navigator.appVersion;
@@ -179,19 +186,22 @@ function voiceIt2Obj() {
     var init = false;
     main.socket2 = io.connect('/', {
       reconnection: true,
-      reconnectionDelay: 1,
+      reconnectionDelay: 10,
       randomizationFactor: 0,
-      reconnectionDelayMax: 1,
+      reconnectionDelayMax: 10,
       transports: ['websocket'],
-      secure: true
+      forceNew: true
     });
-    main.requestPhrases();
-    main.requestAllEnrollments();
-    main.requestAllFaceEnrollments();
     main.assignClicks();
+    main.socket2.emit('initFrontObj', 1);
+    setTimeout(function(){
+      main.requestPhrases();
+      main.requestAllEnrollments();
+      main.requestAllFaceEnrollments();
+    },500);
   }
 
-  this.requestPhrases = () => {
+  this.requestPhrases = function ()  {
     main.socket2.emit('requestPhrases', 1);
   }
 
@@ -255,7 +265,9 @@ function voiceIt2Obj() {
                     main.player.record().stop();
                   }
                 }, 5000);
+                // if (!main.mobile){
                 main.createVideoCircle();
+                // }
                 main.vidCirclej.css('display', 'block');
                 main.vidCirclej.fadeTo(500, 0.5);
                 setTimeout(function() {
@@ -319,7 +331,7 @@ function voiceIt2Obj() {
                 main.exitOut();
               } else {
                 main.handleResponse(response);
-                if (!main.errorCodes.includes(response.responseCode)) {
+                if (main.errorCodes.indexOf(response.responseCode) == -1) {
                   setTimeout(function() {
                     main.continueVerification(response);
                   }, 100);
@@ -334,7 +346,10 @@ function voiceIt2Obj() {
     });
 
     $('#skipButton').click(function() {
+      main.skipped = true;
       $('#warningOverlay').fadeTo(400, 0.0, function() {
+        main.readyButtonj.css('display', 'inline-block');
+        main.readyButtonj.fadeTo(300,1.0);
         $('#skipButton').css('display', 'none');
         $('#warningOverlay').css('display', 'none');
       })
@@ -343,6 +358,7 @@ function voiceIt2Obj() {
     //Assigning the start() function to the read button
     $('#readyButton').click(
       function() {
+        $('#readyButton').css('display','none');
         main.hidden = false;
         main.start();
         if (main.type.biometricType !== "voice") {
@@ -386,6 +402,7 @@ function voiceIt2Obj() {
 
     $('#voiceItModal')
       .modal({
+        closable: false,
         onHide: function() {
           main.hidden = true;
           if (!main.destroyed) {
@@ -397,6 +414,7 @@ function voiceIt2Obj() {
   }
   //called by the the start up buttons
   this.initiate = function() {
+    this.skipped = false;
     main.createObjects();
     if (main.type.action == 'Enrollment') {
       main.showWarningOverlay();
@@ -404,7 +422,6 @@ function voiceIt2Obj() {
       main.warningOverlayj.css('display', 'none');
     }
     main.setup();
-    //main.convertSVG();
   }
 
   this.createObjects = function() {
@@ -422,14 +439,13 @@ function voiceIt2Obj() {
   }
 
   this.showWarningOverlay = function() {
+    $('#readyButton').css('display','none');
+    $('#readyButton').css('opacity',0);
     $('#skipButton').css('display', 'none');
     $("#livenessTutorial").css('display', 'none');
     $("#livenessText").css('display', 'none');
-    setTimeout(function() {
       main.wavej.css('opacity', '0.0');
       main.vidFramej.css('opacity', '0.0');
-      main.readyButtonj.css('opacity', '0.0');
-    }, 200);
     main.wait2j.css('display', 'none');
     setTimeout(function() {
       $('#warningOverlay > div').fadeTo(600, 1.0);
@@ -437,7 +453,6 @@ function voiceIt2Obj() {
     }, 300);
     main.warningOverlayj.css('display', 'flex');
     main.warningOverlayj.css('opacity', '1.0');
-    main.readyButtonj.css('display', 'none');
   }
 
   this.handleDeletion = function(response) {
@@ -452,13 +467,12 @@ function voiceIt2Obj() {
           } else {
             main.vidFramej.fadeTo(500, 1.0);
           }
+          main.readyButtonj.css('display','inline-block');
           main.readyButtonj.fadeTo(500, 1.0);
           main.warningOverlayj.css('display', 'none');
-          main.readyButtonj.css('display', 'block');
         });
       }, 1000);
     } else {
-      main.headerd
     }
   }
 
@@ -587,6 +601,7 @@ function voiceIt2Obj() {
     main.headerj.text("");
     main.headerj.css('display', 'none');
     main.readyButtonj.css('display', 'inline-block');
+    main.readyButtonj.css('opacity', 0);
     main.overlayj.css('opacity', '0');
     main.showLoadingOverlay();
     if (main.type.biometricType == "voice") {
@@ -637,8 +652,6 @@ function voiceIt2Obj() {
     main.vidCirclej.css('display', 'none');
     main.overlayj.css('opacity', '1.0');
     $('#voiceItModal').modal('show');
-    main.readyButtonj.css('opacity', 0.0);
-    main.readyButtonj.fadeTo(550, 1.0);
     main.vidFramej.css('opacity', '0.0');
     main.vidFramej.fadeTo(550, 1.0);
     if (main.liveness && main.type.action !== "Enrollment") {
@@ -714,7 +727,6 @@ function voiceIt2Obj() {
     }, function() {
       // print version information at startup
       var msg = 'Using video.js ' + videojs.VERSION;
-      videojs.log(msg);
     });
   }
 
@@ -737,8 +749,13 @@ function voiceIt2Obj() {
       function(stream) {
         webcam.srcObject = stream;
         webcam.onloadedmetadata = function(e) {
-          imageData.width = webcam.videoWidth;
-          imageData.height = webcam.videoHeight;
+          if (main.mobile){
+            imageData.width = webcam.videoHeight;
+            imageData.height = webcam.videoWidth;
+          } else {
+            imageData.width = webcam.videoWidth;
+            imageData.height = webcam.videoHeight;
+          }
           webcam.play();
           main.videoStream = stream;
         }
@@ -793,7 +810,6 @@ function voiceIt2Obj() {
     }, function() {
       // print version information at startup
       var msg = 'Using video.js ' + videojs.VERSION;
-      videojs.log(msg);
     });
   }
 
@@ -824,7 +840,6 @@ function voiceIt2Obj() {
     }, function() {
       //print version information at startup
       var msg = 'Using video.js ' + videojs.VERSION;
-      videojs.log(msg);
     });
   }
 
@@ -855,7 +870,6 @@ function voiceIt2Obj() {
     }, function() {
       // print version information at startup
       var msg = 'Using video.js ' + videojs.VERSION;
-      videojs.log(msg);
     });
   }
 
@@ -870,7 +884,6 @@ function voiceIt2Obj() {
     // user this.type the record button and started recording
     main.player.on('startRecord', function() {});
     main.player.on('finishRecord', function() {
-      console.log(main.player.recordedData);
       if (main.player.recordedData.video !== undefined) {
         main.player.recordedData = main.player.recordedData.video;
       }
@@ -946,7 +959,9 @@ function voiceIt2Obj() {
         main.createCircle();
         main.circlej.css("opacity", "1.0");
       } else if (main.type.biometricType == "video") {
+        // if (!main.mobile){
         main.createVideoCircle();
+        // }
         main.vidCirclej.css('display', 'block');
         main.vidCirclej.fadeTo(500, 0.5);
         main.createCircle();
@@ -1033,13 +1048,17 @@ function voiceIt2Obj() {
         main.warningOverlayj.fadeTo(350, 0.0, function() {
           main.warningOverlayj.css('display', 'none');
         });
+        if (!main.skipped){
+          main.readyButtonj.css('display','inline-block');
+          main.readyButtonj.fadeTo(300,1.0);
+        }
       }, timeOut);
     }
   }
 
   //exit the modal post completion of task
-  this.exitOut = () => {
-    setTimeout(() => {
+  this.exitOut = function ()  {
+    setTimeout(function ()  {
       if ($('#voiceItModal').hasClass('visible')) {
         if (!main.hidden) {
           $('#voiceItModal').modal("hide");
@@ -1071,7 +1090,7 @@ function voiceIt2Obj() {
       thickness: 5,
       lineCap: "round",
       animation: {
-        duration: 5100,
+        duration: 5200,
         easing: "linear"
       }
     });
@@ -1096,9 +1115,13 @@ function voiceIt2Obj() {
   }
 
   this.initLiveness = function () {
-    main.livenessObj = new Liveness();
+    main.livenessObj = new Liveness(main.socket2);
     main.livenessObj.init();
     main.livenessInit = true;
+    if (!main.assignedEvents){
+      main.livenessObj.assignSocketEvents();
+      main.assignedEvents = true;
+    }
   }
 
   //destroy video, canvas, and other objects
@@ -1124,7 +1147,7 @@ function voiceIt2Obj() {
     if (main.type.biometricType !== "voice") {
       imageData.remove();
       var a = $('#videoCircle')[0];
-      $("<canvas id='imageData' height='640' width='480'></canvas>").insertBefore(a);
+      $("<canvas id='imageData' style='width:100%;' height='480' width='640'></canvas>").insertBefore(a);
     }
 
     if (main.videoCircleStream !== undefined) {
@@ -1152,10 +1175,9 @@ function voiceIt2Obj() {
 
     if (main.livenessObj !== undefined && main.livenessObj !== null) {
       main.livenessObj.stop();
-      setTimeout(()=>{
+      setTimeout(function (){
         main.livenessObj = null;
-        delete main.livenessObj;
-      },200);
+      },100);
     }
 
     setTimeout(function() {
@@ -1245,6 +1267,15 @@ function voiceIt2Obj() {
 
   $(window).on('beforeunload', function() {
     main.socket2.emit('terminateVoiceItObj', 1);
+    main.socket2.disconnect();
+    for (var key in main.socket2){
+      main.socket2[key] = null;
+      delete main.socket2[key];
+    }
+    for (var key in main){
+      main[key] = null;
+      delete main[key];
+    }
   });
 
 }

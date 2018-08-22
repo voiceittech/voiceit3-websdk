@@ -1,26 +1,29 @@
 const express = require('express');
 const app = express();
-const crypto = require('crypto');
 const fs = require('fs');
 const users = require('./users.js');
-var http = require('https');
-const phrases = require('./phrases.js');
-
+var http = require('http');
+const session = require('express-session');
+const uuid = require('uuid/v1');
 //the config file
 const config = require('./config.js');
 const voiceItModule = require('./voiceItBackEnd/js/VoiceItBase.js');
 const bodyParser = require('body-parser');
 var voiceItBackEnd;
+
+var sessionMiddleware = session({
+  resave: true,
+  saveUninitialized: true,
+  secret: uuid(),
+  cookie: {}
+});
+
+app.use(sessionMiddleware);
 app.use(express.static('public'));
 express.static.mime.types["wasm"] = "application/wasm";
 app.use(bodyParser.json());
 
-var options = {
-  key: fs.readFileSync('/etc/apache2/ssl/localhost.key'),
-  cert: fs.readFileSync('/etc/apache2/ssl/localhost.crt')
-};
-
-var server = http.Server(options,app);
+var server = http.Server(app);
 
 server.listen(8000, () => {
   console.log('Listening on *:8000');
@@ -28,17 +31,14 @@ server.listen(8000, () => {
 
 //The voiceitBackBnd module must be initialized only once
 voiceItBackEnd = new voiceItModule({
-  userId: "",
   apiKey: config.VOICEIT_API_KEY,
   apiToken: config.VOICEIT_API_TOKEN,
-  contentLanguage: config.contentLanguage,
-  phrase: config.phrase,
   numLivTests: 3,
   maxLivTries: 2
-}, server);
+}, server, sessionMiddleware);
 
 voiceItBackEnd.on('result', function(result){
-  console.dir(result);
+  console.log(result);
 });
 
 //initiate the base voiceit Module
@@ -55,8 +55,13 @@ app.post('/authenticate', (req, res) => {
         UserId: user.id,
       };
       setTimeout(() => {
-          //Update the user that the module should deal with
-          voiceItBackEnd.updateUser(user.id);
+          //Create a new task for a specific user Id
+          var task = new voiceItBackEnd.task({
+              sessionID: req.sessionID,
+              userId: user.id,
+              contentLanguage: "en-US",
+              phrase: "Never forget tomorrow is a new day"
+            });
       },150);
       res.status(200).send(data);
     } else {
