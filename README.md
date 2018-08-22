@@ -233,7 +233,7 @@ Now we can instansiate the voiceItFrontEndBase class:
 var myVoiceIt = new voiceIt2FrontEndBase();
 myVoiceIt.init()
 ``` 
-This will gather fron-end dependencies (script and link tags), and create the html structure. But this will not instansiate the voiceIt2Obj. 
+This will gather front-end dependencies (script and link tags), and create the html structure. But this will not instansiate the voiceIt2Obj. 
 
 #### Creating the voiceit front end object
 After initializing the base myVoiceIt object as above, it is necessary to wait at least 2 seconds for the dependecies to load, and the html structure to be appended. Hencforth, please call the createVoiceItObj() method:
