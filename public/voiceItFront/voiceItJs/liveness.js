@@ -154,7 +154,6 @@ function Liveness(socket) {
 			},200);
     });
     socket.on('completeLiveness', function(code) {
-      console.log(code);
       switch (code) {
         case 7:
 				main.cancel = true;
