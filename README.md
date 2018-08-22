@@ -153,7 +153,7 @@ const session = ExpressSession({
 ...
 });
 
-voiceItBackEnd = new voiceItModule(config, server);
+voiceItBackEnd = new voiceItModule(config, server, session);
 ```
 Or pass it options directly:
 
@@ -214,7 +214,7 @@ type: TYPE,
 livenessOutcome: "OUTCOME"
 }
 ```
-The outcome can be "passed" or "failed".
+The liveness outcome can be "passed" or "failed".
 
 <a name="front"></a>
 ### Frontend Implementation
