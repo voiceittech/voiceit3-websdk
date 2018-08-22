@@ -16,8 +16,7 @@ The repository contains an example [web demonstration](https://vimeo.com/2851731
 	- [Backend Implementation](#back)
 		- [Gathering Backend Dependencies](#backdecies)
 		- [Initializing the Base Module](#base)
-		- [Updating the user id](#updateuser)
-		- [Updating the phrase](#updatingphrase)
+		- [Create a Task for a user](#task)
 		- [Getting the result](#result)
 	- [Frontend Implementation](#front)
 		- [Creating the HTML](#html)
@@ -126,12 +125,13 @@ Before implementing voiceItBase, please add the following dependencies to your p
   ..
     "EventEmitter": "^1.0.0",
     "atob": "^2.1.1",
-    "ejs": "^2.6.1",
     "events": "^3.0.0",
     "express": "^4.16.3",
+    "express-session": "^1.15.6",
     "fluent-ffmpeg": "^2.1.2",
     "socket.io": "^2.1.1",
     "unirest": "^0.5.1",
+    "uuid": "^3.3.2",
     "ws": "^5.2.1"
   }
 ...
@@ -141,43 +141,54 @@ Make sure to run ```npm install``` after this.
 
 <a name="base"></a>
 #### Initializing the Base Module
+The base module acts as a hub for all the "Task" instances, each of which will be performing a task for a user ID.  
 To implement voiceItBase, either pass it a config file, such as voiceit2-web-login-example/config.js:
 ```
 const server = require('http').Server(app);
 const config = require('./config.js');
+const ExpressSession = require('express-session');
+const session = ExpressSession({
+...
+..
+...
+});
 
 voiceItBackEnd = new voiceItModule(config, server);
 ```
 Or pass it options directly:
 
 ```
+const ExpressSession = require('express-session');
 const server = require('http').Server(app);
+const session = ExpressSession({
+...
+..
+...
+});
 voiceItBackEnd = new voiceItModule({
-      userId: "USER_ID_HERE",
       apiKey: "API_KEY_HERE",
       apiToken: "API_TOKEN_HERE",
-      contentLanguage: "CONTENT_LANG",
-      phrase: "PHRASE",
       numLivTests: NUM_OF_LIVENESS_TESTS
       maxLivTries: MAX_FAILED_LIVENESS_TEST_ATTEMPTS
-    }, server);
+    }, server, session);
 ```
+The base module will only require 'overall' configurations, such as API credentials, liveness challange tries, liveness attempts, etc.
 Please make sure to use ```server.listen(....)``` rather than ```app.listen(...)```.
 
-<a name="updateuser"></a>
-#### Updating the user id
-The backend module must be inititialized only once. To update the user ID that the module will peform operations on, please call the updateUser method:
-```
-voiceItBackEnd.updateUser('USER_ID_HERE');
-```
+<a name="task"></a>
+#### Creating a Task
+The backend module must be inititialized only once. 
+To handle a task for any user, a new voiceItBackEnd.task instance must be created. This will initialize a task for a specific user, in a specific web session:
 
-<a name="updatingphrase"></a>
-#### Updating the phrase
-The file voiceit2-web-login-example/public/voiceItFront/prompts.js manages the phrases and prompts. To update the current phrase, please call the setCurrentPhrase Method:
 ```
-voiceItBackEnd.setCurrPhrase("CURRENT_PHRASE");
-``` 
-
+var task = new voiceItBackEnd.task({
+    sessionID: "SESSION_ID,
+    userId: "USER_ID,
+    contentLanguage: "LANG_HERE",
+    phrase: "PHRASE_HERE"
+   });
+```
+This will set up the back end to listen for, and perform, any specific action (from the 27 possbile) set for the user in the front end.
 <a name="result"></a>
 #### Getting the result 
 Please set up a listener for the 'result' event:
@@ -189,6 +200,7 @@ voiceItBackEnd.on('result', function(result){
 After the completion of any action, the result event will be triggered. For non-liveness events, the result response will be of the following json structure:
 ```
 {
+sessionId: "TASK_SESSION_ID"
 response: {.....json response of the api call....},
 type: TYPE_ACTION
 }
@@ -197,6 +209,7 @@ type: TYPE_ACTION
 For Liveness related tasks, the response will be of the following structure:
 ```
 {
+sessionId: "TASK_SESSION_ID"
 type: TYPE,
 livenessOutcome: "OUTCOME"
 }
