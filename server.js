@@ -33,7 +33,7 @@ server.listen(8000, () => {
 voiceItBackEnd = new voiceItModule({
   apiKey: config.VOICEIT_API_KEY,
   apiToken: config.VOICEIT_API_TOKEN,
-  numLivTests: 3,
+  numLivTests: 5,
   maxLivTries: 2
 }, server, sessionMiddleware);
 
