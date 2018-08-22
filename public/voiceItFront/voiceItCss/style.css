@@ -87,8 +87,9 @@
 }
 
 #warningOverlay {
+  display: flex;
+  width: 100%;
   height: 345px;
-  width: 460px;
   position: absolute;
   z-index: 26;
   background: black;
@@ -112,8 +113,6 @@
   z-index: 2;
   background-color: black;
   opacity: 0;
-  /* max-height: 345px;
-max-width: 460px; */
 }
 
 #wait2 {
@@ -153,9 +152,8 @@ max-width: 460px; */
 }
 
 #imageData {
-  height: 345px;
-  width: 460px;
-  /* display: none; */
+  top: 6%;
+  width: 100%;
   position: absolute;
 }
 
@@ -310,7 +308,7 @@ align-items: center;
 
 
 #content {
-  bottom: 2em;
+  bottom: 1em;
   z-index: 6;
   position: relative;
   padding: 0px;
@@ -348,7 +346,10 @@ align-items: center;
   padding: 2px !important;
   text-align: end !important;
 }
+
 #voiceItModal {
+  width: 460px !important;
+  overflow: hidden;
   margin-bottom: 15%;
   background: transparent;
 }
@@ -390,7 +391,7 @@ align-items: center;
 
 #circle {
 z-index: 12;
-top: 4.5%;
+top: 10.5%;
 position: absolute;
 width: 255px;
 height: 255px;
@@ -398,7 +399,6 @@ left: 21%;
 }
 
 #readyButton {
-  right: 14em;
   position: absolute;
   bottom: 0%;
   z-index: 8;
@@ -416,18 +416,21 @@ left: 21%;
 
 
 #videoCircle {
+  right: -1.5%;
   position: absolute;
   z-index:11;
-  top:-9.3%;
+  top:-2.3%;
   opacity: 0.0;
 }
 
 
-
 #overlayHolder {
+  overflow: hidden;
+  position: relative;
+  justify-content: center;
   display: flex;
   position: relative;
-  min-height: 345px;
+  min-height: 365px;
   width: 100%;
 }
 
@@ -441,6 +444,7 @@ left: 21%;
 }
 
 #cv {
+  top: 6%;
   z-index: 2;
 }
 
@@ -463,6 +467,9 @@ left: 21%;
   position: absolute;
 }
 
+#cv {
+  position: absolute;
+}
 
 .ui.card {
   display: block;
@@ -478,8 +485,55 @@ left: 21%;
   width: 100%;
 }
 
-@media only screen and (max-width: 461px) {
-  #mainForm {
-    /* width: 300px; */
+@media only screen and (max-width: 420px) {
+  #voiceItModal {
+    width: 340px !important;
+  }
+
+  #circle {
+    left: 10.5% !important;
+  }
+  #imageData {
+    left: 9% !important;
+    top: 3.5% !important;
+    width: 368px !important;
+    height: 276px !important;
+  }
+  #circle {
+    top: 7.0% !important;
+    /* display: flex;
+    justify-content: center !important;
+    align-items: center !important; */
+  }
+  #cv {
+    top: 3.5% !important;
+  }
+  #videoCircle {
+    top: -6.0% !important;
+  }
+
+  #waveform {
+    left: -18.5% !important;
+  }
+/*
+  #circle > canvas {
+    height: 218px !important;
+    width: 218px !important;
+    position: absolute !important;
+    top: 12% !important;
+    right: 5% !important;
+    }
+
+  #cv {
+    top: 10% !important;
+    width: 368px !important;
+    height: 276px !important;
+  } */
+}
+
+@media only screen and (min-width: 990px) {
+  #closeButton {
+    top: 1rem !important;
+    right: 1rem !important;
   }
 }

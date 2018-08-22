@@ -1,4 +1,4 @@
-function Liveness() {
+function Liveness(socket) {
   var animationId = 0;
 
   var manyfaces = false;
@@ -41,7 +41,6 @@ function Liveness() {
   this.brfv4BaseURL = _isWebAssemblySupported ? "voiceItFront/voiceItJs/brf-js/libs/brf_wasm/" : "voiceItFront/voiceItJs/brf-js/libs/brf_asmjs/";
   this.support = (typeof WebAssembly === 'object');
   this.oldCircles = [];
-  this.socket;
   this.setup = false;
 
   this.webcam = document.getElementById("myVideo"); // our this.webcam video
@@ -127,36 +126,26 @@ function Liveness() {
     main.resolution = new main.brfv4.Rectangle(0, 0, main.imageData.width, main.imageData.height);
     main.brfmanager = new main.brfv4.BRFManager();
     main.brfmanager.init(main.resolution, main.resolution, "vocieitBRFTracking");
-		main.assignSocketEvents();
-    setTimeout(()=>{
+    setTimeout(function (){
       main.trackfaces();
     },200);
+    socket.emit('initliveness', 1);
   }
 
   this.assignSocketEvents = function() {
-    main.socket = io.connect('/', {
-      reconnection: true,
-      reconnectionDelay: 1,
-      randomizationFactor: 0,
-      reconnectionDelayMax: 1,
-      transports: ['websocket'],
-      secure: true,
-      forceNew: true
-    });
-    main.socket.on('initiated', function(s) {
+    socket.on('initiated', function(s) {
       main.test = s;
       main.createLivenessCircle();
       main.drawCircle(main.test);
     });
-    main.socket.on('test', function(test) {
+    socket.on('test', function(test) {
 			if (main.cancel){
 				main.cancel = false;
-				//main.trackfaces();
 			}
       main.redrawCircle(test);
     });
-    main.socket.on('reTest', function(test) {
-			setTimeout(()=>{
+    socket.on('reTest', function(test) {
+			setTimeout(function(){
 				$('#circle').css('display', 'block');
 				main.redrawCircle(test);
 				setTimeout(function() {
@@ -164,8 +153,7 @@ function Liveness() {
 				}, 300);
 			},200);
     });
-    main.socket.on('completeLiveness', function(code) {
-      console.log(code);
+    socket.on('completeLiveness', function(code) {
       switch (code) {
         case 7:
 				main.cancel = true;
@@ -223,7 +211,7 @@ function Liveness() {
         case 3:
           //passed liveness and face identification
           $('#header').text(main.livPrompts.getPrompt("LIVENESS_SUCCESS"));
-					setTimeout(()=> {
+					setTimeout(function() {
 						$('#wait').fadeTo(300, 0.0, function() {
 							$(this).css('display', 'none');
 							$('#header').css('display', 'inline-block');
@@ -290,8 +278,7 @@ function Liveness() {
       main.brfmanager.update(main.imageDataCtx.getImageData(0, 0, main.resolution.width, main.resolution.height).data);
       var faces = main.brfmanager.getFaces();
       var face = faces[0];
-      console.log(face);
-      main.socket.emit('data', face);
+      socket.emit('data', face);
       if (main.brfv4Example.stats.end) {
         main.brfv4Example.stats.end();
       }
@@ -299,18 +286,12 @@ function Liveness() {
     }
   }
 
-  this.stop = () => {
-    if (main.socket !== undefined){
-    main.socket.emit('terminateLiveness',1);
-    }
+  this.stop = function ()  {
     main.cancel = true;
     window.cancelAnimationFrame(animationId);
-		setTimeout(()=>{
-      main.socket = null;
-      delete main.socket;
+		setTimeout(function(){
 			main.brfv4Example = null;
       delete main.brfv4Example;
-			main.oldCircles = null;
       delete 	main.oldCircle;
 	    main.webcam = null;
       delete main.webcam;
@@ -597,9 +578,9 @@ function Liveness() {
   }
 
   //exit the modal post completion of task
-// 	this.exitOut = () => {
+// 	this.exitOut = ()  {
 //     if (!main.hidden){
-//     setTimeout(() => {
+//     setTimeout(()  {
 //       if ($('#voiceItModal').hasClass('visible')){
 //           $('#voiceItModal').modal("hide");
 //         }
@@ -608,8 +589,8 @@ function Liveness() {
 // }
 
   $(window).on('beforeunload', function() {
-    // main.socket.disconnect(true);
-    // main.socket = null;
+    // socket.disconnect(true);
+    // socket = null;
   });
 
 

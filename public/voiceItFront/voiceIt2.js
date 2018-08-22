@@ -2,89 +2,91 @@ function voiceIt2FrontEndBase() {
   var script = document.createElement('script');
   script.src = 'voiceItFront/voiceItJs/misc/createDynamicHTML.js';
   document.head.appendChild(script);
+  var main = this;
 
-  this.myVoiceIt;
+  main.myVoiceIt;
   var voiceInitiator;
 
   //TODO: when VoiceIt2 Obj has loaded, and the HTML has been appended.
 
-  var main = this;
+  var main = main;
 
-  this.init = () => {
-    setTimeout(()=>{
+  main.init = function(){
+    setTimeout(function(){
       voiceInitiator = new voiceItHtmlStructure();
       voiceInitiator.init();
-      setTimeout(()=>{
-        this.myVoiceIt = new voiceIt2Obj();
-        this.myVoiceIt.init();
-      }, 1600);
-    }, 100);
+    },200);
+  }
+
+  main.createVoiceItObj = function () {
+      main.myVoiceIt = new voiceIt2Obj();
+      main.myVoiceIt.init();
   }
 
 
-  this.init_Voice_Enrollment = () => {
-    if (this.myVoiceIt == undefined) {
-      setTimeout(() => {
+  main.init_Voice_Enrollment = function () {
+    if (main.myVoiceIt == undefined) {
+      setTimeout(function () {
         console.log('loading VocieItObj...');
-        this.init_Voice_Enrollment();
+        main.init_Voice_Enrollment();
       }, 100);
     } else {
-      this.myVoiceIt.encapsulatedVoiceEnrollment();
+      main.myVoiceIt.encapsulatedVoiceEnrollment();
     }
   }
 
-  this.init_Voice_Verification = () => {
-    if (this.myVoiceIt == undefined) {
-      setTimeout(() => {
+  main.init_Voice_Verification = function () {
+    if (main.myVoiceIt == undefined) {
+      setTimeout(function () {
         console.log('loading VocieItObj...');
-        this.init_Voice_Verification();
+        main.init_Voice_Verification();
       }, 100);
     } else {
-      this.myVoiceIt.encapsulatedVoiceVerification();
+      main.myVoiceIt.encapsulatedVoiceVerification();
     }
   }
 
-  this.init_Face_Verification = (liveness) => {
-    if (this.myVoiceIt == undefined) {
-      setTimeout(() => {
+  main.init_Face_Verification = function (liveness) {
+    if (main.myVoiceIt == undefined) {
+      setTimeout(function () {
         console.log('loading VocieItObj...');
-        this.init_Face_Verification(liveness);
+        main.init_Face_Verification(liveness);
       }, 100);
     } else {
-      this.myVoiceIt.encapsulatedFaceVerification(liveness);
+      main.myVoiceIt.encapsulatedFaceVerification(liveness);
     }
   }
 
-  this.init_Face_Enrollment = () => {
-    if (this.myVoiceIt == undefined) {
-      setTimeout(() => {
+  main.init_Face_Enrollment = function () {
+    if (main.myVoiceIt == undefined) {
+      setTimeout(function () {
         console.log('loading VocieItObj...');
-        this.init_Face_Enrollment();
+        main.init_Face_Enrollment();
       }, 100);
     } else {
-      this.myVoiceIt.encapsulatedFaceEnrollment();
+      main.myVoiceIt.encapsulatedFaceEnrollment();
     }
   }
 
-  this.init_Video_Enrollment = () => {
-    if (this.myVoiceIt == undefined) {
-      setTimeout(() => {
+  main.init_Video_Enrollment = function () {
+    if (main.myVoiceIt == undefined) {
+      setTimeout(function () {
         console.log('loading VocieItObj...');
-        this.init_Video_Enrollment();
+        main.init_Video_Enrollment();
       }, 100);
     } else {
-      this.myVoiceIt.encapsulatedVideoEnrollment();
+      main.myVoiceIt.encapsulatedVideoEnrollment();
     }
   }
 
-  this.init_Video_Verification = (liveness) => {
-    if (this.myVoiceIt == undefined) {
-      setTimeout(() => {
+  main.init_Video_Verification = function (liveness) {
+    if (main.myVoiceIt == undefined) {
+      setTimeout(function () {
         console.log('loading VocieItObj...');
-        this.init_Video_Verification(liveness);
+        main.init_Video_Verification(liveness);
       }, 100);
     } else {
-      this.myVoiceIt.encapsulatedVideoVerification(liveness);
+      main.myVoiceIt.encapsulatedVideoVerification(liveness);
     }
   }
 

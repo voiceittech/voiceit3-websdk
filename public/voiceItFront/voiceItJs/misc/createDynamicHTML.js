@@ -1,5 +1,7 @@
 function voiceItHtmlStructure() {
-  this.modalStructure = [{
+
+  var main = this;
+  main.modalStructure = [{
     "attributes": {
       "class": "ui modal",
       "id": "voiceItModal"
@@ -148,7 +150,7 @@ function voiceItHtmlStructure() {
     },
     "nodeName": "button",
     "parent": "#overlayHolder",
-    "text": "Ready?"
+    "text": "Click to begin"
   }, {
     "attributes": {
       "id": "circle"
@@ -158,8 +160,8 @@ function voiceItHtmlStructure() {
   }, {
     "attributes": {
       "id": "imageData",
-      "height": "240",
-      "width": "320"
+      "height": "480",
+      "width": "640"
     },
     "nodeName": "canvas",
     "parent": "#overlayHolder"
@@ -250,7 +252,7 @@ function voiceItHtmlStructure() {
     "parent": "#circleG"
   }];
 
-  this.videoJsStructure = [{
+  main.videoJsStructure = [{
       type: 'link',
       src: 'voiceItFront/voiceItJs/video.js/dist/video-js.min.css'
     },
@@ -284,7 +286,7 @@ function voiceItHtmlStructure() {
     },
   ];
 
-  this.scriptsStructure = [
+  main.scriptsStructure = [
     'voiceItFront/voiceItJs/jquery.min.js',
     'voiceItFront/voiceItJs/misc/bufferloader.js',
     'voiceItFront/voiceItJs/socket.io-client/dist/socket.io.js',
@@ -298,13 +300,13 @@ function voiceItHtmlStructure() {
     'voiceItFront/voiceItJs/VoiceIt2Obj.js',
   ];
 
-  this.linksStructure = [
+  main.linksStructure = [
     'https://fonts.googleapis.com/css?family=Roboto:400,100,300,700',
     'voiceItFront/semantic/dist/semantic.min.css',
     'voiceItFront/voiceItCss/style.css'
   ];
 
-  this.svgElements = [
+  main.svgElements = [
     'svg',
     'g',
     'mask',
@@ -312,100 +314,99 @@ function voiceItHtmlStructure() {
     'rect'
   ];
 
-  this.getmodalStructure = function() {
-    return this.modalStructure;
+  main.getmodalStructure = function() {
+    return main.modalStructure;
   }
 
-  this.getlinksStructure = function() {
-    return this.linksStructure;
+  main.getlinksStructure = function() {
+    return main.linksStructure;
   }
 
-  this.getscriptsStructure = function() {
-    return this.scriptsStructure;
+  main.getscriptsStructure = function() {
+    return main.scriptsStructure;
   }
 
-  this.appendVideoJs = function(count) {
-    if (count == this.videoJsStructure.length) {
+  main.appendVideoJs = function(count) {
+    if (count == main.videoJsStructure.length) {
       return;
     } else {
-      if (this.videoJsStructure[count].type == 'link') {
+      if (main.videoJsStructure[count].type == 'link') {
         var link = document.createElement('link');
         link.type = 'text/css';
-        link.href = this.videoJsStructure[count].src;
+        link.href = main.videoJsStructure[count].src;
         link.rel = "stylesheet"
         document.head.appendChild(link);
       } else {
         var script = document.createElement('script');
-        script.src = this.videoJsStructure[count].src;
+        script.src = main.videoJsStructure[count].src;
         document.head.appendChild(script);
       }
-      setTimeout(() => {
-        return this.appendVideoJs(++count);
-      }, 160);
+      setTimeout(function () {
+        return main.appendVideoJs(++count);
+      }, 200);
     }
   }
 
-  this.appendScripts = function(count){
-    if (count == this.scriptsStructure.length) {
+  main.appendScripts = function(count){
+    if (count == main.scriptsStructure.length) {
       return;
     } else {
-      var timeOut = 20;
-      setTimeout(() => {
+      setTimeout(function () {
         var script = document.createElement('script');
-        script.src = this.scriptsStructure[count];
+        script.src = main.scriptsStructure[count];
         document.head.appendChild(script);
-        return this.appendScripts(++count);
-      }, timeOut);
+        return main.appendScripts(++count);
+      }, 100);
     }
   }
 
-  this.appendModal = function() {
+  main.appendModal = function() {
     var svgns = "http://www.w3.org/2000/svg";
-    for (var i = 0; i < this.modalStructure.length; i++) {
+    for (var i = 0; i < main.modalStructure.length; i++) {
       var ele;
       //svg elements require creation under different namespace
-      if (this.svgElements.includes(this.modalStructure[i].nodeName)){
-        ele = document.createElementNS(svgns,this.modalStructure[i].nodeName);
+      if (main.svgElements.indexOf(main.modalStructure[i].nodeName) > -1){
+        ele = document.createElementNS(svgns,main.modalStructure[i].nodeName);
         ele = $(ele);
-        ele.appendTo($(this.modalStructure[i].parent));
+        ele.appendTo($(main.modalStructure[i].parent));
       }
       //all other non-svg elements
        else {
-        ele = $('<' + this.modalStructure[i].nodeName + '/>').
-        appendTo($(this.modalStructure[i].parent));
-        if (this.modalStructure[i].text) {
-          ele.text(this.modalStructure[i].text);
+        ele = $('<' + main.modalStructure[i].nodeName + '/>').
+        appendTo($(main.modalStructure[i].parent));
+        if (main.modalStructure[i].text) {
+          ele.text(main.modalStructure[i].text);
         }
       }
-      for (var property in this.modalStructure[i].attributes) {
-        ele.attr(property, this.modalStructure[i].attributes[property]);
+      for (var property in main.modalStructure[i].attributes) {
+        ele.attr(property, main.modalStructure[i].attributes[property]);
       }
     }
   }
 
-  this.init = function() {
+  main.init = function() {
     //append the link voiceIt dependecies to the DOM
-    for (var j = 0; j < this.linksStructure.length; j++) {
+    for (var j = 0; j < main.linksStructure.length; j++) {
       var link = document.createElement('link');
       link.type = 'text/css';
-      link.href = this.linksStructure[j];
+      link.href = main.linksStructure[j];
       link.rel = "stylesheet"
       document.head.appendChild(link);
     }
 
     //append the script voiceIt dependecies to the DOM
-    this.appendScripts(0);
+    main.appendScripts(0);
 
     //append video-js dependecies
-    this.appendVideoJs(0);
+    main.appendVideoJs(0);
 
     //append the Modal html to the DOM
-    setTimeout(() => {
-      this.appendModal();
+    setTimeout(function () {
+      main.appendModal();
     }, 500);
   }
 
   //TODO: destroy the modal, scripts, and links, from the DOM
-  this.remove = function() {
+  main.remove = function() {
   }
 }

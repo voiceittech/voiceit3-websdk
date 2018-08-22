@@ -15,6 +15,7 @@ $(document)
     });
 
     var voiceItHTML = new voiceIt2FrontEndBase();
+    voiceItHTML.init();
 
     var init = false;
 
@@ -107,8 +108,8 @@ $(document)
                 $('#loading').fadeTo(250, 0.6);
                 $('#formOverlay').fadeTo(350,0.6);
                 if (!init) {
-                  voiceItHTML.init();
                   setTimeout(function() {
+                    voiceItHTML.createVoiceItObj(); 
                     $("#voiceEnrollmentBtn").click(function() {
                       voiceItHTML.init_Voice_Enrollment();
                     });

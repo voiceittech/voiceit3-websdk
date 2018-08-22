@@ -5,11 +5,11 @@ function prompts () {
 
   this.currPhrase = this.phrases[0];
 
-  this.getPhrase = (int) => {
+  this.getPhrase = function (int)  {
     return this.phrases[int];
   }
 
-  this.setCurrPhrase = (phrase) => {
+  this.setCurrPhrase = function (phrase)  {
     main.currPhrase = phrase;
     this.prompts.PDNM = "Please make sure you are saying the correct phrase: \"" + main.currPhrase + "\"";
     this.prompts.ENROLL_0 = "Please say: \"" + main.currPhrase + "\'";
@@ -18,7 +18,7 @@ function prompts () {
     this.prompts.VERIFY = "Please say \"" + main.currPhrase +"\"";
   }
 
-  this.addPhrase = (phrase) => {
+  this.addPhrase = function (phrase)  {
     this.phrases.push(phrase);
   }
 
