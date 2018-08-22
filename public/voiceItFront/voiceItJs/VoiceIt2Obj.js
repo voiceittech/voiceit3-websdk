@@ -265,9 +265,7 @@ function voiceIt2Obj() {
                     main.player.record().stop();
                   }
                 }, 5000);
-                // if (!main.mobile){
                 main.createVideoCircle();
-                // }
                 main.vidCirclej.css('display', 'block');
                 main.vidCirclej.fadeTo(500, 0.5);
                 setTimeout(function() {

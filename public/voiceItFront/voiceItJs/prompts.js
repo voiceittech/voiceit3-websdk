@@ -95,7 +95,7 @@ function prompts () {
   FACE_RIGHT : "Please turn your face slightly to the right and back ",
   LIVENESS_SUCCESS : "You've been successfully verified",
   LIVENESS_TIMEDOUT: "Sorry, liveness timed out. Please perform the liveness tests quickly",
-  LIVENESS_FAILED: "Sorry, liveness test failed",
+  LIVENESS_FAILED: "Sorry, verification failed",
   LIVENESS_TRY_AGAIN: "Test failed, please try again",
   LIVENESS_TRY_AGAIN_AND_TURN_BACK: "Test failed, please turn your face back straight quickly"
 };

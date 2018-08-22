@@ -46,7 +46,7 @@ function voiceItModule (config, server, session) {
     if (main.tasks[sessionId] !== undefined) {
       delete main.tasks[sessionId];
     }
-}
+  }
 
   this.getTaskOptions = function(sessionID) {
     if (main.tasks[sessionID] !== undefined){

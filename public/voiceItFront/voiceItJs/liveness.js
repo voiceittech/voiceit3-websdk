@@ -154,6 +154,7 @@ function Liveness(socket) {
 			},200);
     });
     socket.on('completeLiveness', function(code) {
+      console.log(code);
       switch (code) {
         case 7:
 				main.cancel = true;
@@ -576,23 +577,6 @@ function Liveness(socket) {
       default:
     }
   }
-
-  //exit the modal post completion of task
-// 	this.exitOut = ()  {
-//     if (!main.hidden){
-//     setTimeout(()  {
-//       if ($('#voiceItModal').hasClass('visible')){
-//           $('#voiceItModal').modal("hide");
-//         }
-//     }, 3000);
-//   }
-// }
-
-  $(window).on('beforeunload', function() {
-    // socket.disconnect(true);
-    // socket = null;
-  });
-
 
   function readWASMBinary(url, onload, onerror, onprogress) {
     var xhr = new XMLHttpRequest();
