@@ -23,7 +23,7 @@ app.use(express.static('public'));
 express.static.mime.types["wasm"] = "application/wasm";
 app.use(bodyParser.json());
 
-var server = http.Server(app);
+var server = http.Server( app);
 
 server.listen(8000, () => {
   console.log('Listening on *:8000');
@@ -33,7 +33,7 @@ server.listen(8000, () => {
 voiceItBackEnd = new voiceItModule({
   apiKey: config.VOICEIT_API_KEY,
   apiToken: config.VOICEIT_API_TOKEN,
-  numLivTests: 5,
+  numLivTests: 3,
   maxLivTries: 2
 }, server, sessionMiddleware);
 
@@ -70,7 +70,7 @@ app.post('/authenticate', (req, res) => {
         Message: "Incorrect Password",
         UserId: "",
       };
-      res.status(404).send(data);
+      res.send(data);
     }
   } else {
     data = {
@@ -78,6 +78,6 @@ app.post('/authenticate', (req, res) => {
       Message: "User not found",
       UserId: "",
     };
-    res.status(404).send(data);
+    res.send(data);
   }
 });

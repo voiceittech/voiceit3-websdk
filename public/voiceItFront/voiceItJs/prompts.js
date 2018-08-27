@@ -34,15 +34,15 @@ function prompts () {
   VOICE_FACE_SETUP : "Setup Face + Voice Verification",
   VOICE_FACE_SETUP_SUBTITLE : "This lets you log in by verifying your face and voice",
   VOICE_FACE_READY : "Face + Voice verification is ready to use",
-  VOICE_FACE_READY_SUBTITLE : "You can now use your face and voice instead of a password to securely log in anytime",
+  VOICE_FACE_READY_SUBTITLE : "You can now use your face and voice instead of a password to securely log in",
   FACE_SETUP : "Setup Face Verification",
   FACE_SETUP_SUBTITLE : "This lets you log in by verifying your face",
   FACE_READY : "Face Verification is Ready",
-  FACE_READY_SUBTITLE : "You can now use your face instead of a password to securely log in anytime",
+  FACE_READY_SUBTITLE : "You can now use your face instead of a password to securely log in",
   VOICE_SETUP : "Setup Voice Verification",
   VOICE_SETUP_SUBTITLE : "This lets you log in by verifying your voice",
   VOICE_READY : "Voice Verification is Ready",
-  VOICE_READY_SUBTITLE: "You can now use your voice instead of a password to securely log in anytime",
+  VOICE_READY_SUBTITLE: "You can now use your voice instead of a password to securely log in",
   /* Prompts for Enrollment and Verification Flow */
   LOOK_INTO_CAM : "Please look into the camera",
   GET_ENROLLED : "There you are, let's get you enrolled",
@@ -87,7 +87,7 @@ function prompts () {
   UNFD : "User not found. Pease make sure you have the right user ID",
   MAX_ATTEMPTS : "Exceeded maximum attempts allowed. Please try later",
   /* Liveness Prompts */
-  SMILE : "Please smile broadly",
+  SMILE : "Please smile widely",
   YAWN : "Please yawn widely",
   FACE_DOWN : "Please turn your face slightly down and back",
   BLINK : "Please blink three times",
@@ -97,6 +97,6 @@ function prompts () {
   LIVENESS_TIMEDOUT : "Sorry, liveness timed out. Please perform the liveness tests quickly",
   LIVENESS_FAILED : "Sorry, verification failed",
   LIVENESS_TRY_AGAIN : "Test failed, please try again",
-  LIVENESS_TRY_AGAIN_AND_TURN_BACK : "Test failed, please turn your face back straight quickly"
+  LIVENESS_TRY_AGAIN_AND_TURN_BACK : "Test failed. Please turn your face to the correct direction"
 };
 }

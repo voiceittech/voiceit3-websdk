@@ -17,7 +17,7 @@ $(document)
     var voiceItHTML = new voiceIt2FrontEndBase();
     voiceItHTML.init();
 
-    var init = false;
+    var initialized = false;
 
     $('#mainForm').keydown(function(event) {
       if (event.keyCode == 13) {
@@ -107,9 +107,9 @@ $(document)
               $('#authenticate').fadeTo(400, 0.0, function() {
                 $('#loading').fadeTo(250, 0.6);
                 $('#formOverlay').fadeTo(350,0.6);
-                if (!init) {
+                if (!initialized) {
                   setTimeout(function() {
-                    voiceItHTML.createVoiceItObj(); 
+                    voiceItHTML.createVoiceItObj();
                     $("#voiceEnrollmentBtn").click(function() {
                       voiceItHTML.init_Voice_Enrollment();
                     });
@@ -144,7 +144,7 @@ $(document)
                       $(this).css('display','none');
                     });
                   }, 2000);
-                  init = true;
+                  initialized = true;
                 }
               });
             } else {
