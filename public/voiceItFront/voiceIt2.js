@@ -27,7 +27,6 @@ function voiceIt2FrontEndBase() {
   main.init_Voice_Enrollment = function () {
     if (main.myVoiceIt == undefined) {
       setTimeout(function () {
-        console.log('loading VocieItObj...');
         main.init_Voice_Enrollment();
       }, 100);
     } else {
@@ -38,7 +37,6 @@ function voiceIt2FrontEndBase() {
   main.init_Voice_Verification = function () {
     if (main.myVoiceIt == undefined) {
       setTimeout(function () {
-        console.log('loading VocieItObj...');
         main.init_Voice_Verification();
       }, 100);
     } else {
@@ -49,7 +47,6 @@ function voiceIt2FrontEndBase() {
   main.init_Face_Verification = function (liveness) {
     if (main.myVoiceIt == undefined) {
       setTimeout(function () {
-        console.log('loading VocieItObj...');
         main.init_Face_Verification(liveness);
       }, 100);
     } else {
@@ -60,7 +57,6 @@ function voiceIt2FrontEndBase() {
   main.init_Face_Enrollment = function () {
     if (main.myVoiceIt == undefined) {
       setTimeout(function () {
-        console.log('loading VocieItObj...');
         main.init_Face_Enrollment();
       }, 100);
     } else {
@@ -71,7 +67,6 @@ function voiceIt2FrontEndBase() {
   main.init_Video_Enrollment = function () {
     if (main.myVoiceIt == undefined) {
       setTimeout(function () {
-        console.log('loading VocieItObj...');
         main.init_Video_Enrollment();
       }, 100);
     } else {
@@ -82,7 +77,6 @@ function voiceIt2FrontEndBase() {
   main.init_Video_Verification = function (liveness) {
     if (main.myVoiceIt == undefined) {
       setTimeout(function () {
-        console.log('loading VocieItObj...');
         main.init_Video_Verification(liveness);
       }, 100);
     } else {

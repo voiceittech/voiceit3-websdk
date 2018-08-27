@@ -90,8 +90,8 @@ function voiceItModule (config, server, session) {
     EventEmitter.call(this);
     var main2 = this;
     main2.socketFrontId;
-    //test stuff
-    main2.tests = [0, 1, 2, 3, 4];
+    //counters, timestamps, and other data for tests
+    main2.tests = [1, 2, 3, 4];
     main2.currTest;
     main2.testIndex = 0;
     main2.passed = {
@@ -109,7 +109,7 @@ function voiceItModule (config, server, session) {
     main2.testTimer;
     main2.currTime;
     main2.type;
-    main2.livTries = 0;
+    main2.livenessTries = 0;
     main2.MAX_TRIES = config.maxLivTries;
     main2.doingLiveness = false;
     main2.checkForFaceStraight = false;
@@ -175,52 +175,6 @@ function voiceItModule (config, server, session) {
     //for a given test cass and face object, do liveness math
     main2.doLiveness = function(type, faceObj) {
       switch (type) {
-        case 0:
-          var face = faceObj.rotationX;
-          var timeNew = new Date().getTime();
-          if ((timeNew - main2.testTimer) > 750) {
-            if (face >= 0.35) {
-              main2.facedDownCounter++;
-              if (main2.facedDownCounter > 1) {
-                main2.passed.test = 0;
-                main2.passed.value = true;
-                main2.testTimer = Date.now();
-              }
-            } else if (faceObj.rotationY < -0.40 || faceObj.rotationY > 0.40) {
-              main2.faceOtherWayCounter++;
-              if (main2.faceOtherWayCounter > 2){
-                main2.livTries++;
-                main2.doingLiveness = false;
-                if (main2.livTries > main2.MAX_TRIES) {
-                  io.to(main2.socketID).emit('stopRecording', 0);
-                  io.to(main2.socketID).emit('completeLiveness', 0);
-                  main2.doingLiveness = false;
-                  var obj = {
-                    sessionId: main2.sessionId,
-                    type: main2.type,
-                    livenessOutcome: "failed"
-                  };
-                  main.emit('result', obj);
-                } else {
-                  io.to(main2.socketID).emit('completeLiveness', 1.5);
-                  main2.testIndex += 1;
-                  if (main2.testIndex > 4) {
-                    main2.testIndex = 0;
-                  }
-                  main2.currTest = main2.tests[main2.testIndex];
-                  setTimeout(function() {
-                    io.to(main2.socketID).emit('reTest', main2.currTest);
-                    main2.testTimer = Date.now();
-                    setTimeout(() => {
-                      main2.doingLiveness = true;
-                    },300);
-                  }, 2600);
-                }
-                main2.faceOtherWayCounter = 0;
-              }
-            }
-          }
-          break;
         case 1:
           var face = faceObj.rotationY;
           timeNew = new Date().getTime();
@@ -232,12 +186,12 @@ function voiceItModule (config, server, session) {
                 main2.passed.value = true;
                 main2.testTimer = Date.now();
               }
-            } else if (faceObj.rotationY > 0.40) {
+            } else if (faceObj.rotationY > 0.46) {
               main2.faceOtherWayCounter++;
               if (main2.faceOtherWayCounter > 2){
-                main2.livTries++;
+                main2.livenessTries++;
                 main2.doingLiveness = false;
-              if (main2.livTries > main2.MAX_TRIES) {
+              if (main2.livenessTries > main2.MAX_TRIES) {
                 io.to(main2.socketID).emit('stopRecording', 0);
                 io.to(main2.socketID).emit('completeLiveness', 0);
                 main2.doingLiveness = false;
@@ -250,7 +204,7 @@ function voiceItModule (config, server, session) {
               } else {
                 io.to(main2.socketID).emit('completeLiveness', 1.5);
                 main2.testIndex += 1;
-                if (main2.testIndex > 4) {
+                if (main2.testIndex > 3) {
                   main2.testIndex = 0;
                 }
                 main2.currTest = main2.tests[main2.testIndex];
@@ -278,12 +232,12 @@ function voiceItModule (config, server, session) {
                 main2.passed.value = true;
                 main2.testTimer = Date.now();
               }
-            } else if (face < -0.40) {
+            } else if (face < -0.46) {
               main2.faceOtherWayCounter++;
               if (main2.faceOtherWayCounter > 2){
-                main2.livTries++;
+                main2.livenessTries++;
                 main2.doingLiveness = false;
-              if (main2.livTries > main2.MAX_TRIES) {
+              if (main2.livenessTries > main2.MAX_TRIES) {
                 io.to(main2.socketID).emit('stopRecording', 0);
                 io.to(main2.socketID).emit('completeLiveness', 0);
                 main2.doingLiveness = false;
@@ -296,7 +250,7 @@ function voiceItModule (config, server, session) {
               } else {
                 io.to(main2.socketID).emit('completeLiveness', 1.5);
                 main2.testIndex += 1;
-                if (main2.testIndex > 4) {
+                if (main2.testIndex > 3) {
                   main2.testIndex = 0;
                 }
                 main2.currTest = main2.tests[main2.testIndex];
@@ -683,7 +637,7 @@ function voiceItModule (config, server, session) {
       main2.successTimeStamps = [];
       main2.currTime = 0;
       main2.type = data.type;
-      main2.livTries = 0;
+      main2.livenessTries = 0;
       main2.doingLiveness = true;
       main2.checkForFaceStraight = false;
       main2.verificationTries = 0;
@@ -746,8 +700,8 @@ function voiceItModule (config, server, session) {
           main2.currTime = Date.now();
           //liveness test timed out
           if ((main2.currTime - main2.testTimer) > 3500) {
-            main2.livTries++;
-            if (main2.livTries > main2.MAX_TRIES) {
+            main2.livenessTries++;
+            if (main2.livenessTries > main2.MAX_TRIES) {
               io.to(main2.socketID).emit('stopRecording', 0);
               io.to(main2.socketID).emit('completeLiveness', 0);
               main2.doingLiveness = false;
@@ -761,7 +715,7 @@ function voiceItModule (config, server, session) {
               main2.doingLiveness = false;
               io.to(main2.socketID).emit('completeLiveness', 1);
               main2.testIndex += 1;
-              if (main2.testIndex > 4) {
+              if (main2.testIndex > 3) {
                 main2.testIndex = 0;
               }
               main2.currTest = main2.tests[main2.testIndex];
@@ -781,7 +735,7 @@ function voiceItModule (config, server, session) {
           if (main2.passed.value) {
             main2.passedTests++;
             main2.testIndex += 1;
-            if (main2.testIndex > 4) {
+            if (main2.testIndex > 3) {
               main2.testIndex = 0;
             }
             main2.oldTest = main2.currTest;

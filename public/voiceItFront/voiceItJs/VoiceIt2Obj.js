@@ -533,7 +533,11 @@ function voiceIt2Obj() {
           main.headerj.fadeTo(500, 0, function() {
             main.headerj.text(main.prompt.getPrompt("LOOK_INTO_CAM"));
             main.headerj.fadeTo(500, 1.0, function() {
+              if (main.type.biometricType == "face"){
+                main.createFaceCircle();
+              } else {
               main.createCircle();
+              }
               $('#circle').fadeTo(350, 1.0);
             });
           });
@@ -568,7 +572,11 @@ function voiceIt2Obj() {
           main.headerj.fadeTo(350, 1.0, function() {
             if (main.type.biometricType !== "voice") {
               $('#circle').fadeTo(350, 0.0);
+              if (main.type.biometricType == "face"){
+                main.createFaceCircle();
+              } else {
               main.createCircle();
+              }
               $('#circle').fadeTo(350, 1.0);
             }
           });
@@ -598,7 +606,7 @@ function voiceIt2Obj() {
     main.vidCirclej.css('display', 'none');
     main.headerj.text("");
     main.headerj.css('display', 'none');
-    main.readyButtonj.css('display', 'inline-block');
+    main.readyButtonj.css('display', 'none');
     main.readyButtonj.css('opacity', 0);
     main.overlayj.css('opacity', '0');
     main.showLoadingOverlay();
@@ -861,7 +869,7 @@ function voiceIt2Obj() {
         record: {
           audio: false,
           video: true,
-          maxLength: 5,
+          maxLength: 3,
           debug: true
         }
       }
@@ -906,7 +914,7 @@ function voiceIt2Obj() {
           };
         }
         main.socket2.emit('recording', obj);
-      } else {
+      } else if (!main.liveness ||  main.type.biometricType == "voice" || main.type.action == "Enrollment") {
         if (main.type.biometricType == "voice") {
           main.wavej.fadeTo(300, 0.3);
         } else if (main.type.biometricType == "video") {
@@ -954,12 +962,10 @@ function voiceIt2Obj() {
         main.circlej.css("display", "none");
         main.wavej.fadeTo(500, 1.0);
       } else if (main.type.biometricType == "face") {
-        main.createCircle();
+        main.createFaceCircle();
         main.circlej.css("opacity", "1.0");
       } else if (main.type.biometricType == "video") {
-        // if (!main.mobile){
         main.createVideoCircle();
-        // }
         main.vidCirclej.css('display', 'block');
         main.vidCirclej.fadeTo(500, 0.5);
         main.createCircle();
@@ -1000,7 +1006,11 @@ function voiceIt2Obj() {
             main.player.record().start();
           }
           main.circlej.fadeTo(350, 1.0);
+          if (main.type.biometricType == "face"){
+            main.createFaceCircle();
+          } else {
           main.createCircle();
+          }
         });
       }
     }, 2000);
@@ -1089,6 +1099,34 @@ function voiceIt2Obj() {
       lineCap: "round",
       animation: {
         duration: 5200,
+        easing: "linear"
+      }
+    });
+  }
+
+  this.createFaceCircle = function(){
+    var overlayHolder = $('#overlayHolder')[0];
+    var imageData = $('#imageData')[0];
+    var circle = $('#circle')[0];
+    if ((!$('#circle > canvas')[0] == undefined)) {
+      var canvas = $('#circle > canvas')[0];
+      canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+      canvas = undefined;
+    }
+    overlayHolder.removeChild(circle);
+    $("<div id='circle'></div>").insertBefore(imageData);
+    //$('#circle').css('transform','rotate(-90deg)');
+    $('#circle').circleProgress({
+      value: 1.0,
+      size: 268,
+      fill: {
+        color: "rgb(251,193,50)"
+      },
+      startAngle: 0,
+      thickness: 5,
+      lineCap: "round",
+      animation: {
+        duration: 3200,
         easing: "linear"
       }
     });

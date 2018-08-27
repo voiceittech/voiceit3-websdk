@@ -125,11 +125,10 @@ function Liveness(socket) {
   this.initSDK = function() {
     main.resolution = new main.brfv4.Rectangle(0, 0, main.imageData.width, main.imageData.height);
     main.brfmanager = new main.brfv4.BRFManager();
-    main.brfmanager.init(main.resolution, main.resolution, "vocieitBRFTracking");
+    main.brfmanager.init(main.resolution, main.resolution, "voiceitBRFTracking");
     setTimeout(function (){
       main.trackfaces();
     },200);
-    socket.emit('initliveness', 1);
   }
 
   this.assignSocketEvents = function() {
@@ -155,6 +154,18 @@ function Liveness(socket) {
     });
     socket.on('completeLiveness', function(code) {
       switch (code) {
+        case 0:
+          //failed liveness
+          $('#circle').fadeTo(300, 0.0, function() {
+            $('#circle').css('display', 'none');
+          });
+          $('#overlay2').fadeTo(300, 1.0);
+          $('#header').fadeTo(300, 0, function() {
+          $('#header').text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
+            $('#header').fadeTo(300, 1.0);
+          });
+
+          break;
         case 7:
 				main.cancel = true;
 				//show waiting, post liveness success
@@ -218,7 +229,7 @@ function Liveness(socket) {
 							$('#header').fadeTo(300, 1.0);
 						});
 					},200);
-					//main.exitOut();
+
           break;
         case 2:
           //failed verification, but passed liveness
@@ -228,7 +239,7 @@ function Liveness(socket) {
             $('#header').css('display', 'inline-block');
             $('#header').fadeTo(300, 1.0);
           });
-					//main.exitOut();
+
           break;
 				//failed a right, left, down test
 				case 1.5:
@@ -237,7 +248,7 @@ function Liveness(socket) {
 				});
 				$('#overlay2').fadeTo(300, 1.0);
 				$('#header').fadeTo(300, 0, function() {
-					$(this).text(main.livPrompts.getPrompt("LIVENESS_TRY_AGAIN_AND_TURN_BACK"));
+					$('#header').text(main.livPrompts.getPrompt("LIVENESS_TRY_AGAIN_AND_TURN_BACK"));
 					$('#header').fadeTo(300, 1.0);
 				});
 				break;
@@ -251,19 +262,6 @@ function Liveness(socket) {
             $(this).text(main.livPrompts.getPrompt("LIVENESS_TRY_AGAIN"));
             $('#header').fadeTo(300, 1.0);
           });
-          break;
-        case 0:
-          //failed liveness
-          $('#wait').css('display', 'none');
-          $('#circle').fadeTo(300, 0.0, function() {
-            $(this).css('display', 'none');
-          });
-          $('#overlay2').fadeTo(300, 1.0);
-          $('#header').fadeTo(300, 0, function() {
-            $(this).text(main.livPrompts.getPrompt("LIVENESS_FAILED"));
-            $('#header').fadeTo(300, 1.0);
-          });
-					//main.exitOut();
           break;
         default:
       }
