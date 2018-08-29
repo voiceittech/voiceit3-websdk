@@ -460,7 +460,7 @@ function voiceItModule (config, server, session) {
           });
           break;
         case "deleteEnrollments":
-          myVoiceIt.deleteAllEnrollmentsForUser({
+          myVoiceIt.deleteAllEnrollments({
             userId: main2.userID,
           }, (jsonResponse) => {
             var obj = {
@@ -570,7 +570,7 @@ function voiceItModule (config, server, session) {
         myVoiceIt.faceVerificationLiv({
           userId: main2.userID,
           contentLanguage: config2.contentLanguage,
-          photo: rootAbsPath + "/tempAssets/pic"+uid+".png"
+          photoFilePath: rootAbsPath + "/tempAssets/pic"+uid+".png"
         }, (jsonResponse) => {
           curr++;
           console.log(jsonResponse);
@@ -650,7 +650,7 @@ function voiceItModule (config, server, session) {
 
     //Handle client-server communication
       io.sockets.connected[main2.socketID].on('requestAllEnrollmentDetails', function(request) {
-        myVoiceIt.getAllEnrollmentsForUser({
+        myVoiceIt.getVoiceEnrollments({
           userId: main2.userID
         }, (jsonResponse) => {
           if (jsonResponse.count < 3) {
@@ -669,7 +669,7 @@ function voiceItModule (config, server, session) {
       });
 
       io.sockets.connected[main2.socketID].on('requestFaceEnrollmentDetails', function(request) {
-        myVoiceIt.getFaceEnrollmentsForUser({
+        myVoiceIt.getFaceEnrollments({
           userId: main2.userID
         }, (jsonResponse) => {
           if (jsonResponse.count < 1) {
