@@ -288,11 +288,16 @@ Please note this is a Beta verison- Feel free to document any errors/bugs in the
 <a name="todo"></a>
 ### TODO
 
-- [x] Test on Chrome
-- [x] Firefox Compatibility
-- [x] Test on Firefox
-- [x] Test on Opera
+- [x] Test on Chrome (Mac)
+- [x] Test on Chrome (Linux)
+- [x] Test on Chrome (Windows 10)
+- [x] Test on Chrome (Android)
+- [x] Test on Firefox (Mac)
+- [x] Test on FireFox (Linux)
+- [ ] Test on Firefox (Windows 10)
+- [ ] Test on Edge (Windows 10)
 - [ ] Test on Windows 10
+- [x] Test on Opera (Mac)
 
 
 
