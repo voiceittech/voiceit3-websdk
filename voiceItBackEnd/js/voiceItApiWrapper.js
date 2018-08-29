@@ -1,410 +1,651 @@
-let unirest = require('unirest');
+const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs');
+
 const BASE_URL = 'https://api.voiceit.io';
-let fs = require('fs');
 
-module.exports = function(apk, tok){
-    this.apiKey = apk;
-    this.authToken = tok;
-    this.authHeader = {
-      user : apk,
-      pass : tok,
-      sendImmediately: true
-    };
-    /* User API Calls */
-    this.getAllPhrases = (options, callback) =>{
-      unirest.get(`${BASE_URL}/phrases/${options.contentLanguage}`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    /* User API Calls */
-    this.getAllUsers = (callback) =>{
-      unirest.get(`${BASE_URL}/users`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.createUser = (callback) => {
-      unirest.post(`${BASE_URL}/users`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.checkUserExists = (options, callback) => {
-      unirest.get(`${BASE_URL}/users/${options.userId}`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.deleteUser = (options, callback) => {
-      unirest.delete(`${BASE_URL}/users/${options.userId}`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.getGroupsForUser = (options, callback) =>{
-      unirest.get(`${BASE_URL}/users/${options.userId}/groups`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    /* Group API Calls */
-
-    this.getAllGroups = (callback) =>{
-      unirest.get(`${BASE_URL}/groups`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.getGroup = (options, callback) =>{
-      unirest.get(`${BASE_URL}/groups/${options.groupId}`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.checkGroupExists = (options, callback) =>{
-      unirest.get(`${BASE_URL}/groups/${options.groupId}/exists`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.createGroup = (options = {}, callback) => {
-      unirest.post(`${BASE_URL}/groups`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field("description", (options.description != null) ? options.description : "")
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.addUserToGroup = (options = {}, callback) => {
-      unirest.put(`${BASE_URL}/groups/addUser`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field("userId", options.userId)
-      .field("groupId", options.groupId)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.removeUserFromGroup = (options = {}, callback) => {
-      unirest.put(`${BASE_URL}/groups/removeUser`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field("userId", options.userId)
-      .field("groupId", options.groupId)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.deleteGroup = (options, callback) => {
-      unirest.delete(`${BASE_URL}/groups/${options.groupId}`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    /* Enrollment API Calls */
-    this.getAllEnrollmentsForUser = (options, callback) => {
-      unirest.get(`${BASE_URL}/enrollments/${options.userId}`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.getFaceEnrollmentsForUser = (options, callback) => {
-      unirest.get(`${BASE_URL}/enrollments/face/${options.userId}`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.createVoiceEnrollment = (options, callback) => {
-      unirest.post(`${BASE_URL}/enrollments`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('userId', options.userId)
-      .field('phrase', options.phrase)
-      .field('contentLanguage', options.contentLanguage)
-      .attach('recording', options.audioFilePath)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.createVoiceEnrollmentByUrl = (options, callback) => {
-      unirest.post(`${BASE_URL}/enrollments/byUrl`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('userId', options.userId)
-      .field('phrase', options.phrase)
-      .field('contentLanguage', options.contentLanguage)
-      .field('fileUrl', options.audioFileURL)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.createFaceEnrollment = (options, callback) => {
-      unirest.post(`${BASE_URL}/enrollments/face`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('userId', options.userId)
-      .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
-      .attach('video', options.videoFilePath)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.createVideoEnrollment = (options, callback) => {
-      unirest.post(`${BASE_URL}/enrollments/video`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('userId', options.userId)
-      .field('phrase', options.phrase)
-      .field('contentLanguage', options.contentLanguage)
-      .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
-      .attach('video', options.videoFilePath)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.createVideoEnrollmentByUrl = (options, callback) => {
-      unirest.post(`${BASE_URL}/enrollments/video/byUrl`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('userId', options.userId)
-      .field('phrase', options.phrase)
-      .field('contentLanguage', options.contentLanguage)
-      .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
-      .field('fileUrl', options.videoFileURL)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.deleteFaceEnrollment = (options, callback) => {
-      unirest.delete(`${BASE_URL}/enrollments/face/${options.userId}/${options.faceEnrollmentId}`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.deleteEnrollmentForUser = (options, callback) => {
-      unirest.delete(`${BASE_URL}/enrollments/${options.userId}/${options.enrollmentId}`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.deleteAllEnrollmentsForUser = (options, callback) => {
-      unirest.delete(`${BASE_URL}/enrollments/${options.userId}/all`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    /* Verification API Calls */
-
-    this.voiceVerification = (options, callback) => {
-      var stats = fs.statSync(options.audioFilePath);
-      var fileSizeInBytes = stats.size;
-      unirest.post(`${BASE_URL}/verification`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .headers({'Content-Length': fileSizeInBytes})
-      .field('userId', options.userId)
-      .field('phrase', options.phrase)
-      .field('contentLanguage', options.contentLanguage)
-      .attach('recording', options.audioFilePath)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.voiceVerificationByUrl = (options, callback) => {
-      unirest.post(`${BASE_URL}/verification/byUrl`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('userId', options.userId)
-      .field('phrase', options.phrase)
-      .field('contentLanguage', options.contentLanguage)
-      .field('fileUrl', options.audioFileURL)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.faceVerificationLiv = (options, callback) => {
-      var stats = fs.statSync(options.photo);
-      var fileSizeInBytes = stats.size;
-      unirest.post(`${BASE_URL}/verification/face`)
-      .headers({'Content-Length': fileSizeInBytes, 'platformId': 44})
-      .auth(this.authHeader)
-      .field('userId', options.userId)
-      .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
-      .attach('photo', options.photo)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.faceVerification = (options, callback) => {
-      unirest.post(`${BASE_URL}/verification/face`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('userId', options.userId)
-      .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
-      .attach('video', options.videoFilePath)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.videoVerification = (options, callback) => {
-      unirest.post(`${BASE_URL}/verification/video`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('userId', options.userId)
-      .field('phrase', options.phrase)
-      .field('contentLanguage', options.contentLanguage)
-      .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
-      .attach('video', options.videoFilePath)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-        this.videoVerificationLiv = (options, callback) => {
-      var picSize = fs.statSync(options.photoFilePath);
-      var audioSize = fs.statSync(options.audioFilePath);
-      var len = audioSize + picSize;
-      unirest.post(`${BASE_URL}/verification/video`)
-      .auth(this.authHeader)
-      .headers({'Content-Length': len, 'platformId': 44})
-      .field('userId', options.userId)
-      .field('phrase', options.phrase)
-      .field('contentLanguage', options.contentLanguage)
-      .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
-      .attach('photo', options.photoFilePath)
-      .attach('audio', options.audioFilePath)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.videoVerificationByUrl = (options, callback) => {
-      unirest.post(`${BASE_URL}/verification/video/byUrl`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('userId', options.userId)
-      .field('phrase', options.phrase)
-      .field('contentLanguage', options.contentLanguage)
-      .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
-      .field('fileUrl', options.videoFileURL)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    /* Identification API Calls */
-
-    this.voiceIdentification = (options, callback) => {
-      unirest.post(`${BASE_URL}/identification`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('phrase', options.phrase)
-      .field('groupId', options.groupId === 'NONE' ? null : options.groupId)
-      .field('contentLanguage', options.contentLanguage)
-      .attach('recording', options.audioFilePath)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.voiceIdentificationByUrl = (options, callback) => {
-      unirest.post(`${BASE_URL}/identification/byUrl`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('phrase', options.phrase)
-      .field('groupId', options.groupId === 'NONE' ? null : options.groupId)
-      .field('contentLanguage', options.contentLanguage)
-      .field('fileUrl', options.audioFileURL)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.videoIdentification = (options, callback) => {
-      unirest.post(`${BASE_URL}/identification/video`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('phrase', options.phrase)
-      .field('groupId', options.groupId === 'NONE' ? null : options.groupId)
-      .field('contentLanguage', options.contentLanguage)
-      .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
-      .attach('video', options.videoFilePath)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
-    this.videoIdentificationByUrl = (options, callback) => {
-      unirest.post(`${BASE_URL}/identification/video/byUrl`)
-      .auth(this.authHeader)
-      .headers({'platformId': 44})
-      .field('phrase', options.phrase)
-      .field('groupId', options.groupId === 'NONE' ? null : options.groupId)
-      .field('contentLanguage', options.contentLanguage)
-      .field('doBlinkDetection', (options.doBlinkDetection != null ) ? options.doBlinkDetection : false )
-      .field('fileUrl', options.videoFileURL)
-      .end(function (httpResponse) {
-        callback(httpResponse.body);
-      });
-    };
-
+function checkFileExists(filePath, callback) {
+  if (!fs.existsSync(filePath)) {
+    callback(Error(`File Path ${filePath} Does Not Exist`));
+    return false;
+  }
+  return true;
 }
+
+function VoiceIt2(apk, tok) {
+  this.apiKey = apk;
+  this.authToken = tok;
+
+  this.axiosInstance = axios.create({
+    auth: {
+      username: apk,
+      password: tok,
+    },
+    headers: {
+      platformId: '31',
+    },
+  });
+
+  /* User API Calls */
+
+  this.getAllUsers = (callback) => {
+    this.axiosInstance.get(`${BASE_URL}/users`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.getPhrases = (options, callback) => {
+    this.axiosInstance.get(`${BASE_URL}/phrases/${options.contentLanguage}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.createUser = (callback) => {
+    this.axiosInstance.post(`${BASE_URL}/users`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.checkUserExists = (options, callback) => {
+    this.axiosInstance.get(`${BASE_URL}/users/${options.userId}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.deleteUser = (options, callback) => {
+    this.axiosInstance.delete(`${BASE_URL}/users/${options.userId}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.getGroupsForUser = (options, callback) => {
+    this.axiosInstance.get(`${BASE_URL}/users/${options.userId}/groups`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  /* Group API Calls */
+
+  this.getAllGroups = (callback) => {
+    this.axiosInstance.get(`${BASE_URL}/groups`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.getGroup = (options, callback) => {
+    this.axiosInstance.get(`${BASE_URL}/groups/${options.groupId}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.checkGroupExists = (options, callback) => {
+    this.axiosInstance.get(`${BASE_URL}/groups/${options.groupId}/exists`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.createGroup = (options = {}, callback) => {
+    const form = new FormData();
+    form.append('description', (options.description != null) ? options.description : '');
+
+    this.axiosInstance.post(`${BASE_URL}/groups`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.addUserToGroup = (options, callback) => {
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('groupId', options.groupId);
+
+    this.axiosInstance.put(`${BASE_URL}/groups/addUser`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.removeUserFromGroup = (options, callback) => {
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('groupId', options.groupId);
+
+    this.axiosInstance.put(`${BASE_URL}/groups/removeUser`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.deleteGroup = (options, callback) => {
+    this.axiosInstance.delete(`${BASE_URL}/groups/${options.groupId}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  /* Enrollment API Calls */
+
+  this.getVoiceEnrollments = (options, callback) => {
+    this.axiosInstance.get(`${BASE_URL}/enrollments/voice/${options.userId}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.getFaceEnrollments = (options, callback) => {
+    this.axiosInstance.get(`${BASE_URL}/enrollments/face/${options.userId}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.getVideoEnrollments = (options, callback) => {
+    this.axiosInstance.get(`${BASE_URL}/enrollments/video/${options.userId}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.createVoiceEnrollment = (options, callback) => {
+    if (!checkFileExists(options.audioFilePath, callback)) {
+      return;
+    }
+
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('recording', fs.createReadStream(options.audioFilePath), {
+      filename: 'recording.wav',
+    });
+
+    this.axiosInstance.post(`${BASE_URL}/enrollments/voice`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.createVoiceEnrollmentByUrl = (options, callback) => {
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('fileUrl', options.audioFileURL);
+
+    this.axiosInstance.post(`${BASE_URL}/enrollments/voice/byUrl`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.createFaceEnrollment = (options, callback) => {
+    if (!checkFileExists(options.videoFilePath, callback)) {
+      return;
+    }
+
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('video', fs.createReadStream(options.videoFilePath));
+
+    this.axiosInstance.post(`${BASE_URL}/enrollments/face`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.createFaceEnrollmentByUrl = (options, callback) => {
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('fileUrl', options.videoFileURL);
+
+    this.axiosInstance.post(`${BASE_URL}/enrollments/face/byUrl`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.createVideoEnrollment = (options, callback) => {
+    if (!checkFileExists(options.videoFilePath, callback)) {
+      return;
+    }
+
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('video', fs.createReadStream(options.videoFilePath), {
+      filename: 'video.mp4',
+    });
+
+    this.axiosInstance.post(`${BASE_URL}/enrollments/video`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.createVideoEnrollmentByUrl = (options, callback) => {
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('fileUrl', options.videoFileURL);
+
+    this.axiosInstance.post(`${BASE_URL}/enrollments/video/byUrl`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.deleteFaceEnrollment = (options, callback) => {
+    this.axiosInstance.delete(`${BASE_URL}/enrollments/face/${options.userId}/${options.faceEnrollmentId}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.deleteVoiceEnrollment = (options, callback) => {
+    this.axiosInstance.delete(`${BASE_URL}/enrollments/voice/${options.userId}/${options.voiceEnrollmentId}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.deleteVideoEnrollment = (options, callback) => {
+    this.axiosInstance.delete(`${BASE_URL}/enrollments/video/${options.userId}/${options.videoEnrollmentId}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.deleteAllFaceEnrollments = (options, callback) => {
+    this.axiosInstance.delete(`${BASE_URL}/enrollments/${options.userId}/face`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.deleteAllVoiceEnrollments = (options, callback) => {
+    this.axiosInstance.delete(`${BASE_URL}/enrollments/${options.userId}/voice`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.deleteAllVideoEnrollments = (options, callback) => {
+    this.axiosInstance.delete(`${BASE_URL}/enrollments/${options.userId}/video`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.deleteAllEnrollments = (options, callback) => {
+    this.axiosInstance.delete(`${BASE_URL}/enrollments/${options.userId}/all`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  /* Verification API Calls */
+
+  this.voiceVerification = (options, callback) => {
+    if (!checkFileExists(options.audioFilePath, callback)) {
+      return;
+    }
+
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('recording', fs.createReadStream(options.audioFilePath), {
+      filename: 'recording.wav',
+    });
+
+    this.axiosInstance.post(`${BASE_URL}/verification/voice`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.voiceVerificationByUrl = (options, callback) => {
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('fileUrl', options.audioFileURL);
+
+    this.axiosInstance.post(`${BASE_URL}/verification/voice/byUrl`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.faceVerification = (options, callback) => {
+    if (!checkFileExists(options.videoFilePath, callback)) {
+      return;
+    }
+
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('video', fs.createReadStream(options.videoFilePath), {
+      filename: 'video.mp4',
+    });
+
+    this.axiosInstance.post(`${BASE_URL}/verification/face`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.faceVerificationLiv = (options, callback) => {
+    if (!checkFileExists(options.photoFilePath, callback)) {
+      return;
+    }
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('photo', fs.createReadStream(options.photoFilePath), {
+      filename: 'photo.jpg',
+    });
+
+    this.axiosInstance.post(`${BASE_URL}/verification/face`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.faceVerificationByUrl = (options, callback) => {
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('userId', options.userId);
+    form.append('fileUrl', options.videoFileURL);
+
+    this.axiosInstance.post(`${BASE_URL}/verification/face/byUrl`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.videoVerification = (options, callback) => {
+    if (!checkFileExists(options.videoFilePath, callback)) {
+      return;
+    }
+
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('userId', options.userId);
+    form.append('video', fs.createReadStream(options.videoFilePath), {
+      filename: 'video.mp4',
+    });
+    this.axiosInstance.post(`${BASE_URL}/verification/video`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.videoVerificationLiv = (options, callback) => {
+    if (!checkFileExists(options.photoFilePath, callback)) {
+      return;
+    }
+    if (!checkFileExists(options.audioFilePath, callback)) {
+      return;
+    }
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('userId', options.userId);
+    form.append('photo', fs.createReadStream(options.photoFilePath), {
+      filename: 'photo.jpg',
+    });
+    form.append('audio', fs.createReadStream(options.audioFilePath), {
+      filename: 'audio.wav',
+    });
+    this.axiosInstance.post(`${BASE_URL}/verification/video`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.videoVerificationByUrl = (options, callback) => {
+    const form = new FormData();
+    form.append('userId', options.userId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('userId', options.userId);
+    form.append('fileUrl', options.videoFileURL);
+
+    this.axiosInstance.post(`${BASE_URL}/verification/video/byUrl`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  /* Identification API Calls */
+
+  this.voiceIdentification = (options, callback) => {
+    if (!checkFileExists(options.audioFilePath, callback)) {
+      return;
+    }
+
+    const form = new FormData();
+    form.append('groupId', options.groupId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('recording', fs.createReadStream(options.audioFilePath), {
+      filename: 'recording.wav',
+    });
+
+    this.axiosInstance.post(`${BASE_URL}/identification/voice`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.voiceIdentificationByUrl = (options, callback) => {
+    const form = new FormData();
+    form.append('groupId', options.groupId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('fileUrl', options.audioFileURL);
+
+    this.axiosInstance.post(`${BASE_URL}/identification/voice/byUrl`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.faceIdentification = (options, callback) => {
+    if (!checkFileExists(options.videoFilePath, callback)) {
+      return;
+    }
+
+    const form = new FormData();
+    form.append('groupId', options.groupId);
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('video', fs.createReadStream(options.videoFilePath), {
+      filename: 'video.mp4',
+    });
+
+    this.axiosInstance.post(`${BASE_URL}/identification/face`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.faceIdentificationByUrl = (options, callback) => {
+    const form = new FormData();
+    form.append('groupId', options.groupId);
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('fileUrl', options.videoFileURL);
+
+    this.axiosInstance.post(`${BASE_URL}/identification/face/byUrl`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.videoIdentification = (options, callback) => {
+    if (!checkFileExists(options.videoFilePath, callback)) {
+      return;
+    }
+
+    const form = new FormData();
+    form.append('groupId', options.groupId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('video', fs.createReadStream(options.videoFilePath), {
+      filename: 'video.mp4',
+    });
+
+    this.axiosInstance.post(`${BASE_URL}/identification/video`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+
+  this.videoIdentificationByUrl = (options, callback) => {
+    const form = new FormData();
+    form.append('groupId', options.groupId);
+    form.append('contentLanguage', options.contentLanguage);
+    form.append('phrase', options.phrase ? options.phrase : '');
+    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
+    form.append('fileUrl', options.videoFileURL);
+
+    this.axiosInstance.post(`${BASE_URL}/identification/video/byUrl`, form, {
+      headers: form.getHeaders(),
+    }).then((httpResponse) => {
+      callback(httpResponse.data);
+    }).catch((error) => {
+      callback(error.response.data);
+    });
+  };
+}
+
+module.exports = VoiceIt2;
