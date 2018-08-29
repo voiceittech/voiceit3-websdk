@@ -202,7 +202,7 @@ function voiceIt2Obj() {
   }
 
   this.requestPhrases = function ()  {
-    main.socket2.emit('requestPhrases', 1);
+    main.socket2.emit('requestPhrase', 1);
   }
 
   this.requestAllEnrollments = function() {
@@ -215,7 +215,7 @@ function voiceIt2Obj() {
 
   this.assignClicks = function() {
 
-    main.socket2.on('requestPhrases', function(response) {
+    main.socket2.on('phrase', function(response) {
       main.setPhrase(response.phrase);
     });
 
