@@ -668,6 +668,10 @@ function voiceItModule (config, server, session) {
         });
       });
 
+      io.sockets.connected[main2.socketID].on('requestPhrase', function(){
+        io.to(main2.socketID).emit('phrase', {phrase: config2.phrase});
+      });
+
       io.sockets.connected[main2.socketID].on('requestFaceEnrollmentDetails', function(request) {
         myVoiceIt.getFaceEnrollments({
           userId: main2.userID
