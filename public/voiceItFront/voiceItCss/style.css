@@ -350,7 +350,7 @@ align-items: center;
 #voiceItModal {
   width: 460px !important;
   overflow: hidden;
-  margin-bottom: 15%;
+  margin-bottom: 8%;
   background: transparent;
 }
 .ui.teal.header {
