@@ -215,11 +215,11 @@ function voiceIt2Obj() {
   }
 
   this.requestVoiceEnrollments = function() {
-    main.socket2.emit('requestFaceEnrollmentDetails', 1);
+    main.socket2.emit('requestVoiceEnrollmentDetails', 1);
   }
 
   this.requestVideoEnrollments = function() {
-    main.socket2.emit('requestFaceEnrollmentDetails', 1);
+    main.socket2.emit('requestVideoEnrollmentDetails', 1);
   }
 
   this.assignClicks = function() {
