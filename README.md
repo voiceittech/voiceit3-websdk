@@ -1,5 +1,5 @@
 # VoiceIt2 Web Login Example and Kit
-The repository contains an example [web demonstration](https://vimeo.com/285173131) of VoiceIt's API 2.0 use-cases. Please navigate to [Incorporating the kit](#kit) for instructions on how to integrate parts of the Example into your own projects.
+The repository contains an example [web demonstration](#webexample) of VoiceIt's API 2.0 use-cases. Please navigate to [Incorporating the kit](#kit) for instructions on how to integrate parts of the Example into your own projects.
 
 - [Prerequisites](#prereq)
 - [Recommeded Platform](#platform)
@@ -47,9 +47,10 @@ The repository contains an example [web demonstration](https://vimeo.com/2851731
 Please refer to [this video](https://vimeo.com/285173131) for a walkthrough example
 
 <a name="ui"></a>
-#### UI Snapshot 
-<img width="360px" src="./demoGif.gif" style="display: inline !important"/>
-<img width="360px" src="./livenessGif.gif" style="display: inline !important; float: right;"/>
+#### UI Snapshots
+The following shows Voice Verification, Face Verification (With liveness detection on) and Video Verification, respectively.
+
+<img width="250px" src="./voiceVerification.gif" style="display: inline !important"/><img width="250px" src="./faceVerification.gif" style="display: inline-block !important;"/><img width="250px" src="./videoVerification.gif" style="display: inline-block !important;"/>
 
 <a name="start"></a>
 ### Getting Started
@@ -123,19 +124,22 @@ Before implementing voiceItBase, please add the following dependencies to your p
   "dependencies": {
   ...
   ..
-    "EventEmitter": "^1.0.0",
+      "EventEmitter": "^1.0.0",
     "atob": "^2.1.1",
+    "axios": "^0.18.0",
     "events": "^3.0.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "fluent-ffmpeg": "^2.1.2",
+    "form-data": "^2.3.2",
     "socket.io": "^2.1.1",
-    "unirest": "^0.5.1",
     "uuid": "^3.3.2",
     "ws": "^5.2.1"
+  ..
+  ...
   }
-...
 ..
+...
 ```
 Make sure to run ```npm install``` after this.
 
