@@ -16,6 +16,29 @@ $(document)
 
     var voiceItHTML = new voiceIt2FrontEndBase();
     voiceItHTML.init();
+    voiceItHTML.onLoad = function(){
+      $("#voiceEnrollmentBtn").on('click', function() {
+        voiceItHTML.init_Voice_Enrollment();
+      });
+      $("#voiceVerificationBtn").on('click', function() {
+        voiceItHTML.init_Voice_Verification();
+      });
+      $("#faceVerificationBtn").on('click', function() {
+        voiceItHTML.init_Face_Verification(liveness);
+      });
+
+      $("#faceEnrollmentBtn").on('click', function() {
+        voiceItHTML.init_Face_Enrollment();
+      });
+
+      $("#videoVerificationBtn").on('click', function() {
+        voiceItHTML.init_Video_Verification(liveness);
+      });
+
+      $("#videoEnrollmentBtn").on('click', function() {
+        voiceItHTML.init_Video_Enrollment();
+      });
+    };
 
     var initialized = false;
 
@@ -108,30 +131,6 @@ $(document)
                 $('#loading').fadeTo(250, 0.6);
                 $('#formOverlay').fadeTo(350,0.6);
                 if (!initialized) {
-                    voiceItHTML.onLoad = function(){
-                      $("#voiceEnrollmentBtn").on('click', function() {
-                        voiceItHTML.init_Voice_Enrollment();
-                      });
-                      $("#voiceVerificationBtn").on('click', function() {
-                        voiceItHTML.init_Voice_Verification();
-                      });
-
-                      $("#faceVerificationBtn").on('click', function() {
-                        voiceItHTML.init_Face_Verification(liveness);
-                      });
-
-                      $("#faceEnrollmentBtn").on('click', function() {
-                        voiceItHTML.init_Face_Enrollment();
-                      });
-
-                      $("#videoVerificationBtn").on('click', function() {
-                        voiceItHTML.init_Video_Verification(liveness);
-                      });
-
-                      $("#videoEnrollmentBtn").on('click', function() {
-                        voiceItHTML.init_Video_Enrollment();
-                      });
-                    };
                     setTimeout(function(){
                       $('#verifyHolder').css('display', 'flex');
                       $('#verifyHolder').css('justify-content', 'center');
