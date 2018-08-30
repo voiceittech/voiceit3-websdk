@@ -16,17 +16,17 @@ function voiceIt2FrontEndBase() {
     setTimeout(function(){
       voiceInitiator = new voiceItHtmlStructure();
       voiceInitiator.init();
-    },100);
-    setTimeout(function(){
-      main.createVoiceItObj();
-    }, 1550);
+      setTimeout(function(){
+        main.createVoiceItObj();
+      }, 2600);
+    },200);
   }
 
   main.createVoiceItObj = function () {
     if (window.hasOwnProperty('voiceIt2Obj')){
+      main.onLoad();
       main.myVoiceIt = new voiceIt2Obj();
       main.myVoiceIt.init();
-      main.onLoad();
     } else {
       setTimeout(function(){
         main.createVoiceItObj();
