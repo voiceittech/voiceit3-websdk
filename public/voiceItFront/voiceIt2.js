@@ -9,18 +9,29 @@ function voiceIt2FrontEndBase() {
 
   //TODO: when VoiceIt2 Obj has loaded, and the HTML has been appended.
 
-  var main = main;
+  main.onLoad = function(){
+  }
 
   main.init = function(){
     setTimeout(function(){
       voiceInitiator = new voiceItHtmlStructure();
       voiceInitiator.init();
-    },200);
+    },100);
+    setTimeout(function(){
+      main.createVoiceItObj();
+    }, 1550);
   }
 
   main.createVoiceItObj = function () {
+    if (window.hasOwnProperty('voiceIt2Obj')){
       main.myVoiceIt = new voiceIt2Obj();
       main.myVoiceIt.init();
+      main.onLoad();
+    } else {
+      setTimeout(function(){
+        main.createVoiceItObj();
+      },100);
+    }
   }
 
 

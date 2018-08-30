@@ -298,7 +298,7 @@ function voiceIt2Obj() {
 
     main.socket2.on('requestResponse', function(response) {
       //check if it was deletion
-      if (response.type == "deleteEnrollments") {
+      if (response.type == "deleteVoiceEnrollments" || response.type == "deleteFaceEnrollments" || response.type == "deleteVideoEnrollments") {
         main.handleDeletion(response);
       }
       //All other API call such as verifications, enrollments, etc.
@@ -400,8 +400,19 @@ function voiceIt2Obj() {
         main.destroyed = false;
         var options = {
           biometricType: "delete",
-          action: "Enrollments"
+          action: "VoiceEnrollments"
         };
+        if (main.type.biometricType == "face"){
+          options = {
+            biometricType: "delete",
+            action: "FaceEnrollments"
+          };
+        } else if (main.type.biometricType == "video"){
+          options = {
+            biometricType: "delete",
+            action: "VideoEnrollments"
+          };
+        }
         //Control now transferred to socket.on(..)
         main.socket2.emit('apiRequest', options);
         $('#warningOverlay > span').fadeTo(300, 0.0);
@@ -469,11 +480,14 @@ function voiceIt2Obj() {
   }
 
   this.handleDeletion = function(response) {
-    response = response.response;
-    if (response.responseCode == "SUCC") {
-      main.enrollmentNeededVideo = true;
-      main.enrollmentNeededFace = true;
-      main.enrollmentNeededVoice = true;
+    if (response.response.responseCode == "SUCC") {
+      if (response.type == "deleteFaceEnrollments"){
+        main.enrollmentNeededFace = true;
+      } else if (response.type == "deleteVideoEnrollments"){
+        main.enrollmentNeededVideo = true;
+      } else {
+        main.enrollmentNeededVoice = true;
+      }
       setTimeout(function() {
         main.warningOverlayj.fadeTo(500, 0.0, function() {
           if (main.type.biometricType == "voice") {
@@ -486,7 +500,6 @@ function voiceIt2Obj() {
           main.warningOverlayj.css('display', 'none');
         });
       }, 1000);
-    } else {
     }
   }
 

@@ -459,8 +459,8 @@ function voiceItModule (config, server, session) {
             main2.removeFile(rootAbsPath + "/tempAssets/video"+uid+".mov");
           });
           break;
-        case "deleteEnrollments":
-          myVoiceIt.deleteAllEnrollments({
+        case "deleteVoiceEnrollments":
+          myVoiceIt.deleteAllVoiceEnrollments({
             userId: main2.userID,
           }, (jsonResponse) => {
             var obj = {
@@ -472,6 +472,32 @@ function voiceItModule (config, server, session) {
             io.to(main2.socketID).emit('requestResponse', obj);
           });
           break;
+          case "deleteVideoEnrollments":
+            myVoiceIt.deleteAllVideoEnrollments({
+              userId: main2.userID,
+            }, (jsonResponse) => {
+              var obj = {
+                sessionId: main2.sessionId,
+                response: jsonResponse,
+                type: type
+              };
+              main.emit('result', obj);
+              io.to(main2.socketID).emit('requestResponse', obj);
+            });
+            break;
+            case "deleteFaceEnrollments":
+              myVoiceIt.deleteAllFaceEnrollments({
+                userId: main2.userID,
+              }, (jsonResponse) => {
+                var obj = {
+                  sessionId: main2.sessionId,
+                  response: jsonResponse,
+                  type: type
+                };
+                main.emit('result', obj);
+                io.to(main2.socketID).emit('requestResponse', obj);
+              });
+              break;
         default:
       }
     };

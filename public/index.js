@@ -108,42 +108,42 @@ $(document)
                 $('#loading').fadeTo(250, 0.6);
                 $('#formOverlay').fadeTo(350,0.6);
                 if (!initialized) {
-                  setTimeout(function() {
-                    voiceItHTML.createVoiceItObj();
-                    $("#voiceEnrollmentBtn").click(function() {
-                      voiceItHTML.init_Voice_Enrollment();
-                    });
+                    voiceItHTML.onLoad = function(){
+                      $("#voiceEnrollmentBtn").on('click', function() {
+                        voiceItHTML.init_Voice_Enrollment();
+                      });
+                      $("#voiceVerificationBtn").on('click', function() {
+                        voiceItHTML.init_Voice_Verification();
+                      });
 
-                    $("#voiceVerificationBtn").click(function() {
-                      voiceItHTML.init_Voice_Verification();
-                    });
+                      $("#faceVerificationBtn").on('click', function() {
+                        voiceItHTML.init_Face_Verification(liveness);
+                      });
 
-                    $("#faceVerificationBtn").click(function() {
-                      voiceItHTML.init_Face_Verification(liveness);
-                    });
+                      $("#faceEnrollmentBtn").on('click', function() {
+                        voiceItHTML.init_Face_Enrollment();
+                      });
 
-                    $("#faceEnrollmentBtn").click(function() {
-                      voiceItHTML.init_Face_Enrollment();
-                    });
+                      $("#videoVerificationBtn").on('click', function() {
+                        voiceItHTML.init_Video_Verification(liveness);
+                      });
 
-                    $("#videoVerificationBtn").click(function() {
-                      voiceItHTML.init_Video_Verification(liveness);
-                    });
-
-                    $("#videoEnrollmentBtn").click(function() {
-                      voiceItHTML.init_Video_Enrollment();
-                    });
-                    $('#verifyHolder').css('display', 'flex');
-                    $('#verifyHolder').css('justify-content', 'center');
-                    $('#verify').text('Please Verify');
-                    $('#verify').css('display', 'block');
-                    $('#verify').fadeTo(500, 1.0);
-                    $('#authenticate').css('display', 'none');
-                    $('#options').fadeTo(400, 1.0);
-                    $('#loading').fadeTo(250, 0.0, function(){
-                      $(this).css('display','none');
-                    });
-                  }, 2000);
+                      $("#videoEnrollmentBtn").on('click', function() {
+                        voiceItHTML.init_Video_Enrollment();
+                      });
+                    };
+                    setTimeout(function(){
+                      $('#verifyHolder').css('display', 'flex');
+                      $('#verifyHolder').css('justify-content', 'center');
+                      $('#verify').text('Please Verify');
+                      $('#verify').css('display', 'block');
+                      $('#verify').fadeTo(500, 1.0);
+                      $('#authenticate').css('display', 'none');
+                      $('#options').fadeTo(400, 1.0);
+                      $('#loading').fadeTo(250, 0.0, function(){
+                        $(this).css('display','none');
+                      });
+                    },1600);
                   initialized = true;
                 }
               });
