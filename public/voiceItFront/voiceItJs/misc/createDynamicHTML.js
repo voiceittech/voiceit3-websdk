@@ -356,7 +356,7 @@ function voiceItHtmlStructure() {
         script.src = main.scriptsStructure[count];
         document.head.appendChild(script);
         return main.appendScripts(++count);
-      }, 100);
+      }, 200);
     }
   }
 
