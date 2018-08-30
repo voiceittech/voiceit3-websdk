@@ -350,9 +350,9 @@ function voiceItModule (config, server, session) {
     //switched to the respective api call
     main2.handleClientRequest = function (options) {
       var type = options.biometricType + options.action;
+      var uid = uuid();
       switch (type) {
         case "voiceVerification":
-        var uid = uuid();
           fs.appendFileSync(rootAbsPath + "/tempAssets/audio"+uid+".wav", new Buffer.alloc(options.recording.length, options.recording));
           myVoiceIt.voiceVerification({
             userId: main2.userID,
@@ -367,7 +367,7 @@ function voiceItModule (config, server, session) {
             };
             main.emit('result', obj);
             io.to(main2.socketID).emit('requestResponse', obj);
-            main2.removeFiles();
+            main2.removeFile(rootAbsPath + "/tempAssets/audio"+uid+".wav");
           });
           break;
         case "voiceEnrollment":
@@ -385,7 +385,7 @@ function voiceItModule (config, server, session) {
             };
             main.emit('result', obj);
             io.to(main2.socketID).emit('requestResponse', obj);
-            main2.removeFiles();
+            main2.removeFile(rootAbsPath + "/tempAssets/audio"+uid+".wav");
           });
           break;
         case "faceEnrollment":
@@ -401,7 +401,7 @@ function voiceItModule (config, server, session) {
             };
             main.emit('result', obj);
             io.to(main2.socketID).emit('requestResponse', obj);
-            main2.removeFiles();
+            main2.removeFile(rootAbsPath + "/tempAssets/video"+uid+".mp4");
           });
           break;
         case "faceVerification":
@@ -418,7 +418,7 @@ function voiceItModule (config, server, session) {
             };
             main.emit('result', obj);
             io.to(main2.socketID).emit('requestResponse', obj);
-            main2.removeFiles();
+            main2.removeFile(rootAbsPath + "/tempAssets/video"+uid+".mp4");
           });
           break;
         case "videoEnrollment":
@@ -437,7 +437,7 @@ function voiceItModule (config, server, session) {
             };
             main.emit('result', obj);
             io.to(main2.socketID).emit('requestResponse', obj);
-            main2.removeFiles();
+            main2.removeFile(rootAbsPath + "/tempAssets/video"+uid+".mov");
           });
           break;
         case "videoVerification":
@@ -456,7 +456,7 @@ function voiceItModule (config, server, session) {
             };
             main.emit('result', obj);
             io.to(main2.socketID).emit('requestResponse', obj);
-            main2.removeFiles();
+            main2.removeFile(rootAbsPath + "/tempAssets/video"+uid+".mov");
           });
           break;
         case "deleteEnrollments":
@@ -545,7 +545,10 @@ function voiceItModule (config, server, session) {
                     main.emit('result', obj);
                     io.to(main2.socketID).emit('completeLiveness', 2);
                   }
-                  main2.removeFiles();
+                  main2.removeFile(rootAbsPath + "/tempAssets/pic"+uid+".png");
+                  main2.removeFile(rootAbsPath + "/tempAssets/audio"+uid+".wav");
+                  main2.removeFile(rootAbsPath + "/tempAssets/vid"+uid+".mp4");
+                  main2.removeFile(rootAbsPath + "/tempAssets/vid2"+uid+".mp4");
                 });
               }).on('error', function(e) {
                 console.log('error: ', e.code, e.msg);
@@ -573,7 +576,6 @@ function voiceItModule (config, server, session) {
           photoFilePath: rootAbsPath + "/tempAssets/pic"+uid+".png"
         }, (jsonResponse) => {
           curr++;
-          console.log(jsonResponse);
           var obj = {
             response: jsonResponse,
             type: main2.type
@@ -604,22 +606,28 @@ function voiceItModule (config, server, session) {
             };
             main.emit('result', obj);
           }
-          main2.removeFiles(responses);
+          main2.removeFile(rootAbsPath + "/tempAssets/pic"+uid+".png");
+          main2.removeFile(rootAbsPath + "/tempAssets/vid"+uid+".mp4");
         });
       }
     }
 
-    main2.removeFiles = function (num) {
-      fs.readdir(rootAbsPath +'/tempAssets', (err, files) => {
-        if (err) throw err;
-          for (const file of files) {
-            if (file !== 'readMe.txt'){
-              fs.unlink(path.join(rootAbsPath+'/tempAssets', file), err => {
-                if (err) throw err;
-              });
-          }
-        }
-      });
+    main2.removeFile = function (path) {
+      fs.unlink(path, function(err) {
+        if(err){
+        console.error("Error occurred while trying to remove file");
+      }
+    });
+      // fs.readdir(rootAbsPath +'/tempAssets', (err, files) => {
+      //   if (err) throw err;
+      //     for (const file of files) {
+      //       if (file !== 'readMe.txt'){
+      //         fs.unlink(path.join(rootAbsPath+'/tempAssets', file), err => {
+      //           if (err) throw err;
+      //         });
+      //     }
+      //   }
+      // });
     }
 
     main2.resetAll = function (data) {

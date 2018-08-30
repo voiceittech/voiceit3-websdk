@@ -73,12 +73,6 @@ function Liveness(socket, phrase) {
     document.getElementsByTagName("head")[0].appendChild(script);
   }
 
-  // var script = document.createElement("script");
-  // script.setAttribute("type", "text/javascript");
-  // script.setAttribute("async", true);
-  // script.setAttribute("src", main.brfv4BaseURL + "BRFv4_JS_TK190218_v4.0.5_trial.js");
-  // document.getElementsByTagName("head")[0].appendChild(script);
-
   this.init = function(type) {
     main.cancel = false;
     if (main.brfv4Example.stats.init) {
