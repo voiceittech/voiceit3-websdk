@@ -48,7 +48,7 @@ Please refer to [this video](https://vimeo.com/285173131) for a walkthrough exam
 
 <a name="ui"></a>
 #### UI Snapshots
-The following shows Voice Verification, Face Verification (With liveness detection on) and Video Verification, respectively.
+The following shows Voice Verification, Face Verification (With liveness detection on) and Video Verification (with Liveness turned off), respectively.
 
 <img width="290px" src="./voiceVerification.gif" style="display: inline !important"/><img width="290px" src="./faceVerification.gif" style="display: inline-block !important;"/><img width="290px" src="./videoVerification.gif" style="display: inline-block !important;"/>
 
