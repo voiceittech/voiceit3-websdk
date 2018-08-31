@@ -242,6 +242,7 @@ myVoiceit.onLoad = function(){
 //VoiceIt dependecies have been loaded
 }
 ```
+In case a created "Task" cannot connect with the client side socket, we have provided a fallback to reconnect as soon as the client side socket establishes connection. We recommend you call ```myVoiceIt.init``` as soon as the page loads.
 
 <a name="connect"></a>
 #### Connecting your UI to the Backend
