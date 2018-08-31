@@ -189,9 +189,9 @@ function voiceIt2Obj() {
     var init = false;
     main.socket2 = io.connect('/', {
       reconnection: true,
-      reconnectionDelay: 10,
+      reconnectionDelay: 500,
       randomizationFactor: 0,
-      reconnectionDelayMax: 10,
+      reconnectionDelayMax: 500,
       transports: ['websocket'],
       forceNew: true
     });
