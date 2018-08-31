@@ -196,19 +196,18 @@ function voiceIt2Obj() {
       forceNew: true
     });
     main.assignClicks();
-    main.socket2.emit('initFrontObj', 1);
     setTimeout(function(){
+      main.socket2.emit('initFrontObj', 1);
       main.requestPhrases();
       main.requestFaceEnrollments();
       main.requestVideoEnrollments();
       main.requestVoiceEnrollments();
-    },100);
+    },200);
   }
 
   this.requestPhrases = function ()  {
     main.socket2.emit('requestPhrase', 1);
   }
-
 
   this.requestFaceEnrollments = function() {
     main.socket2.emit('requestFaceEnrollmentDetails', 1);
@@ -970,6 +969,7 @@ function voiceIt2Obj() {
   }
 
   this.start = function() {
+    main.requestPhrases();
     main.headerj.css('display', 'inline-block');
     if (main.type.action == "Verification" && main.type.biometricType == "voice") {
       main.headerj.css('display', 'inline-block !important');
@@ -986,7 +986,6 @@ function voiceIt2Obj() {
       if (main.type.biometricType !== "face") {
         main.headerj.text(main.prompt.getPrompt("VERIFY"));
       } else {
-        console.log(233232);
         main.headerj.text(this.prompt.getPrompt("LOOK_INTO_CAM"));
       }
       if (main.type.biometricType == "voice") {

@@ -12,28 +12,26 @@ function voiceIt2FrontEndBase() {
   main.onLoad = function(){
   }
 
-  main.init = function(){
-    setTimeout(function(){
+  setTimeout(function(){
       voiceInitiator = new voiceItHtmlStructure();
       voiceInitiator.init();
-      setTimeout(function(){
-        main.createVoiceItObj();
-      }, 2600);
-    },200);
+  },200);
+
+  main.init = function(){
+      main.createVoiceItObj();
   }
 
   main.createVoiceItObj = function () {
     if (window.hasOwnProperty('voiceIt2Obj')){
-      main.onLoad();
       main.myVoiceIt = new voiceIt2Obj();
       main.myVoiceIt.init();
+      main.onLoad();
     } else {
       setTimeout(function(){
         main.createVoiceItObj();
       },100);
     }
   }
-
 
   main.init_Voice_Enrollment = function () {
     if (main.myVoiceIt == undefined) {

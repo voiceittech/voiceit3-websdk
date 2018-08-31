@@ -10,6 +10,9 @@ const uuid = require('uuid/v1');
 function voiceItModule (config, server, session) {
   this.ongoingTasks = {};
   this.tasks = {};
+  this.sockets = {};
+  this.waitingForSockets = {};
+
   var main = this;
   const myVoiceIt = new voiceit2(config.apiKey, config.apiToken);
   let io = require('socket.io').listen(server, {
@@ -18,17 +21,12 @@ function voiceItModule (config, server, session) {
   io.on('connection', function(socket){
     socket.on('initFrontObj', function(){
       //get the session ID here, and instansiate the task that corresponds to that session ID.
-      var taskOptions = main.getTaskOptions(socket.request.sessionID);
-      if (taskOptions !== undefined){
-        taskOptions.socketId = socket.id;
-        var sessId = socket.request.sessionID;
-        main.ongoingTasks[sessId] = new main.taskCreator(taskOptions);
-      }
+      main.setSocket(socket.request.sessionID, socket.id);
     });
 
     socket.on('disconnect', function(){
       setTimeout(function(){
-        main.removeTask(socket.request.sessionID);
+        main.removeTasks(socket.request.sessionID);
       },200);
     });
   });
@@ -39,18 +37,47 @@ function voiceItModule (config, server, session) {
 
   const rootAbsPath = path.resolve(__dirname, '../');
 
-  this.removeTask = function(sessionId) {
+  this.setSocket = function(sessionId, socketID){
+    //this is a fallback incase a task was set without waiting for the client side socket
+    if (main.waitingForSockets[sessionId] !== undefined){
+      if (main.ongoingTasks[sessionId] == undefined){
+        //create task here
+        var options = main.tasks[sessionId].getOptions();
+        options.socketId = socketID;
+        main.ongoingTasks[sessionId] = new main.taskCreator(options);
+      }
+    } else {
+      main.sockets[sessionId] = socketID;
+    }
+  }
+
+  // this.findSocket = function(sessionId){
+  //   return main.sockets[sessionId];
+  // }
+
+  this.removeTasks = function(sessionId) {
     if (main.ongoingTasks[sessionId] !== undefined){
       delete main.ongoingTasks[sessionId]
       }
     if (main.tasks[sessionId] !== undefined) {
       delete main.tasks[sessionId];
     }
+    if (main.sockets[sessionId] !== undefined) {
+      delete main.sockets[sessionId];
+    }
+    if (main.waitingForSockets[sessionId] !== undefined){
+      delete main.waitingForSockets[sessionId];
+    }
   }
 
-  this.getTaskOptions = function(sessionID) {
-    if (main.tasks[sessionID] !== undefined){
-      return main.tasks[sessionID].getOptions();
+  this.executeTask = function(sessionID, options) {
+    //This presumes the client side/socket is already set up
+    if (main.sockets[sessionID] !== undefined){
+      options.socketId = main.sockets[sessionID];
+      main.ongoingTasks[sessionID] = new main.taskCreator(options);
+    } else {
+      //incase the client side socket is not set
+      main.waitingForSockets[sessionID] = 1;
     }
   }
 
@@ -73,13 +100,16 @@ function voiceItModule (config, server, session) {
     this.phrase = config2.phrase;
     var sessId = config2.sessionID;
     main.tasks[sessId] = this;
-    this.getOptions = function (){
-      return {
+    this.options = {
       sessionID: main2.sessionId,
       userId: main2.userID,
       contentLanguage: main2.contentLanguage,
       phrase: main2.phrase
-    }};
+    };
+    this.getOptions = function(){
+      return main2.options;
+    }
+    main.executeTask(config2.sessionID, main2.options);
   }
 
   this.taskCreator = function(config2) {
