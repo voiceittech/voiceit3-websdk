@@ -310,9 +310,9 @@ Please note this is a Beta verison- Feel free to document any errors/bugs in the
 - [x] Test on Chrome (Android) - without liveness
 - [x] Test on Firefox (Mac)
 - [x] Test on FireFox (Linux)
-- [ ] Test on Firefox (Windows 10)
+- [x] Test on Firefox (Windows 10)
 - [ ] Test on Edge (Windows 10)
-- [ ] Test on Windows 10
+- [x] Test on Windows 10
 - [x] Test on Opera (Mac)
 
 
