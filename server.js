@@ -54,12 +54,12 @@ app.post('/authenticate', (req, res) => {
         Message: "Successfully authenticated user",
         UserId: user.id,
       };
-        //Create a new task for a specific user Id
+      //Create a new task for a specific user Id
           var task = new voiceItBackEnd.task({
               sessionID: req.sessionID,
               userId: user.id,
               contentLanguage: "en-US",
-              phrase: "Never forget tomorrow is a new day"
+              phrase: "Today is a nice day to go for a walk"
             });
       res.status(200).send(data);
     } else {

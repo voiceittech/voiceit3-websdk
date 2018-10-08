@@ -189,20 +189,21 @@ function voiceIt2Obj() {
     var init = false;
     main.socket2 = io.connect('/', {
       reconnection: true,
-      reconnectionDelay: 500,
+      reconnectionDelay: 1,
       randomizationFactor: 0,
-      reconnectionDelayMax: 500,
+      reconnectionDelayMax: 1,
       transports: ['websocket'],
       forceNew: true
     });
     main.assignClicks();
-    setTimeout(function(){
+    main.socket2.on('connect', function(){
+      console.log(124243);
       main.socket2.emit('initFrontObj', 1);
       main.requestPhrases();
       main.requestFaceEnrollments();
       main.requestVideoEnrollments();
       main.requestVoiceEnrollments();
-    },200);
+    })
   }
 
   this.requestPhrases = function ()  {
