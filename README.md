@@ -1,4 +1,5 @@
 # VoiceIt2 Web Login Example and Kit
+
 The repository contains an example [web demonstration](#webexample) of VoiceIt's API 2.0 use-cases. Please navigate to [Incorporating the kit](#kit) for instructions on how to integrate parts of the Example into your own projects.
 
 - [Prerequisites](#prereq)
