@@ -11,7 +11,7 @@ The repository contains an example [web demonstration](#webexample) of VoiceIt's
 	- [UI SnapShots](#ui)
 	- [Getting Started](#start)
 		- [Getting the Credentials](#credit)
-		- [Dependencieds](#decies)
+		- [Dependencies](#decies)
 		- [The Config File](#config)
 		- [The User Id](#userid)
 		- [Running the example](#run)
