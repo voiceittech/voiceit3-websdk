@@ -79,7 +79,7 @@ require('voiceit-php-backend/VoiceIt2WebBackend.php');
 // Replace these strings with your own credentials
 $myVoiceIt = new VoiceIt2WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN");
 
-// Define a callback function to capture the response when a verification API completes.
+// Define a callback function to capture the response when a verification request completes.
 
 function voiceItResultCallback($jsonObj){
 	//$jsonObj is a php object following the json format as described below
