@@ -148,7 +148,7 @@ The frontend can be implemented in a modular fashion - each type (voice, face, a
 
 #### Initializing the frontend
 
-To incorporate the frontend, please copy the files `VoiceItApi2WebSDK/dist/voiceit2.min.js` and `VoiceItApi2WebSDK/dist/face_detector.wasm` to your public directory exposed via the web server or to a designated folder for other included javascript files on the webpage for authentication.
+To incorporate the frontend, please copy the files `VoiceItApi2WebSDK/dist/voiceit2.min.js` (javascript library) and `VoiceItApi2WebSDK/dist/face_detector.wasm` (face detector web assembly model) to your public directory exposed via the web server or to a designated folder for other included javascript files on the webpage for authentication.
 
 Then include the minified JavaScript file `voiceit2.min.js` via a script tag on the webpage.
 
@@ -156,7 +156,7 @@ Then include the minified JavaScript file `voiceit2.min.js` via a script tag on 
 <script src='/voiceit2.min.js'></script>
 ```
 
-Now we can initialize the frontend object, it takes relative public web path to the PHP end point that called the `$myVoiceIt->InitBackend` method and the path to web assembly model of the Face Detector, used for liveness. This should have been copied to the server's public directly in the step [Initializing the frontend](#initializing-the-frontend) above.
+Now we can initialize the frontend object, it takes the relative public path to the PHP end point where the `$myVoiceIt->InitBackend` method is called and the path to web assembly model of the Face Detector, used for liveness. This should have been copied to the server's public directly in the step [Initializing the frontend](#initializing-the-frontend) above.
 
 ```javascript
 // The
