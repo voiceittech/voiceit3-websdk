@@ -53,16 +53,16 @@ Before unpacking the repo, please make sure to create a Developer account at htt
 login and navigate to the "Settings tab" to view your Api Key and Token, both of which will be needed later on. Also, navigate to the "User Management" tab and click "Create a User". This will create a user with a User ID which will be needed later on.
 
 #### The Config File
-Before starting the Example, please navigate to php-example/config.php. Please replace the 'API_KEY_HERE' with your API Key, and 'API_TOKEN_HERE' with your API Token. And add the userId created in the User Management section before in place of the 'TEST_USER_ID_HERE'.
+Before starting the Example, please navigate to `VoiceItApi2WebSDK/php-example/config.php`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
 
 #### Running the Example
-Start your server, pointing to the `php-example` directory as the document root directory.
+Start your server(Apache), pointing to the `VoiceItApi2WebSDK/php-example` directory as the document root directory.
 Now visit your server at its designated port in an appropriate browser, and you should see a demo login page.
 
-In the email input, type: `demo@voiceit.io`. In the password input, type: `demo123`. After submitting the form, further verification/enrollment methods will appear that you can test out. Please first do an enrollment, such as a face enrollment, then after a successful enrollment you can test the face verification method.
+In the email input, type: `demo@voiceit.io`. In the password input, type: `demo123`. After submitting the form, further verification/enrollment methods will appear that you can test out. Please first do an enrollment, such as a face enrollment, then after a successful enrollment you can test the face verification method (Note: you will need to give your browser both microphone and camera permissions to test the demo).
 
 ## Incorporating the SDK
-Parts of the Example can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification with/without Liveness), can be implemented independently, providing a total of 27 different use-cases (such as voice-only verification, or face enrollment and video verification, or video-only verification w/ Liveness, to name a few). For any such use-case, a backend and frontend implementation is required:
+Parts of the Example can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification with/without Liveness), can be implemented independently, providing a total of 27 different use-cases (such as voice-only verification, or face enrollment and video verification, or video-only verification with Liveness, to name a few). For any such use-case, a backend and frontend implementation is required:
 
 ### Backend Implementation
 Please copy the folder `VoiceItApi2WebSDK/voiceit-php-backend` to you project root.
@@ -73,6 +73,8 @@ The base module for the backend is `VoiceItApi2WebSDK/voiceit-php-backend/VoiceI
 Initialize the base module in file that is publicly accessible via the server, such as `VoiceItApi2WebSDK/php-example/example_endpoint/index.php`. Then initialize the VoiceIt2VoiceIt2WebBackend like the following
 
 ```php
+// Note: You might have to modify the require path of the voiceit-php-backend folder
+// depending on where you placed the folder in your project
 require('voiceit-php-backend/VoiceIt2WebBackend.php');
 // Replace these strings with your own credentials
 $myVoiceIt = new VoiceIt2WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN");
@@ -115,9 +117,11 @@ After the completion of any verification action, the voiceItResultCallback will 
 ```
 
 #### Generating a Secure Token
-Similarly to `php-example/login/index.php` you need to initialize the backend and then generate a secure token for the user in the backend, and send it to front end via an API call, or any means once the user is successfully authenticated via a username and password login or any other means. This token is then passed to the frontend to authorize the biometric login. Here is an example of how to generate the token in the backend.
+Similarly to `VoiceItApi2WebSDK/php-example/login/index.php` you need to initialize the backend and then generate a secure token for the user in the backend, and send it to front end via an API call, or any means once the user is successfully authenticated via a username and password login or any other means. This token is then passed to the frontend to authorize the biometric login. Here is an example of how to generate the token in the backend.
 
 ```php
+// Note: You might have to modify the require path of the voiceit-php-backend folder
+// depending on where you placed the folder in your project
 require('voiceit-php-backend/VoiceIt2WebBackend.php');
 // Upon a successful login, lookup the associated VoiceIt userId
 $VOICEIT_USERID = "VOICEIT_USER_ID_AFTER_DATABASE_LOOKUP";
@@ -148,7 +152,7 @@ Then include the minified JavaScript file `voiceit2.min.js` via a script tag on 
 <script src='/voiceit2.min.js'></script>
 ```
 
-Now we can initialize the frontend object, it takes relative public web path to the PHP end point that called the `initBackend` method and the path to web assembly model of the Face Detector, used for liveness. This should have been copied to the server's public directly in the step [Initializing the frontend](#initializing-the-frontend) above.
+Now we can initialize the frontend object, it takes relative public web path to the PHP end point that called the `$myVoiceIt->InitBackend` method and the path to web assembly model of the Face Detector, used for liveness. This should have been copied to the server's public directly in the step [Initializing the frontend](#initializing-the-frontend) above.
 
 ```javascript
 // The
