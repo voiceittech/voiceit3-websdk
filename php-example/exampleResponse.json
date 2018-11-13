@@ -1,0 +1,11 @@
+{
+  "callType": "faceVerification",
+  "userId": "usr_a2bfe16276sdsd9e5bf6asdafdf1a23",
+  "jsonResponse": {
+    "faceConfidence": 100,
+    "message": "Successfully verified face for user with userId : usr_a2bfe16276sdsd9e5bf6asdafd7f1a23",
+    "timeTaken": "2.249s",
+    "responseCode": "SUCC",
+    "status": 200
+  }
+}

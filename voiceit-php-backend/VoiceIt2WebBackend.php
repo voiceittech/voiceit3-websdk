@@ -31,7 +31,7 @@ class VoiceIt2WebBackend {
   public $BASE_URL = 'https://api.voiceit.io';
   public $api_key;
   public $api_token;
-  public $platformId = '42';
+  public $platformId = '48';
 
   function __construct($key, $token) {
      $this->api_key = $key;

@@ -1,307 +1,284 @@
-# VoiceIt2 Web Login Example and Kit
-The repository contains an example [web demonstration](#webexample) of VoiceIt's API 2.0 use-cases. Please navigate to [Incorporating the kit](#kit) for instructions on how to integrate parts of the Example into your own projects.
+# VoiceIt API 2 Web SDK
+The repository contains an example [web demonstration](#webexample) of VoiceIt's API 2.0 in the browser with a PHP backend. Please navigate to [Incorporating the SDK](#incorporating-the-sdk) for instructions on how to integrate the SDK into your own project(s).
 
-- [Prerequisites](#prereq)
-- [Recommeded Platform](#platform)
-- [Compatible Platforms](#platform)
-- [Web Example](#webexample)
-	- [UI SnapShots](#ui)
-	- [Getting Started](#start)
-		- [Getting the Credentials](#credit)
-		- [Dependencieds](#decies)
-		- [The Config File](#config)
-		- [The User Id](#userid)
-		- [Running the example](#run)
-- [Incorporating the Kit](#kit)
-	- [Backend Implementation](#back)
-		- [Gathering Backend Dependencies](#backdecies)
-		- [Initializing the Base Module](#base)
-		- [Create a Task for a user](#task)
-		- [Getting the result](#result)
-	- [Frontend Implementation](#front)
-		- [Creating the HTML](#html)
-		- [Connecting to your UI](#connect)
-- [Getting Help](#help)
-- [Disclaimer](#disclaimer)
-- [TODO](#todo)
+* [Prerequisites](#prerequisites)
+* [Recommended Platform](#recommended-platform)
+* [Compatible Platforms](#compatible-platforms)
+* [Web Example](#webexample)
+	* [UI Screenshots](#ui-screenshots)
+	* [Getting Started](#getting-started)
+		* [Getting the Credentials](#getting-the-credentials)
+		* [The Config File](#the-config-file)
+		* [Running the example](#running-the-example)
+* [Incorporating the SDK](#incorporating-the-sdk)
+	* [Backend Implementation](#backend-implementation)
+		* [Initializing the Base Module](#initializing-the-base-module)
+		* [Getting the result](#result)
+		* [Generating a Secure Token](#generating-a-secure-token)
+	* [Frontend Implementation](#front)
+		* [Initializing the frontend](#intializing-the-frontend)
+		* [Setting the Secure Token](#setting-the-secure-token)
+		* [Initializing the Enrollment and Verification UI](#initializing-the-enrollment-and-verification-ui)
+			* [Encapsulated Voice Enrollment](#encapsulated-voice-enrollment)
+			* [Encapsulated Face Enrollment](#encapsulated-face-enrollment)
+			* [Encapsulated Video Enrollment](#encapsulated-video-enrollment)
+			* [Encapsulated Voice Verification](#encapsulated-voice-verification)
+			* [Encapsulated Face Verification](#encapsulated-voice-verification)
+			* [Encapsulated Video Verification](#encapsulated-video-verification)
+* [Getting Help](#getting-help)
+* [Disclaimer](#disclaimer)
+* [TODO](#todo)
 
+## Prerequisites
+* PHP 5.0 or greater
+* PHP Compatible Server such as Apache
 
-
-<a name="prereq"></a>
-#### Prerequisites
-<ul>
-  <li><img width="40px" src="https://png.icons8.com/color/1600/nodejs.png" alt="Node Js"/>
-  <li><img width="50px" src="https://s24255.pcdn.co/wp-content/uploads/2017/02/ffmpeg-logo.png" alt="FFMPEG"/>
-</ul>
-
-
-<a name="platform"></a>
-#### Recommended Platform
+## Recommended Platform
 <img width="35px" src="http://pngimg.com/uploads/chrome_logo/chrome_logo_PNG17.png" alt="Google Chrome"/>
 
-#### Compatible Platforms
+## Compatible Platforms
 <img style="display: inline-block" width="35px" src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Mozilla_Firefox_3.5_logo_256.png" alt="Firefox"/>    <img style="display: inline-block" width="35px" src="https://upload.wikimedia.org/wikipedia/commons/d/d4/Opera_browser_logo_2013.png" alt="Google Chrome"/>
 
-<a name="webexample"></a>
 ## Web Example
-Please refer to [this video](https://vimeo.com/285173131) for a walkthrough example
 
-<a name="ui"></a>
-#### UI Snapshots
-The following shows Voice Verification, Face Verification (With liveness detection on) and Video Verification (with Liveness turned off), respectively.
+### UI Screenshots
+The following show Voice Verification, Face Verification (With liveness detection on) and Video Verification (with Liveness turned off), respectively.
 
 <img width="290px" src="./graphics/voiceVerification.gif" style="display: inline !important"/><img width="290px" src="./graphics/faceVerification.gif" style="display: inline-block !important;"/><img width="290px" src="./graphics/videoVerification.gif" style="display: inline-block !important;"/>
 
-<a name="start"></a>
 ### Getting Started
 
-<a name="credit"></a>
 #### Getting the Credentials
-Before unpacking the repo, plese make sure to create a Developer account at https://voiceit.io/signup. Upon completion,
-login and navigate to the "Settings tab" at the bottom lower left corner. Click "Activate API 2.0" to get your Api Key and Token, both of which will be needed later on. Also, navigate to the "User Management" tab and click "Create a User". This will create a user with a User ID which will be needed later on.
+Before unpacking the repo, please make sure to create a Developer account at https://voiceit.io/signup. Upon completion,
+login and navigate to the "Settings tab" to view your Api Key and Token, both of which will be needed later on. Also, navigate to the "User Management" tab and click "Create a User". This will create a user with a User ID which will be needed later on.
 
-<a name="decies"></a>
-#### Getting the Dependencies
-Please clone or download this repository. First, make sure you have node JS installed;
-
-OSX:
-```
-brew install node
-```
-Linux:
-```
-sudo apt-get install nodejs
-```
-Also, make sure you have ffmpeg installed;
-
-OSX:
-```
-brew install ffmpeg
-```
-Linux:
-```
-sudo apt-get install ffmpeg
-```
-Finally, unpack the contents, and cd into the root directory. Run:
-```
-npm install
-```
-This will get the required dependencies for the Example.
-
-<a name="config"></a>
 #### The Config File
-Before starting the Example, please navigate to voiceit2-web-login-example/config.js. The config file hosts options that initiate the voiceIt Back-End module. Please replace the 'API_KEY_HERE' with your API Key, and 'API_TOKEN_HERE' with your API Token. Change other options as per your preferences.
+Before starting the Example, please navigate to php-example/config.php. Please replace the 'API_KEY_HERE' with your API Key, and 'API_TOKEN_HERE' with your API Token. And add the userId created in the User Management section before in place of the 'TEST_USER_ID_HERE'.
 
-<a name="userid"></a>
-#### The User Id
-A userId will be needed for most API calls. For the Example, we've created a users file that has a simple object with key/value pair of user-email to User-Details . In a real scenario, a voiceIt User ID could be fetched from a database, a session, etc.
-Please navigate to voiceit2-web-login-example/users.js, and replace 'USER_ID_HERE' with a user Id from your account.
-
-<a name="run"></a>
 #### Running the Example
-After the steps above, run the following to start the Example server:
-```
-npm start
-```
-This will start the server at http://localhost:3000. Please navigate to http://localhost:3000.
-In the email input, type: 'demo@voiceit.io'. In the password input, type: 'voiceit123'. After submitting the form, further verification/enrollment methods will appear that you can test out.
+Start your server, pointing to the `php-example` directory as the document root directory.
+Now visit your server at its designated port in an appropriate browser, and you should see a demo login page.
 
-<a name="kit"></a>
-## Incorporating the Kit
-Parts of the Example can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently, providing a total of 27 different use-cases (such as voice-only verification, or face enrollment and video verification, or video-only verification w/ Liveness, to name a few). For any such use-case, a backend and fronted implementation is required:
+In the email input, type: `demo@voiceit.io`. In the password input, type: `demo123`. After submitting the form, further verification/enrollment methods will appear that you can test out. Please first do an enrollment, such as a face enrollment, then after a successful enrollment you can test the face verification method.
 
-<a name="back"></a>
+## Incorporating the SDK
+Parts of the Example can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification with/without Liveness), can be implemented independently, providing a total of 27 different use-cases (such as voice-only verification, or face enrollment and video verification, or video-only verification w/ Liveness, to name a few). For any such use-case, a backend and frontend implementation is required:
+
 ### Backend Implementation
-Please copy the folder voiceit2-web-login-example/voiceItBackEnd to you project root.
-The base module for the backend is voiceit2-web-login-example/voiceItBackEnd/js/voiceItBase.js. This module is responsible for monitoring "Task" instances, each of which would deal with the processes required to perform a specific action (any from the possible 27) for a specific user, in a specific web session. A task instance would do post-recording processing, liveness detection math, socket communication with the specific client, and API calls, all done through voiceit2-web-login-example/voiceItbackEnd/js/voiceItApiWrapper.js-an altered version of our Node Wrapper.
+Please copy the folder `VoiceItApi2WebSDK/voiceit-php-backend` to you project root.
 
-<a name="backdecies"></a>
-#### Gathering Backend Dependencies
-Before implementing voiceItBase, please add the following dependencies to your project's package.json, under the dependencies section:
-```
-...
-..
-  "dependencies": {
-  ...
-  ..
-      "EventEmitter": "^1.0.0",
-    "atob": "^2.1.1",
-    "axios": "^0.18.0",
-    "events": "^3.0.0",
-    "express": "^4.16.3",
-    "express-session": "^1.15.6",
-    "fluent-ffmpeg": "^2.1.2",
-    "form-data": "^2.3.2",
-    "socket.io": "^2.1.1",
-    "uuid": "^3.3.2",
-    "ws": "^5.2.1"
-  ..
-  ...
-  }
-..
-...
-```
-Make sure to run ```npm install``` after this.
+The base module for the backend is `VoiceItApi2WebSDK/voiceit-php-backend/VoiceIt2VoiceIt2WebBackend.php`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action (any from the possible 27) for a specific user, in a specific web session.
 
-<a name="base"></a>
 #### Initializing the Base Module
-The base module acts as a hub for all the "Task" instances, each of which will be performing a task for a user ID.  
-To implement voiceItBase, either pass it a config file, such as voiceit2-web-login-example/config.js:
-```
-const server = require('http').Server(app);
-const config = require('./config.js');
-const ExpressSession = require('express-session');
-const session = ExpressSession({
-...
-..
-...
-});
+Initialize the base module in file that is publicly accessible via the server, such as `VoiceItApi2WebSDK/php-example/example_endpoint/index.php`. Then initialize the VoiceIt2VoiceIt2WebBackend like the following
 
-voiceItBackEnd = new voiceItModule(config, server, session);
-```
-Or pass it options directly:
+```php
+require('voiceit-php-backend/VoiceIt2WebBackend.php');
+// Replace these strings with your own credentials
+$myVoiceIt = new VoiceIt2WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN");
 
-```
-const ExpressSession = require('express-session');
-const server = require('http').Server(app);
-const session = ExpressSession({
-...
-..
-...
-});
-voiceItBackEnd = new voiceItModule({
-      apiKey: "API_KEY_HERE",
-      apiToken: "API_TOKEN_HERE",
-      numLivTests: NUM_OF_LIVENESS_TESTS
-      maxLivTries: MAX_FAILED_LIVENESS_TEST_ATTEMPTS
-    }, server, session);
-```
-The base module will only require 'overall' configurations, such as API credentials, liveness challange tries, liveness attempts, etc.
-Please make sure to use ```server.listen(....)``` rather than ```app.listen(...)```.
+// Define a callback function to capture the response when a verification API completes.
 
-<a name="task"></a>
-#### Creating a Task
-The backend module must be inititialized only once.
-To handle a task for any user, a new voiceItBackEnd.task instance must be created:
+function voiceItResultCallback($jsonObj){
+	//$jsonObj is a php object following the json format as described below
+  $callType = $jsonObj["callType"];
+  $userId = $jsonObj["userId"];
+  if($jsonObj["jsonResponse"]["responseCode"] == "SUCC"){
+  	// User was successfully verified now log them in via the
+		// backend, this could mean starting a new session after
+		// with their details, after you lookup the user with the
+		// provided VoiceIt userId
+  }
+}
+
+// Initialize the backend, passing a reference to the $_POST, $_FILES objects so
+// the backend can successfully capture form parameters and files, and finally
+// a callback to handle the API response on the server side.
+$myVoiceIt->InitBackend($_POST, $_FILES, voiceItResultCallback);
 ```
-var task = new voiceItBackEnd.task({
-    sessionID: "SESSION_ID,
-    userId: "USER_ID,
-    contentLanguage: "LANG_HERE",
-    phrase: "PHRASE_HERE"
-   });
-```
-This will set up the back end to listen for, and perform, any specific action (from the 27 possbile) set for the user in the front end.
-<a name="result"></a>
-#### Getting the result
-Please set up a listener for the 'result' event:
-```
-voiceItBackEnd.on('result', function(result){
-  //handle outcome
-});
-```
-After the completion of any action, the result event will be triggered. For non-liveness events, the result response will be of the following json structure:
-```
+
+#### Getting the Result
+After the completion of any verification action, the voiceItResultCallback will be triggered. The result response will be of the following json structure:
+
+```json
 {
-sessionId: "TASK_SESSION_ID"
-response: {.....json response of the api call....},
-type: TYPE_ACTION
+	"callType": "faceVerification",
+	"userId": "usr_********************",
+	"jsonResponse": {
+		"faceConfidence": 100,
+		"message": "Successfully verified face for user with userId : usr_********************",
+		"timeTaken": "2.249s",
+		"responseCode": "SUCC",
+		"status": 200
+	}
 }
 ```
 
-For Liveness related tasks, the response will be of the following structure:
-```
-{
-sessionId: "TASK_SESSION_ID"
-type: TYPE,
-livenessOutcome: "OUTCOME"
-}
-```
-The liveness outcome can be "passed" or "failed".
+#### Generating a Secure Token
+Similarly to `php-example/login/index.php` you need to initialize the backend and then generate a secure token for the user in the backend, and send it to front end via an API call, or any means once the user is successfully authenticated via a username and password login or any other means. This token is then passed to the frontend to authorize the biometric login. Here is an example of how to generate the token in the backend.
 
-<a name="front"></a>
+```php
+require('voiceit-php-backend/VoiceIt2WebBackend.php');
+// Upon a successful login, lookup the associated VoiceIt userId
+$VOICEIT_USERID = "VOICEIT_USER_ID_AFTER_DATABASE_LOOKUP";
+header("HTTP/1.1 200 OK");
+// Initialize module and replace this with your own credentials
+$myVoiceIt = new VoiceIt2WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN_HERE");
+// Generate a new token for the userId
+$createdToken = $myVoiceIt->generateTokenForUser($VOICEIT_USERID);
+// Then return this token to the front end, for example as part of a jsonResponse
+$jsonResponse = Array(
+	"ResponseCode" => "SUCC",
+	"Message" => "Successfully logged in user",
+	"Token" => $createdToken
+);
+echo json_encode($jsonResponse);
+```
+
 ### Frontend Implementation
-The frontend can be implemented in a modular fashion- each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently.
+The frontend can be implemented in a modular fashion - each type (voice, face, and video), and each action (enrollment, and verification with/without liveness), can be implemented independently.
 
-<a name="html"></a>
-#### Creating the HTML
+#### Initializing the frontend
 
-To incorporate the Frontend, please copy the folder voiceit2-web-login-example/public/voiceItFront to your project directory.
-Include voiceItFront/voiceIt2.js into your html:
-```
-<script src='YOUR_PROJECT_ROOT/voiceItFront/voiceIt2.js'/>
-```
-Now we can instansiate the voiceItFrontEndBase class:
-```
-var myVoiceIt = new voiceIt2FrontEndBase();
-myVoiceIt.init()
-```
-This will gather front-end dependencies (script and link tags), create the html structure, and initialize the voiceItFrontEndBase Object. It is necessary to wait at least 2 seconds for all the dependecies, and html structure to load. We recommend using the onLoad callback to know when everything has loaded and proceede thereafter.
-```
-myVoiceit.onLoad = function(){
-//VoiceIt dependecies have been loaded
-}
-```
-In case a created "Task" cannot connect with the client side socket, we have provided a fallback to reconnect as soon as the client side socket establishes connection. We recommend you call ```myVoiceIt.init``` as soon as the page loads.
+To incorporate the frontend, please copy the files `VoiceItApi2WebSDK/dist/voiceit2.min.js` and `VoiceItApi2WebSDK/dist/face_detector.wasm` to your public directory exposed via the web server or to a designated folder for other included javascript files on the webpage for authentication.
 
-<a name="connect"></a>
-#### Connecting your UI to the Backend
+Then include the minified JavaScript file `voiceit2.min.js` via a script tag on your the webpage.
 
-For any of the use-cases mentioned above, please call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness (false by default).
+```html
+<script src='/voiceit2.min.js'></script>
+```
 
-For instance, to start a face verification w/wo liveness process, you'd have to call:
+Now we can initialize the frontend object, it takes relative public web path to the PHP end point that called the `initBackend` method and the path to web assembly model of the Face Detector, used for liveness. This should have been copied to the server's public directly in the step [Initializing the frontend](#initializing-the-frontend) above.
+
+```javascript
+// The
+var myVoiceIt = new VoiceIt2.initialize('/example_endpoint/', '/face_detector.wasm');
 ```
-myVoiceIt.init_Face_Verification(LIVENESS_BOOL);
+
+#### Setting the secure token
+Once the frontend is initialized, you can set the secure token obtained via the backend(note: this secure token is unique for every userId and needs to be regenerated if a different user is attempting to log in) during the [Generating a Secure Token](#generating-a-secure-token) section above. Simply call `setSecureToken` like this:
+
+```JavaScript
+myVoiceIt.setSecureToken('TOKEN_OBTAINED_FROM_BACKEND');
 ```
-This will reveal the UI Modal to start the face verification process.
-We recommend calling these methods inside the onLoad callback, as so:
-```
-myVoiceit.onLoad = function(){
-//VoiceIt dependecies have been loaded
-...
-..
-$('#example_voiceEnrollment_button').on('click',function(){
-myVoiceIt.init_Voice_Enrollment();
+
+#### Initializing the Enrollment and Verification UI
+
+To start the UI for any of the use-cases mentioned above, please call the appropriate encapsulated method as shown below
+
+##### Encapsulated Voice Enrollment
+```JavaScript
+myVoiceIt.encapsulatedVoiceEnrollment({
+	contentLanguage:'en-US',
+	phrase:'never forget tomorrow is a new day',
+	completionCallback:function(success){
+		if(success){
+			alert('Voice Enrollments Done!');
+		} else {
+			alert('Voice Enrollments Cancelled or Failed!');
+		}
+	}
 });
-..
-...
-}
 ```
 
-Similarly:
-```
-//Reveal the UI Modal to start the Voice Enrollment process
-myVoiceIt.init_Voice_Enrollment();
-```
-```
-//Reveal the UI Modal to start the Voice Verification process
-myVoiceIt.init_Voice_Verification();
-```
-
-```
-//Reveal the UI Modal to start the Face Enrollment process
-myVoiceIt.init_Face_Enrollment()
-```
-```
-//Reveal the UI Modal to start the Video Enrollment process
-myVoiceIt.init_Video_Enrollment()
+##### Encapsulated Face Enrollment
+```JavaScript
+myVoiceIt.encapsulatedFaceEnrollment({
+	completionCallback:function(success){
+		if(success){
+			alert('Face Enrollment Done!');
+		} else {
+			alert('Face Enrollment Cancelled or Failed!');
+		}
+	}
+});
 ```
 
+##### Encapsulated Video Enrollment
+```JavaScript
+myVoiceIt.encapsulatedVideoEnrollment({
+	contentLanguage:'en-US',
+	phrase:'never forget tomorrow is a new day',
+	completionCallback:function(success){
+		if(success){
+			alert('Video Enrollments Done!');
+		} else {
+			alert('Video Enrollments Cancelled or Failed!');
+		}
+	}
+});
 ```
-//Reveal the UI Modal to start the Video Verification process
-myVoiceIt.init_Video_Verification(LIVENESS_BOOL)
-```
-The init_ACTION_TYPE() method(s) can be called dynamically from any action/event per your implementation. For instance, in the Example, the respective button clicks call the respective init_ACTION_TYPE() method, and the LIVENESS_BOOL is set by the UI toggle button.
 
-<a name="help"></a>
+##### Encapsulated Voice Verification
+```JavaScript
+myVoiceIt.encapsulatedVoiceVerification({
+	contentLanguage:'en-US',
+	phrase:'never forget tomorrow is a new day',
+	needEnrollmentsCallback:function(){
+		// Three voice enrollments needed
+		alert('A minimum of three enrollments are needed')
+	},
+	completionCallback:function(success){
+		if(success){
+			// Successfully verified user, now user can
+			// be redirected to a protected page
+			// Note: In addition to successfully verifying the user on
+			// the frontend make sure to also check the json response on
+			// the backend and successfully verify on the backend for true security.
+			alert('Successfully verified voice');
+		}
+	}
+});
+```
+
+##### Encapsulated Face Verification
+```JavaScript
+myVoiceIt.encapsulatedFaceVerification({
+	doLiveness:true,
+	completionCallback:function(success){
+		if(success){
+			// Successfully verified user, now user can
+			// be redirected to a protected page
+			// Note: In addition to successfully verifying the user on
+			// the frontend make sure to also check the json response on
+			// the backend and successfully verify on the backend for true security.
+			alert('Successfully verified face');
+		} else {
+			alert('Face Verification Cancelled or Failed!');
+		}
+	}
+});
+```
+
+##### Encapsulated Video Verification
+```JavaScript
+myVoiceIt.encapsulatedVideoVerification({
+	doLiveness:true,
+	contentLanguage:'en-US',
+	phrase:'never forget tomorrow is a new day',
+	needEnrollmentsCallback:function(){
+		// Three video enrollments needed
+		alert('A minimum of three enrollments are needed')
+	},
+	completionCallback:function(success){
+		if(success){
+			// Successfully verified user, now user can
+			// be redirected to a protected page
+			// Note: In addition to successfully verifying the user on
+			// the frontend make sure to also check the json response on
+			// the backend and successfully verify on the backend for true security.
+			alert('Successfully verified face and voice');
+		}
+	}
+});
+```
+
 ## Getting Help
-Need implementation help? Found a bug? Please contact hassan@voiceit.io.
+Need implementation help? Found a bug? Please contact support@voiceit.io.
 
-<a name="disclaimer"></a>
 ### Disclaimer
-Please note this is a Beta verison- Feel free to document any errors/bugs in the issues section of the repository.
+Please note this is a Beta version - Feel free to document any errors/bugs in the issues section of the repository.
 
-<a name="todo"></a>
 ### TODO
 
 - [x] Test on Chrome (Mac)
