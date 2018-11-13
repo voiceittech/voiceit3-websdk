@@ -150,7 +150,7 @@ The frontend can be implemented in a modular fashion - each type (voice, face, a
 
 To incorporate the frontend, please copy the files `VoiceItApi2WebSDK/dist/voiceit2.min.js` and `VoiceItApi2WebSDK/dist/face_detector.wasm` to your public directory exposed via the web server or to a designated folder for other included javascript files on the webpage for authentication.
 
-Then include the minified JavaScript file `voiceit2.min.js` via a script tag on your the webpage.
+Then include the minified JavaScript file `voiceit2.min.js` via a script tag on the webpage.
 
 ```html
 <script src='/voiceit2.min.js'></script>
