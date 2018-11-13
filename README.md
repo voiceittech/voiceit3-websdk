@@ -82,13 +82,13 @@ $myVoiceIt = new VoiceIt2WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN")
 // Define a callback function to capture the response when a verification request completes.
 
 function voiceItResultCallback($jsonObj){
-	//$jsonObj is a php object following the json format as described below
+	// $jsonObj is a php object following the json format as described below
   $callType = $jsonObj["callType"];
   $userId = $jsonObj["userId"];
   if($jsonObj["jsonResponse"]["responseCode"] == "SUCC"){
   	// User was successfully verified now log them in via the
-		// backend, this could mean starting a new session after
-		// with their details, after you lookup the user with the
+		// backend, this could mean starting a new session with
+		// their details, after you lookup the user with the
 		// provided VoiceIt userId
   }
 }
