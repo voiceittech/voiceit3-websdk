@@ -416,7 +416,7 @@ class VoiceIt2WebBackend {
     $fields = [
       'userId' => $userId,
       'contentLanguage' => $contentLanguage,
-      // 'phrase' => $phrase,
+      'phrase' => $phrase,
       'recording' => curl_file_create($filePath)
     ];
     curl_setopt($crl, CURLOPT_POSTFIELDS, $fields);
