@@ -1,9 +1,8 @@
 <?php
+session_start();
 require('../../voiceit-php-backend/VoiceIt2WebBackend.php');
 include('../config.php');
-
 $myVoiceIt = new VoiceIt2WebBackend($VOICEIT_API_KEY, $VOICEIT_API_TOKEN);
-
 function voiceItResultCallback($jsonObj){
   $callType = strtolower($jsonObj["callType"]);
   $userId = $jsonObj["userId"];
@@ -11,7 +10,6 @@ function voiceItResultCallback($jsonObj){
     if($jsonObj["jsonResponse"]["responseCode"] == "SUCC"){
       // User was successfully verified so lookup user details via
       // VoiceIt UserId and begin session
-      session_start();
       $_SESSION["userId"] = $userId;
     }
   }
