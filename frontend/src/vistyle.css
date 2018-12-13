@@ -1,0 +1,235 @@
+.ui.card>.content, .ui.cards>.card>.content {
+  border-top: none;
+}
+
+.ui.active.dimmer.modals.transition {
+    display: flex !important;
+    display: -ms-flexbox !important;
+}
+
+.visible.transition {
+    display: block!important;
+    visibility: visible!important;
+}
+
+.ui.teal.image.header {
+  padding-bottom: 10px !important;
+}
+.column {
+  max-width: 450px;
+}
+
+.cls-2, .cls-12, .cls-13 {
+  font-family: inherit !important;
+  font-size: 8px !important;
+  letter-spacing: 1px !important;
+}
+
+.ic {
+  color: white;
+  font-size: 1.8rem !important;
+}
+
+.ic:hover {
+  color: #FCBB1B;
+}
+
+.dropdown, .compact.menu {
+  flex-grow: 1 !important;
+}
+
+.ui.teal.image.header {
+  margin: 0px;
+  padding-bottom: 0px;
+}
+
+#videoLiveness {
+  position: relative;
+  height: 345px;
+  width: 460px;
+  display: none;
+}
+
+.viVideo {
+  display: none !important;
+  position: absolute;
+  background-color: #000000;
+  margin: 0px auto;
+  height: 345px;
+  width: 460px;
+  top: 0;
+  z-index: -1;
+ }
+
+ .ui.card {
+   padding-top: 10%;
+   background-color: black;
+ }
+
+.ui.card>.extra {
+   background-color:  white;
+ }
+
+ .ui.card>.content>.header {
+   font-weight: normal !important;
+   font-size: 1.585714em !important;
+ }
+
+.ui.card>.content {
+  background-color:  white;
+  padding: 6px;
+}
+
+#comingSoon {
+  opacity: 0;
+}
+
+#videoRecord,#viPhotoCapture {
+  display: none;
+}
+
+.vjs-record .vjs-device-button.vjs-control {
+  display: none !important;
+}
+
+.ui.pointing.basic.label.left {
+  position:fixed;
+}
+
+.ui.modal>.close {
+  z-index: 500;
+}
+
+#verify{
+  text-align: center;
+  margin-bottom: 3%;
+  max-width: max-content;
+}
+
+#powered-by {
+  max-width: 12em;
+  margin-right: 0.7em;
+  margin-bottom: 0.4em;
+}
+
+.cls-2 {
+  font-size: 12px !important;
+}
+
+.cls-3, .cls-4  {
+  font-size: 13px !important;
+}
+
+ .ui.card>.content>.header {
+   margin: 0px auto;
+ }
+
+.ui.card>.extra{
+  border: none !important;
+  padding: 2px !important;
+  text-align: end !important;
+}
+
+.ui.teal.header {
+  color:  #000000 !important;
+}
+
+.ui.modal {
+  width: auto !important;
+}
+
+.ui.dimmer {
+  background-color: rgba(0,0,0,0.7);
+}
+
+
+.viReadyButton:focus {
+  box-shadow: 0 0 0 2px rgba(255,255,255,.5) inset !important;
+}
+
+
+.viReadyButton:hover {
+  box-shadow: 0 0 0 2px #fff inset!important;
+}
+
+#myAudio{
+  display: none;
+}
+
+#video:focus {
+    background: #e0e1e2 none !important;
+    color: rgba(0,0,0,.6) !important;
+}
+
+.video-js .vjs-tech {
+  /* outline: none !important; */
+}
+
+#video:hover {
+  background: rgba(34,36,38,.15) !important;
+}
+
+/* #closeButton{
+  color: #ffffff;
+  font-size: 25px;
+} */
+
+#freq {
+  opacity: 0;
+  bottom: 6%;
+  left: 12%;
+  position:absolute;
+  z-index: 3;
+  max-width: 600px !important;
+  max-height: 600px !important;
+}
+
+.ui.card {
+  display: block;
+  background-color: @grey;
+  width: 100%;
+  text-align: left;
+  font-style: italic;
+  font-size: 0.8em;
+  margin: 0px !important;
+}
+
+.large.ui.buttons {
+  width: 100%;
+}
+
+@media only screen and (max-width: 420px) {
+  .viModal {
+    min-width: 340px !important;
+    max-width: 340px !important;
+  }
+
+  /* TODO: Refactor this media query css in Javascript */
+  .viProgressCircle {
+    top: 7.0% !important;
+    left: 10.5% !important;
+  }
+
+  .viImageCanvas {
+    left: 9% !important;
+    top: 3.5% !important;
+    width: 368px !important;
+    height: 276px !important;
+  }
+
+  .viCanvas{
+    top: 3.5% !important;
+  }
+
+  .viVideoCircle {
+    top: -6.0% !important;
+  }
+
+  .viWaveform{
+    left: -18.5% !important;
+  }
+}
+
+.arrowButton{
+  cursor: pointer;
+}

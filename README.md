@@ -1,5 +1,5 @@
 # VoiceIt API 2 Web SDK
-The repository contains an example [web demonstration](#webexample) of VoiceIt's API 2.0 in the browser with a PHP backend. Please navigate to [Incorporating the SDK](#incorporating-the-sdk) for instructions on how to integrate the SDK into your own project(s).
+The repository contains an example [web demonstration](#webexample) of VoiceIt's API 2.0 in the browser with a PHP or NodeJS backend. Please navigate to [Incorporating the SDK](#incorporating-the-sdk) for instructions on how to integrate the SDK into your own project(s).
 
 * [Prerequisites](#prerequisites)
 * [Recommended Platform](#recommended-platform)
@@ -30,8 +30,8 @@ The repository contains an example [web demonstration](#webexample) of VoiceIt's
 * [TODO](#todo)
 
 ## Prerequisites
-* PHP 5.0 or greater
-* PHP Compatible Server such as Apache
+* PHP 5.0 or greater or Node 8.0 or greater
+* PHP Compatible Server such as Apache for the PHP backend
 
 ## Recommended Platform
 <img width="35px" src="http://pngimg.com/uploads/chrome_logo/chrome_logo_PNG17.png" alt="Google Chrome"/>
@@ -50,27 +50,45 @@ The following show Voice Verification, Face Verification (With liveness detectio
 
 #### Getting the Credentials
 Before unpacking the repo, please make sure to create a Developer account at https://voiceit.io/signup. Upon completion,
-login and navigate to the "Settings tab" to view your Api Key and Token, both of which will be needed later on. Also, navigate to the "User Management" tab and click "Create a User". This will create a user with a User ID which will be needed later on.
+login and navigate to the "Settings tab" to view your Api Key and Token, both of which will be needed later on. Also, navigate to the "User Management" tab and click "Create a User". This will create a user with a User ID which will be used later on for the examples.
 
 #### The Config File
+
+##### *PHP*
 Before starting the Example, please navigate to `VoiceItApi2WebSDK/php-example/config.php`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
 
-#### Running the Example
-Start your server(Apache), pointing to the `VoiceItApi2WebSDK/php-example` directory as the document root directory.
-Now visit your server at its designated port in an appropriate browser, and you should see a demo login page.
+##### *NodeJS*
+Before starting the Example, please navigate to `VoiceItApi2WebSDK/node-example/config.js`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
 
-In the email input, type: `demo@voiceit.io`. In the password input, type: `demo123`. After submitting the form, further verification/enrollment methods will appear that you can test out. Please first do an enrollment, such as a face enrollment, then after a successful enrollment you can test the face verification method (Note: you will need to give your browser both microphone and camera permissions to test the demo).
+#### Running the Example
+
+##### *PHP*
+Start your server(Apache), pointing to the `VoiceItApi2WebSDK/php-example` directory as the document root directory.
+
+##### *NodeJS*
+First navigate to `VoiceItApi2WebSDK/voiceit-node-backend` via the command line and run `npm install`. Then navigate to the `VoiceItApi2WebSDK/node-example` directory via the command line, and run `npm install` to install all the required node modules. Finally, run `npm start` to start the server on port 3000.
+
+Now visit your server at its designated port in an appropriate browser, and you should see a demo login page. In the email input, type: `demo@voiceit.io`. In the password input, type: `demo123`. After submitting the form, further verification/enrollment methods will appear that you can test out. Please first do an enrollment, such as a face enrollment, then after a successful enrollment you can test the face verification method (Note: you will need to give your browser both microphone and camera permissions to test the demo).
 
 ## Incorporating the SDK
 Parts of the Example can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification with/without Liveness), can be implemented independently, providing a total of 27 different use-cases (such as voice-only verification, or face enrollment and video verification, or video-only verification with Liveness, to name a few). For any such use-case, a backend and frontend implementation is required:
 
 ### Backend Implementation
+
+##### *PHP*
 Please copy the folder `VoiceItApi2WebSDK/voiceit-php-backend` to you project root.
 
 The base module for the backend is `VoiceItApi2WebSDK/voiceit-php-backend/VoiceIt2VoiceIt2WebBackend.php`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action (any from the possible 27) for a specific user, in a specific web session.
 
+##### *NodeJS*
+Please copy the folder `VoiceItApi2WebSDK/voiceit-node-backend` to you project root. Now navigate to `voiceit-node-backend` folder via the command line and run the command `npm install` or `yarn install` depending on your preferred package manager.
+
+The base module for the backend is `voiceit-node-backend`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action for a specific user, in a specific web session.
+
 #### Initializing the Base Module
-Initialize the base module in file that is publicly accessible via the server, such as `VoiceItApi2WebSDK/php-example/example_endpoint/index.php`. Then initialize the VoiceIt2VoiceIt2WebBackend like the following
+
+##### *PHP*
+The base module needs to be initialized in a file that is publicly accessible via the server, such as `VoiceItApi2WebSDK/php-example/example_endpoint/index.php`. Initialize the VoiceIt2VoiceIt2WebBackend like the following
 
 ```php
 // Note: You might have to modify the require path of the voiceit-php-backend folder
@@ -99,6 +117,31 @@ function voiceItResultCallback($jsonObj){
 $myVoiceIt->InitBackend($_POST, $_FILES, voiceItResultCallback);
 ```
 
+##### *NodeJS*
+The base module needs to be initialized at a `POST` endpoint publicly accessible via the server, such as `example_endpoint`. This express endpoint needs to support multipart form data uploads. Thus please make sure to run `npm install multer` in your project. Then define the endpoint/route like the following, ensuring that you call `multer.any()` middleware for the route
+
+```javascript
+...
+const VoiceIt2WebSDK = require('../voiceit-node-backend')
+const multer = require('multer')()
+
+
+app.post('/example_endpoint', multer.any(), function (req, res) {
+	const myVoiceIt = new VoiceIt2WebSDK("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN");
+	myVoiceIt.initBackend(req, res, function(jsonObj){
+		const callType = jsonObj.callType.toLowerCase();
+		const userId = jsonObj.userId;
+		if(jsonObj.jsonResponse.responseCode === "SUCC"){
+			// User was successfully verified now log them in via the
+			// backend, this could mean starting a new session with
+			// their details, after you lookup the user with the
+			// provided VoiceIt userId
+		}
+	});
+...
+});
+```
+
 #### Getting the Result
 After the completion of any verification action, the `voiceItResultCallback` will be triggered. The result response will be of the following json structure:
 
@@ -117,8 +160,9 @@ After the completion of any verification action, the `voiceItResultCallback` wil
 ```
 
 #### Generating a Secure Token
-Similarly to `VoiceItApi2WebSDK/php-example/login/index.php` you need to initialize the backend and then generate a secure token for the user in the backend, and send it to front end via an API call, or any means once the user is successfully authenticated via a username and password login or any other means. This token is then passed to the frontend to authorize the biometric login. Here is an example of how to generate the token in the backend.
+Similarly to `VoiceItApi2WebSDK/php-example/login/index.php` or the `/login` route in `VoiceItApi2WebSDK/node-example/server.js` you need to initialize the backend and then generate a secure token for the user in the backend, and send it to front end via an API call once the user is successfully authenticated via a username and password login or any other means. This token is then passed to the frontend to authorize the biometric login. Here is an example of how to generate the token in the backend.
 
+##### *PHP*
 ```php
 // Note: You might have to modify the require path of the voiceit-php-backend folder
 // depending on where you placed the folder in your project
@@ -143,6 +187,30 @@ $jsonResponse = Array(
 echo json_encode($jsonResponse);
 ```
 
+##### *NodeJS*
+```javascript
+...
+const VoiceIt2WebSDK = require('../voiceit-node-backend');
+
+app.get('/login', function (req, res) {
+	// Upon a successful login, lookup the associated VoiceIt userId
+	const VOICEIT_USERID = "VOICEIT_USER_ID_AFTER_DATABASE_LOOKUP";
+
+	// Initialize module and replace this with your own credentials
+	const myVoiceIt = new VoiceIt2WebSDK("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN_HERE");
+
+	// Generate a new token for the userId
+	const createdToken = myVoiceIt.generateTokenForUser(VOICEIT_USERID);
+
+	// Then return this token to the front end, for example as part of a jsonResponse
+  res.json({
+    'ResponseCode': 'SUCC',
+    'Message' : 'Successfully authenticated user',
+    'Token' : createdToken
+  });
+});
+```
+
 ### Frontend Implementation
 The frontend can be implemented in a modular fashion - each type (voice, face, and video), and each action (enrollment, and verification with/without liveness), can be implemented independently.
 
@@ -156,7 +224,7 @@ Then include the minified JavaScript file `voiceit2.min.js` via a script tag on 
 <script src='/voiceit2.min.js'></script>
 ```
 
-Now we can initialize the frontend object, it takes the relative public path to the PHP end point where the `$myVoiceIt->InitBackend` method is called and the path to web assembly model of the Face Detector, used for liveness. This should have been copied to the server's public directly in the step [Initializing the frontend](#initializing-the-frontend) above.
+Now we can initialize the frontend object, it takes the relative public path to the backend end point where the backend is initialized, such as the `example_endpoint` demonstrated in PHP and NodeJS above, and the path to web assembly model of the Face Detector, used for liveness. This should have been copied to the server's public directly in the step [Initializing the frontend](#initializing-the-frontend) above.
 
 ```javascript
 // The
@@ -242,6 +310,7 @@ myVoiceIt.encapsulatedVoiceVerification({
 ##### Encapsulated Face Verification
 ```JavaScript
 myVoiceIt.encapsulatedFaceVerification({
+	// Set to true to present user with liveness challenges
 	doLiveness:true,
 	completionCallback:function(success){
 		if(success){
@@ -261,6 +330,7 @@ myVoiceIt.encapsulatedFaceVerification({
 ##### Encapsulated Video Verification
 ```JavaScript
 myVoiceIt.encapsulatedVideoVerification({
+	// Set to true to present user with liveness challenges
 	doLiveness:true,
 	contentLanguage:'en-US',
 	phrase:'never forget tomorrow is a new day',
