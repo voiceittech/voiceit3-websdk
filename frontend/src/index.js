@@ -513,18 +513,18 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   voiceIt2ObjRef.handleVerificationResponse = function(response){
     voiceIt2ObjRef.modal.removeWaitingLoader();
     if (response.responseCode === "SUCC") {
-      voiceIt2ObjRef.exitOut(true);
+      voiceIt2ObjRef.exitOut(true, response);
       voiceIt2ObjRef.displayAppropriateMessage(response);
     } else {
       voiceIt2ObjRef.attempts++;
       //continue to verify
       if (voiceIt2ObjRef.attempts > voiceIt2ObjRef.MAX_ATTEMPTS) {
         voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("MAX_ATTEMPTS"));
-        voiceIt2ObjRef.exitOut(false);
+        voiceIt2ObjRef.exitOut(false, response);
       } else {
         voiceIt2ObjRef.displayAppropriateMessage(response);
         if(vi$.contains(voiceIt2ObjRef.errorCodes, response.responseCode)) {
-            voiceIt2ObjRef.exitOut(false);
+            voiceIt2ObjRef.exitOut(false, response);
         } else {
             voiceIt2ObjRef.continueVerification(response);
         }
@@ -545,7 +545,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       voiceIt2ObjRef.attempts++;
       if (voiceIt2ObjRef.attempts > voiceIt2ObjRef.MAX_ATTEMPTS) {
         voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("MAX_ATTEMPTS"));
-        voiceIt2ObjRef.exitOut(false);
+        voiceIt2ObjRef.exitOut(false, response);
       } else {
         voiceIt2ObjRef.continueEnrollment(response);
       }
@@ -559,7 +559,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       }, function(response){
       voiceIt2ObjRef.modal.removeWaitingLoader();
       if (response.responseCode === "SUCC") {
-        voiceIt2ObjRef.exitOut(true);
+        voiceIt2ObjRef.exitOut(true, response);
         voiceIt2ObjRef.displayAppropriateMessage(response);
         //do something after successful. Right now it just stays there
       } else {
@@ -567,11 +567,11 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         //continue to verify
         if (voiceIt2ObjRef.attempts > voiceIt2ObjRef.MAX_ATTEMPTS) {
           voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("MAX_ATTEMPTS"));
-          voiceIt2ObjRef.exitOut(false);
+          voiceIt2ObjRef.exitOut(false, response);
         } else {
           voiceIt2ObjRef.displayAppropriateMessage(response);
           if (vi$.contains(voiceIt2ObjRef.errorCodes, response.responseCode)) {
-            voiceIt2ObjRef.exitOut(false);
+            voiceIt2ObjRef.exitOut(false, response);
           } else {
             setTimeout(function() {
               voiceIt2ObjRef.continueVerification(response);
@@ -625,7 +625,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
             }, function(response){
             voiceIt2ObjRef.modal.removeWaitingLoader();
             if (response.responseCode === "SUCC") {
-              voiceIt2ObjRef.exitOut(true);
+              voiceIt2ObjRef.exitOut(true, response);
               voiceIt2ObjRef.displayAppropriateMessage(response);
               //do something after successful. Right now it just stays there
             } else {
@@ -633,11 +633,11 @@ voiceIt2ObjRef.initModalClickListeners = function(){
               //continue to verify
               if (voiceIt2ObjRef.attempts > voiceIt2ObjRef.MAX_ATTEMPTS) {
                 voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("MAX_ATTEMPTS"));
-                voiceIt2ObjRef.exitOut(false);
+                voiceIt2ObjRef.exitOut(false, response);
               } else {
                 voiceIt2ObjRef.displayAppropriateMessage(response);
                 if (vi$.contains(voiceIt2ObjRef.errorCodes, response.responseCode)) {
-                  voiceIt2ObjRef.exitOut(false);
+                  voiceIt2ObjRef.exitOut(false, response);
                 } else {
                   setTimeout(function() {
                     voiceIt2ObjRef.continueVerification(response);
@@ -789,7 +789,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
             voiceIt2ObjRef.enrollmentNeededVideo = false;
           }
           voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("SUCC_ENROLLMENT_3"));
-          voiceIt2ObjRef.exitOut(true);
+          voiceIt2ObjRef.exitOut(true, response);
         }
       } else {
         voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt(response.responseCode));
@@ -800,7 +800,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       if (response.responseCode === "SUCC") {
         // voiceIt2ObjRef.enrollmentNeededFace = false;
         voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("SUCC_ENROLLMENT_3"));
-        voiceIt2ObjRef.exitOut(true);
+        voiceIt2ObjRef.exitOut(true, response);
       }
       //handle re-recording and animations for face
       else {
@@ -901,13 +901,13 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   };
 
   // Exit the modal post completion of task
-  voiceIt2ObjRef.exitOut = function (success){
+  voiceIt2ObjRef.exitOut = function (success, response){
       // Give user 4 seconds to read final message, then exit out of the modal
       vi$.delay(TIME_BEFORE_EXITING_MODAL_AFTER_SUCCESS, function(){
         vi$.fadeOut(voiceIt2ObjRef.modal.domRef.modalDimBackground, 1100, function(){
               voiceIt2ObjRef.destroy();
               voiceIt2ObjRef.modal.hide();
-              voiceIt2ObjRef.completionCallback(success);
+              voiceIt2ObjRef.completionCallback(success, response);
         });
       });
   };
