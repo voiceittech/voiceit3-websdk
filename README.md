@@ -249,7 +249,7 @@ To start the UI for any of the use-cases mentioned above, please call the approp
 myVoiceIt.encapsulatedVoiceEnrollment({
 	contentLanguage:'en-US',
 	phrase:'never forget tomorrow is a new day',
-	completionCallback:function(success){
+	completionCallback:function(success, jsonResponse){
 		if(success){
 			alert('Voice Enrollments Done!');
 		} else {
@@ -262,7 +262,7 @@ myVoiceIt.encapsulatedVoiceEnrollment({
 ##### Encapsulated Face Enrollment
 ```JavaScript
 myVoiceIt.encapsulatedFaceEnrollment({
-	completionCallback:function(success){
+	completionCallback:function(success, jsonResponse){
 		if(success){
 			alert('Face Enrollment Done!');
 		} else {
@@ -277,7 +277,7 @@ myVoiceIt.encapsulatedFaceEnrollment({
 myVoiceIt.encapsulatedVideoEnrollment({
 	contentLanguage:'en-US',
 	phrase:'never forget tomorrow is a new day',
-	completionCallback:function(success){
+	completionCallback:function(success, jsonResponse){
 		if(success){
 			alert('Video Enrollments Done!');
 		} else {
@@ -296,7 +296,7 @@ myVoiceIt.encapsulatedVoiceVerification({
 		// Three voice enrollments needed
 		alert('A minimum of three enrollments are needed')
 	},
-	completionCallback:function(success){
+	completionCallback:function(success, jsonResponse){
 		if(success){
 			// Successfully verified user, now user can
 			// be redirected to a protected page
@@ -314,7 +314,7 @@ myVoiceIt.encapsulatedVoiceVerification({
 myVoiceIt.encapsulatedFaceVerification({
 	// Set to true to present user with liveness challenges
 	doLiveness:true,
-	completionCallback:function(success){
+	completionCallback:function(success, jsonResponse){
 		if(success){
 			// Successfully verified user, now user can
 			// be redirected to a protected page
@@ -340,7 +340,7 @@ myVoiceIt.encapsulatedVideoVerification({
 		// Three video enrollments needed
 		alert('A minimum of three enrollments are needed')
 	},
-	completionCallback:function(success){
+	completionCallback:function(success, jsonResponse){
 		if(success){
 			// Successfully verified user, now user can
 			// be redirected to a protected page
