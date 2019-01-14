@@ -1,1 +1,5 @@
-export const MAIN_THEME_COLOR = '#FBC132';
+var Colors = {
+  MAIN_THEME_COLOR : '#FBC132'
+};
+
+export default Colors;

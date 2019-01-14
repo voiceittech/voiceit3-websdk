@@ -1,4 +1,5 @@
 import ProgressBar from 'progressbar.js';
+import Colors from './colors';
 const vi$ = {
   post: function(modal, endPoint, requestType, token, props, callback) {
       var http = new XMLHttpRequest();
@@ -14,10 +15,10 @@ const vi$ = {
       http.send(formData);
       http.onreadystatechange = function() {
         if (http.readyState === 4) {
+          // Uncomment below for debugging.
           // console.log(`${requestType} response: ${http.responseText}`);
           const parsedJson = JSON.parse(http.responseText.trim());
           if(parsedJson.responseCode === 'INVT'){
-            // TODO: Show Error Message and Dismiss Modal
             modal.showTokenErrorAndDestroy();
             return;
           }
@@ -142,7 +143,7 @@ const vi$ = {
       strokeWidth: 3,
       easing: 'easeInOut',
       duration: progressDuration,
-      color: color || '#FBC132',
+      color: color || Colors.MAIN_THEME_COLOR,
       trailColor: 'rgba(0,0,0,0.0)',
       trailWidth: 0,
       svgStyle: null
@@ -176,7 +177,6 @@ const vi$ = {
   clickOn: function(selector, listener){
     var elem = vi$.qs(selector);
     if(!elem){ console.error('Invalid Selector Passed to Click On'); return ; }
-    // TODO: Figure out how to unbind click, maybe unnecessary
     elem.addEventListener('click', listener);
   },
   delay: function(duration, done){

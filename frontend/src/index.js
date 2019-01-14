@@ -16,7 +16,7 @@ import Wavesurfer from 'videojs-wavesurfer/dist/videojs.wavesurfer.js';
 import Record from 'videojs-record/dist/videojs.record.js';
 import 'semantic-ui/dist/semantic.min.css';
 import './vistyle.css';
-import { MAIN_THEME_COLOR } from './colors';
+import Colors from './colors';
 
 export function initialize(backendURLPath, relative_path_to_face_detector){
   var voiceIt2ObjRef = this;
@@ -43,7 +43,6 @@ export function initialize(backendURLPath, relative_path_to_face_detector){
   voiceIt2ObjRef.timeStampId;
 
   // Declare display/control objects such as overlays, waveforms, etc
-  voiceIt2ObjRef.audioVisualizer;
   voiceIt2ObjRef.livenessType = "face";
 
   // Variables needed for the audio/video streams, and for destroying instances
@@ -56,6 +55,10 @@ export function initialize(backendURLPath, relative_path_to_face_detector){
 
   voiceIt2ObjRef.livenessObj;
   voiceIt2ObjRef.passedLiveness = false;
+
+  voiceIt2ObjRef.setThemeColor = function(hexColor){
+    Colors.MAIN_THEME_COLOR = hexColor;
+  }
 
   voiceIt2ObjRef.setPhrase = function(phrase) {
     voiceIt2ObjRef.phrase = phrase;
@@ -184,6 +187,13 @@ voiceIt2ObjRef.StopRecording = function(code) {
   }
 };
 
+function destroyAndHideModal(){
+  vi$.fadeOut(voiceIt2ObjRef.modal.domRef.modalDimBackground, 1100, function(){
+        voiceIt2ObjRef.destroy();
+        voiceIt2ObjRef.modal.hide();
+    });
+}
+
 voiceIt2ObjRef.initModalClickListeners = function(){
 
       // When clicking skip button
@@ -220,19 +230,12 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         }
       }, false);
 
-      // TODO: Left Arrow and Close Button Do Same Thing, Refactor This
       vi$.clickOn(voiceIt2ObjRef.modal.domRef.closeButton, function(){
-        vi$.fadeOut(voiceIt2ObjRef.modal.domRef.modalDimBackground, 1100, function(){
-              voiceIt2ObjRef.destroy();
-              voiceIt2ObjRef.modal.hide();
-          });
+          destroyAndHideModal();
       });
 
       vi$.clickOn(voiceIt2ObjRef.modal.domRef.leftArrowIcon, function(){
-        vi$.fadeOut(voiceIt2ObjRef.modal.domRef.modalDimBackground, 1100, function(){
-              voiceIt2ObjRef.destroy();
-              voiceIt2ObjRef.modal.hide();
-          });
+          destroyAndHideModal();
       });
 
       // Proceed for enrollment

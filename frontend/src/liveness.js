@@ -3,7 +3,7 @@ import Prompts from './prompts';
 import initFaceTracker  from './facetracker';
 import LivenessMath from './livenessMath';
 const LIVENESS_TEST_TIMEOUT = 3500;
-import { MAIN_THEME_COLOR } from './colors';
+import Colors from './colors';
 
 export default function Liveness(VoiceItObj, face_detector_path, modal, currentPhrase) {
   const LivenessRef = this;
@@ -119,12 +119,12 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
   LivenessRef.passedLivenessTest = function(){
     LivenessRef.cancel = true;
     // Show waiting, post liveness success
-    modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], MAIN_THEME_COLOR);
+    modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], Colors.MAIN_THEME_COLOR);
     vi$.qs(modal.domRef.progressCircle).style.transform = LivenessRef.oldCircles[1];
   };
 
   LivenessRef.passedAllFaceLivenessTests = function(){
-    modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], MAIN_THEME_COLOR);
+    modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], Colors.MAIN_THEME_COLOR);
     vi$.qs(modal.domRef.progressCircle).style.transform = LivenessRef.oldCircles[1];
     setTimeout(function() {
       modal.hideProgressCircle(300, function() {
@@ -140,7 +140,7 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
   LivenessRef.passedAllVideoLivenessTests = function(){
     LivenessRef.cancel = true;
     // Show waiting, ready to start video verification post liveness success
-    modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], MAIN_THEME_COLOR);
+    modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], Colors.MAIN_THEME_COLOR);
     vi$.qs(modal.domRef.progressCircle).style.transform = LivenessRef.oldCircles[1];
     modal.hideProgressCircle(500, function() {
         modal.domRef.progressCircle.style.display = 'none';
@@ -336,7 +336,7 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
   LivenessRef.redrawCircle = function(testType) {
     switch (testType) {
       case 0:
-        modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], MAIN_THEME_COLOR);
+        modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], Colors.MAIN_THEME_COLOR);
         vi$.qs(modal.domRef.progressCircle).style.transform = LivenessRef.oldCircles[1];
         setTimeout(function() {
           modal.displayMessage(LivenessRef.prompts.getPrompt('FACE_DOWN'));
@@ -350,7 +350,7 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
         }, 300);
         break;
       case 1:
-        modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], MAIN_THEME_COLOR);
+        modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], Colors.MAIN_THEME_COLOR);
         vi$.qs(modal.domRef.progressCircle).style.transform = LivenessRef.oldCircles[1];
         setTimeout(function() {
           modal.displayMessage(LivenessRef.prompts.getPrompt('FACE_RIGHT'));
@@ -364,7 +364,7 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
         }, 300);
         break;
       case 2:
-        modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], MAIN_THEME_COLOR);
+        modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], Colors.MAIN_THEME_COLOR);
         vi$.qs(modal.domRef.progressCircle).style.transform = LivenessRef.oldCircles[1];
         setTimeout(function() {
           modal.displayMessage(LivenessRef.prompts.getPrompt('FACE_LEFT'));
@@ -378,7 +378,7 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
         }, 300);
         break;
       case 3:
-        modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], MAIN_THEME_COLOR);
+        modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], Colors.MAIN_THEME_COLOR);
         vi$.qs(modal.domRef.progressCircle).style.transform = LivenessRef.oldCircles[1];
         setTimeout(function() {
           modal.displayMessage(LivenessRef.prompts.getPrompt('SMILE'));
@@ -391,7 +391,7 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
         }, 300);
         break;
       case 4:
-        modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], MAIN_THEME_COLOR);
+        modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], Colors.MAIN_THEME_COLOR);
         vi$.qs(modal.domRef.progressCircle).style.transform = LivenessRef.oldCircles[1];
         setTimeout(function() {
           modal.displayMessage(LivenessRef.prompts.getPrompt('YAWN'));

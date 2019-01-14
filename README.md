@@ -19,6 +19,7 @@ The repository contains an example [web demonstration](#webexample) of VoiceIt's
 		* [Generating a Secure Token](#generating-a-secure-token)
 	* [Frontend Implementation](#front)
 		* [Initializing the frontend](#intializing-the-frontend)
+		* [Setting theme color](#setting-theme-color)
 		* [Setting the Secure Token](#setting-the-secure-token)
 		* [Initializing the Enrollment and Verification UI](#initializing-the-enrollment-and-verification-ui)
 			* [Encapsulated Voice Enrollment](#encapsulated-voice-enrollment)
@@ -231,6 +232,16 @@ Now we can initialize the frontend object, it takes the relative public path to 
 ```javascript
 // The
 var myVoiceIt = new VoiceIt2.initialize('/example_endpoint/', '/face_detector.wasm');
+```
+
+#### Setting Theme Color
+
+You can now also optionally set the theme color for the Web SDK, it is by default set to `#FBC132` (the VoiceIt signature yellow color).
+
+```javascript
+// This takes a valid hexadecimal color as an argument
+myVoiceIt.setThemeColor('#0000FF');
+// Now the theme color is set to blue
 ```
 
 #### Setting the secure token

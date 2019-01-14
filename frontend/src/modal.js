@@ -1,11 +1,10 @@
 import vi$ from './utilities';
 import Prompts from './prompts';
 import ProgressBar from 'progressbar.js';
-import Vudio from './vudio';
 import LoadingCircle from './vectors/loadingCircle.svg';
 import LivenessTutorial from './vectors/livenessTutorial.svg';
 import PoweredByBadge from './vectors/voiceit-powered-by-one-default.svg'
-import { MAIN_THEME_COLOR } from './colors';
+import Colors from './colors';
 
 export default function Modal(mRef) {
   const VoiceItModalRef = this;
@@ -452,7 +451,7 @@ export default function Modal(mRef) {
     VoiceItModalRef.livenessCircleInstance = new ProgressBar.Circle(VoiceItModalRef.domRef.progressCircle, {
       strokeWidth: 3,
       easing: 'easeInOut',
-      color: MAIN_THEME_COLOR,
+      color: Colors.MAIN_THEME_COLOR,
       trailColor: 'rgba(0,0,0,0.0)',
       trailWidth: 0,
       svgStyle: null
@@ -474,7 +473,7 @@ export default function Modal(mRef) {
     var waveProps = {
       'styles':{
         'position': 'absolute',
-        'top': '8%',
+        'top': '15%',
         'right': '0',
         'bottom': '0',
         'zIndex': '2',
@@ -493,19 +492,81 @@ export default function Modal(mRef) {
     for (var prop in waveProps.styles) {
       VoiceItModalRef.domRef.waveform.style[prop] = waveProps.styles[prop];
     }
+    // Creates the Waveform for Voice Enrollment and Verification
     VoiceItModalRef.domRef.viCard.insertBefore(VoiceItModalRef.domRef.waveform, VoiceItModalRef.domRef.content);
-    // var colors = ['#fb6d6b', '#c10056', ' #a50053', '#51074b'];
-    var colors = [MAIN_THEME_COLOR, MAIN_THEME_COLOR, MAIN_THEME_COLOR, MAIN_THEME_COLOR];//['#F7C959','#FBC132','#E4B237','#FBC43C'];
-    VoiceItModalRef.audioVisualizer = new Vudio(VoiceItModalRef.domRef.waveform, {
-      effect: 'waveform',
-      accuracy: 512,
-      width: 512,
-      height: 300,
-      waveform: {
-        maxHeight: 200,
-        color: colors
+    var colors = [Colors.MAIN_THEME_COLOR, Colors.MAIN_THEME_COLOR, Colors.MAIN_THEME_COLOR, Colors.MAIN_THEME_COLOR];
+    var waveContext = VoiceItModalRef.domRef.waveform.getContext("2d");
+    var waveStartTime = new Date().getTime();
+
+    function getPath(height) {
+      var width = VoiceItModalRef.domRef.waveform.width;
+      var spacing = 0.08;
+      var loopNum = 0;
+      var pointList = [];
+      var i = 0;
+
+      for (i = 0; i < width / 2; i++) {
+      pointList[loopNum] = [loopNum, Math.sin(loopNum * spacing) * (i * height) + 100];
+      loopNum++;
       }
+      for (i = width / 2; i > 0; i--) {
+      pointList[loopNum] = [loopNum, Math.sin(loopNum * spacing) * (i * height) + 100];
+      loopNum++;
+      }
+      return pointList;
+    }
+
+    var analyser, amp, animationId;
+    navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: false
+    }).then(function(stream) {
+
+        var context = new AudioContext();
+        analyser = context.createAnalyser();
+        context.createMediaStreamSource(stream).connect(analyser);
+        amp = new Uint8Array(analyser.frequencyBinCount);
+        VoiceItModalRef.videoCircleStream = stream;
+        var waveRunning = false;
+
+        function setWaveAmp() {
+          analyser.getByteFrequencyData(amp);
+          const RMS = vi$.getRMS(amp);
+          var currentAmp = 0.25 * RMS / 50;
+          currentAmp = currentAmp > 0.25 ? 0.25 : currentAmp;
+          currentAmp = currentAmp < 0.1 ? 0.0 : currentAmp;
+          var currentTime = new Date().getTime();
+          var runTime = currentTime - waveStartTime;
+
+          waveContext.clearRect(0, 0, VoiceItModalRef.domRef.waveform.width, VoiceItModalRef.domRef.waveform.height);
+          waveContext.beginPath();
+          waveContext.lineWidth = 2.0;
+          waveContext.strokeStyle = Colors.MAIN_THEME_COLOR;
+
+          var height = Math.sin(runTime * 0.006) * currentAmp;
+          var pointList = getPath(height);
+
+          for (var i = 0; i < VoiceItModalRef.domRef.waveform.width; i++) {
+            if (i === 0) {
+              waveContext.moveTo(pointList[0][0], pointList[0][1]);
+            } else {
+              waveContext.lineTo(pointList[i][0], pointList[i][1]);
+            }
+          }
+          waveContext.stroke();
+          animationId = window.requestAnimationFrame(setWaveAmp);
+        }
+
+        animationId = window.requestAnimationFrame(setWaveAmp);
+        // Add animation to cleanup array
+        VoiceItModalRef.cleanupFunctions.push(function(){
+          window.cancelAnimationFrame(animationId);
+        });
+    }).catch(function(err) {
+        console.log("error : " + err);
     });
+
+
   }
 
   VoiceItModalRef.revealWaveform = function(duration, after){
@@ -731,14 +792,7 @@ export default function Modal(mRef) {
     while(VoiceItModalRef.cleanupFunctions.length != 0){
       VoiceItModalRef.cleanupFunctions.shift()();
     }
-    if (VoiceItModalRef.audioVisualizer !== null && VoiceItModalRef.audioVisualizer !== undefined && VoiceItModalRef.audioVisualizer.getStream() !== undefined) {
-      VoiceItModalRef.audioVisualizer.getStream().getTracks()[0].stop();
-      for (var key in VoiceItModalRef.audioVisualizer.audioVisualizer){
-        VoiceItModalRef.audioVisualizer.audioVisualizer[key] = null;
-        delete voiceIt2ObjRef.audioVisualizer[key];
-      }
-      VoiceItModalRef.audioVisualizer = null;
-    }
+
     if (VoiceItModalRef.videoCircleStream !== undefined) {
       VoiceItModalRef.videoCircleStream.getTracks()[0].stop();
       VoiceItModalRef.videoCircleStream = undefined;
