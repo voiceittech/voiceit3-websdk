@@ -77,7 +77,7 @@ export default function Prompts() {
     BLINK: "Please blink three times",
     FACE_LEFT: "Please turn your face slightly to the left and back",
     FACE_RIGHT: "Please turn your face slightly to the right and back ",
-    LIVENESS_READY_PROMPT: "Please move closer to the camera. You\'ll be performing a predetermined number of liveness challenges. You\'ll have 2 seconds to perform each test, selected randomly from the following 4 :",
+    LIVENESS_READY_PROMPT: "Please move closer to the camera. You\'ll be performing a predetermined number of liveness challenges. You\'ll have 2 seconds to perform each test, selected randomly from the following 3 :",
     LIVENESS_SUCCESS: "You've been successfully verified",
     LIVENESS_TIMEDOUT: "Sorry, liveness timed out. Please perform the liveness tests quickly",
     LIVENESS_FAILED: "Sorry, verification failed",

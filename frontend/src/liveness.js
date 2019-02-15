@@ -25,7 +25,7 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
   LivenessRef.cancel = false;
 
   LivenessRef.setupVariables = function(testType){
-    LivenessRef.tests = vi$.shuffle( [1, 2, 3]);// 4 Yawn Test Disabled
+    LivenessRef.tests = vi$.shuffle( [1, 2, 3]);// 0 Down and 4 Yawn Tests Disabled
     LivenessRef.testTimeStart = Date.now();
     LivenessRef.currentTest = LivenessRef.tests[0];
     LivenessRef.testIndex = 0;
