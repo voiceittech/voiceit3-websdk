@@ -157,7 +157,7 @@ export function initialize(backendURLPath, relative_path_to_face_detector){
     vi$.delay(300, function(){
         vi$.fadeOut(voiceIt2ObjRef.modal.domRef.progressCircle, 300);
     });
-    vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300);
+    vi$.fadeOut(voiceIt2ObjRef.modal.domRef.outerOverlay, 300);
     setTimeout(function() {
       // voiceIt2ObjRef.overlayj.fadeTo(300, 0.3);
       voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
@@ -898,6 +898,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'inline-block';
         voiceIt2ObjRef.modal.domRef.readyButton.style.opacity = '1.0';
       } else if (voiceIt2ObjRef.liveness) {
+        voiceIt2ObjRef.modal.domRef.imageCanvas.style.opacity = '1.0';
         voiceIt2ObjRef.modal.revealLivenessOverlay();
       }
     }

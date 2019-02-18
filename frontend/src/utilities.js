@@ -141,7 +141,7 @@ const vi$ = {
   createProgressCircle: function(progressCircle, progressDuration, value, anim, color){
     var bar = new ProgressBar.Circle(progressCircle, {
       strokeWidth: 3,
-      easing: 'easeInOut',
+      easing: 'linear',
       duration: progressDuration,
       color: color || Colors.MAIN_THEME_COLOR,
       trailColor: 'rgba(0,0,0,0.0)',
