@@ -210,9 +210,16 @@ const vi$ = {
     }
     return arr;
   },
+  getLastArrayItem: (array) => {
+    if(!array) return null;
+    if(array.length === 0){
+      return null;
+    }
+    return array[array.length-1];
+  },
   dataURItoBlob: (dataURI) => {
     if(typeof dataURI !== 'string'){
-        throw new Error('Invalid argument: dataURI must be a string');
+        return null;
     }
     dataURI = dataURI.split(',');
     var type = dataURI[0].split(':')[1].split(';')[0],

@@ -161,6 +161,7 @@ export function initialize(backendURLPath, relative_path_to_face_detector){
     setTimeout(function() {
       // voiceIt2ObjRef.overlayj.fadeTo(300, 0.3);
       voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+
       voiceIt2ObjRef.player.record().start();
       voiceIt2ObjRef.livenessType = "voice";
       // Record 5 Second Video
@@ -558,7 +559,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   voiceIt2ObjRef.onFinishLivenessFaceVerification = function(){
       voiceIt2ObjRef.modal.showWaitingLoader(true);
       apiRef.faceVerificationWithLiveness({
-        viPhotoData : vi$.dataURItoBlob(voiceIt2ObjRef.livenessObj.successPics.pop())
+        viPhotoData : vi$.dataURItoBlob(vi$.getLastArrayItem(voiceIt2ObjRef.livenessObj.successPics))
       }, function(response){
       voiceIt2ObjRef.modal.removeWaitingLoader();
       if (response.responseCode === "SUCC") {
@@ -577,7 +578,11 @@ voiceIt2ObjRef.initModalClickListeners = function(){
             voiceIt2ObjRef.exitOut(false, response);
           } else {
             setTimeout(function() {
-              voiceIt2ObjRef.continueVerification(response);
+              if (voiceIt2ObjRef.liveness) {
+                voiceIt2ObjRef.initiate();
+              } else {
+                voiceIt2ObjRef.continueVerification(response);
+              }
             }, 100);
           }
         }
@@ -624,7 +629,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
               viContentLanguage: voiceIt2ObjRef.contentLanguage,
               viPhrase: voiceIt2ObjRef.phrase,
               viVoiceData : voiceIt2ObjRef.player.recordedData,
-              viPhotoData: vi$.dataURItoBlob(voiceIt2ObjRef.livenessObj.successPics.pop())
+              viPhotoData: vi$.dataURItoBlob(vi$.getLastArrayItem(voiceIt2ObjRef.livenessObj.successPics))
             }, function(response){
             voiceIt2ObjRef.modal.removeWaitingLoader();
             if (response.responseCode === "SUCC") {
