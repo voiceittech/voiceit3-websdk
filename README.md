@@ -51,9 +51,9 @@ The following show Voice Verification, Face Verification (With liveness detectio
 
 ### Getting Started
 
-#### Getting the Credentials
-Before unpacking the repo, please make sure to create a Developer account at https://voiceit.io/signup. Upon completion,
-login and navigate to the "Settings tab" to view your Api Key and Token, both of which will be needed later on. Also, navigate to the "User Management" tab and click "Create a User". This will create a user with a User ID which will be used later on for the examples.
+Sign up for a free Developer Account at <a href="https://voiceit.io/signup" target="_blank">VoiceIt.io</a> and view your API Key and Token in the settings page(as shown below). You can also review the HTTP Documentation at <a href="https://api.voiceit.io" target="_blank">api.voiceit.io</a>.
+
+<img src="./graphics/getcredentials.png" alt="API Key and Token" width="400px" />
 
 #### The Config File
 
