@@ -48,7 +48,7 @@ The repository contains an example [web demonstration](#webexample) of VoiceIt's
 The following show Voice Verification, Face Verification (With liveness detection on) and Video Verification (with Liveness turned off), respectively.
 
 <div style="background: #000 !important;">
-  <img width="290px" src="./graphics/voiceVerification.gif" style="display: inline !important"/><img width="290px" src="./graphics/faceVerification.gif" style="display: inline-block !important;"/><img width="290px" src="./graphics/videoVerification.gif" style="display: inline-block !important;"/>
+  <img width="290px" src="./graphics/voiceVerification.gif" style="display: inline-block !important"/><img width="290px" src="./graphics/faceVerification.gif" style="display: inline-block !important;"/><img width="290px" src="./graphics/videoVerification.gif" style="display: inline-block !important;"/>
 </div>
 
 ### Getting Started
