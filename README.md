@@ -42,9 +42,7 @@ The repository contains an example [web demonstration](#webexample) of VoiceIt's
 ## Compatible Platforms
 <img style="display: inline-block" width="35px" src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Mozilla_Firefox_3.5_logo_256.png" alt="Firefox"/>    <img style="display: inline-block" width="35px" src="https://upload.wikimedia.org/wikipedia/commons/d/d4/Opera_browser_logo_2013.png" alt="Google Chrome"/>
 
-## Web Example
-
-### UI Screenshots
+## UI Screenshots
 The following show Voice Verification, Face Verification (With liveness detection on) and Video Verification (with Liveness turned off), respectively.
 
 <div style="background: #000 !important;">
