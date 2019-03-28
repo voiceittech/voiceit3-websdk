@@ -104,10 +104,12 @@ class VoiceIt2WebBackend {
 
     if($reqType == "enoughVoiceEnrollments"){
       $resp = $this->getAllVoiceEnrollments($EXTRACTED_USER_ID);
-      $resp_obj = json_decode($resp);
+      $resp_voice_obj = json_decode($resp);
+      $resp = $this->getAllVideoEnrollments($EXTRACTED_USER_ID);
+      $resp_video_obj = json_decode($resp);
       $finalResult = "";
-      if($resp_obj->responseCode == "SUCC"){
-        if($resp_obj->count >= 3){
+      if($resp_voice_obj->responseCode == "SUCC" && $resp_video_obj->responseCode == "SUCC"){
+        if(($resp_voice_obj->count + $resp_video_obj->count) >= 3){
           $finalResult = json_encode(array('enoughEnrollments' => true));
         } else {
           $finalResult = json_encode(array('enoughEnrollments' => false));
@@ -120,9 +122,12 @@ class VoiceIt2WebBackend {
 
     if($reqType == "enoughFaceEnrollments"){
       $resp = $this->getAllFaceEnrollments($EXTRACTED_USER_ID);
-      $resp_obj = json_decode($resp);
-      if($resp_obj->responseCode == "SUCC"){
-        if($resp_obj->count >= 1){
+      $resp_face_obj = json_decode($resp);
+      $resp = $this->getAllVideoEnrollments($EXTRACTED_USER_ID);
+      $resp_video_obj = json_decode($resp);
+
+      if($resp_face_obj->responseCode == "SUCC" && $resp_video_obj->responseCode == "SUCC"){
+        if(($resp_face_obj->count + $resp_video_obj->count) >= 1){
           returnJson(json_encode(array('enoughEnrollments' => true)));
         } else {
           returnJson(json_encode(array('enoughEnrollments' => false)));

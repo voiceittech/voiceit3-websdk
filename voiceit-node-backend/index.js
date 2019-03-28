@@ -106,9 +106,10 @@ function VoiceIt2(apk, tok) {
               });
               break;
           case "enoughVoiceEnrollments":
-              mainThis.getAllVoiceEnrollments({userId: extractedUserId}, (result) =>{
-                if(result.responseCode === 'SUCC'){
-                  if(result.count >= 3){
+              mainThis.getAllVoiceEnrollments({userId: extractedUserId}, (resultVoice) =>{
+                mainThis.getAllVideoEnrollments({userId: extractedUserId}, (resultVideo) =>{
+                if(resultVoice.responseCode === 'SUCC' && resultVideo.responseCode === 'SUCC'){
+                  if((resultVoice.count + resultVideo.count) >= 3){
                     res.json({ enoughEnrollments : true});
                   } else {
                     res.json({ enoughEnrollments : false });
@@ -116,12 +117,14 @@ function VoiceIt2(apk, tok) {
                 } else {
                   res.json({ enoughEnrollments : false });
                 }
+                });
               });
               break;
           case "enoughFaceEnrollments":
-              mainThis.getAllFaceEnrollments({userId: extractedUserId}, (result) =>{
-                if(result.responseCode === 'SUCC'){
-                  if(result.count >= 1){
+              mainThis.getAllFaceEnrollments({userId: extractedUserId}, (resultFace) =>{
+                mainThis.getAllVideoEnrollments({userId: extractedUserId}, (resultVideo) =>{
+                if(resultFace.responseCode === 'SUCC' && resultVideo.responseCode === 'SUCC'){
+                  if((resultFace.count + resultVideo.count) >= 1){
                     res.json({ enoughEnrollments : true});
                   } else {
                     res.json({ enoughEnrollments : false });
@@ -129,6 +132,7 @@ function VoiceIt2(apk, tok) {
                 } else {
                   res.json({ enoughEnrollments : false });
                 }
+                });
               });
               break;
           case "enoughVideoEnrollments":

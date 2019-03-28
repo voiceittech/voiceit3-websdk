@@ -244,7 +244,15 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           if (voiceIt2ObjRef.type.biometricType === "face"){
             apiRef.deleteFaceEnrollments(voiceIt2ObjRef.handleDeletion);
           } else if (voiceIt2ObjRef.type.biometricType === "video"){
-            apiRef.deleteVideoEnrollments(voiceIt2ObjRef.handleDeletion);
+            apiRef.deleteFaceEnrollments(function(responseFace){
+                if (responseFace.responseCode === "SUCC") {
+                  apiRef.deleteVoiceEnrollments(function(responseVoice){
+                    if (responseVoice.responseCode === "SUCC") {
+                      apiRef.deleteVideoEnrollments(voiceIt2ObjRef.handleDeletion);
+                    }
+                  });
+                }
+            });
           } else {
             apiRef.deleteVoiceEnrollments(voiceIt2ObjRef.handleDeletion);
           }
