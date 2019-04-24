@@ -74,7 +74,7 @@ function takeToConsole(){
 }
 
 function setupFrontEnd() {
-  window.myVoiceIt = new VoiceIt2.initialize('example_endpoint/', 'resources/face_detector.wasm');
+  window.myVoiceIt = VoiceIt2.initialize('example_endpoint/');
   document.querySelector('#voiceEnrollmentBtn').addEventListener('click', function() {
     myVoiceIt.encapsulatedVoiceEnrollment({
       contentLanguage:'en-US',

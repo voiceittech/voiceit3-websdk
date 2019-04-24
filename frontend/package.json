@@ -10,6 +10,8 @@
   "author": "Hassan Ismaeel & Armaan Bindra",
   "license": "MIT",
   "dependencies": {
+    "@tensorflow-models/posenet": "^1.0.0",
+    "@tensorflow/tfjs": "^1.0.4",
     "arraybuffer-loader": "^1.0.6",
     "css-loader": "^1.0.0",
     "file-loader": "^2.0.0",

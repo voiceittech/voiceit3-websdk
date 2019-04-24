@@ -60,6 +60,7 @@ export default function Prompts() {
     TVER: "Sorry, no video enrollments found.\nPlease enroll before verifying.",
     NFEF: "Sorry, no face enrollments found.\nPlease enroll before verifying.",
     NEHSD: "Sorry, I couldn't quite catch that.\nPlease speak slower.",
+    NSPE: "Sorry, your enrollment was not similar enough to previous enrollments.\nMake sure to enroll only one person at a time.",
     STTF: "Sorry, I couldn't understand you. Make sure to say the correct phrase",
     SSTQ: "Sorry, I couldn't quite hear you.\nPlease speak louder.",
     SSTL: "Oh! Its getting a little too loud in here.\nLet's try this again, speaking at a normal volume",

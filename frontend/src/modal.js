@@ -237,7 +237,7 @@ export default function Modal(mRef) {
         'minHeight': '345px',
         'width': '100%',
         'zIndex': '1',
-        'background': 'rgba(0,0,0,0.7)'
+        'background': 'rgba(0,0,0,0.5)'
       },
       'nodeName': 'div',
       'elName':'outerOverlay',
@@ -787,6 +787,14 @@ export default function Modal(mRef) {
     VoiceItModalRef.domRef.imageCanvas.style.opacity = 0.0;
   };
 
+  VoiceItModalRef.darkenCircle = function(darken){
+    if(darken){
+      vi$.fadeOut(VoiceItModalRef.domRef.outerOverlay, 300);
+    } else {
+      vi$.fadeIn(VoiceItModalRef.domRef.outerOverlay, 300);
+    }
+  }
+  
   VoiceItModalRef.destroy = function() {
     VoiceItModalRef.removeWaitingLoader();
     while(VoiceItModalRef.cleanupFunctions.length != 0){

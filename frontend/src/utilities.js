@@ -182,18 +182,6 @@ const vi$ = {
   delay: function(duration, done){
     setTimeout(done, duration);
   },
-  readWASMBinary: function(url, onload) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-    xhr.responseType = "arraybuffer";
-    xhr.onload = function xhr_onload() {
-      if (xhr.status === 200 || xhr.status === 0 && xhr.response) {
-        onload(xhr.response);
-        return;
-      }
-    };
-    xhr.send(null);
-  },
   /**
   * Shuffles array in place.
   * @param {Array} arr items An array containing the items.

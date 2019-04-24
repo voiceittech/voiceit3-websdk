@@ -48,6 +48,7 @@ export default function api(modal, endPoint){
   }
 
   apiRef.faceVerificationWithLiveness = (options, callback) => {
+    console.log(options);
     vi$.post(
       modal,
       BASE_END_POINT,

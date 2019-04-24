@@ -1,35 +1,37 @@
 import vi$ from './utilities';
 import Prompts from './prompts';
-import initFaceTracker  from './facetracker';
 import LivenessMath from './livenessMath';
 const LIVENESS_TEST_TIMEOUT = 3500;
 import Colors from './colors';
 
-export default function Liveness(VoiceItObj, face_detector_path, modal, currentPhrase) {
+export default function Liveness(VoiceItObj) {
   const LivenessRef = this;
+  const modal = VoiceItObj.modal;
+  const currentPhrase = VoiceItObj.phrase;
   const _isWebAssemblySupported = vi$.isWebAssemblySupported();
   LivenessRef.animationId = 0;
   LivenessRef.manyfaces = false;
   LivenessRef.livenessStarted = false;
+  LivenessRef.finished = false;
 
   // Refactor prompts to be prop on modal object
   LivenessRef.prompts = new Prompts();
   LivenessRef.cancel = false;
+  LivenessRef.allPassed = false;
+  LivenessRef.picturesCaptured = false;
+  LivenessRef.continueToVoice = true;
   LivenessRef.oldCircles = [];
   LivenessRef.setup = false;
   LivenessRef.imageDataCtx = modal.domRef.imageCanvas.getContext('2d');
-  LivenessRef.faceTrackerLib = null;
   LivenessRef.faceManager = undefined;
   LivenessRef.resolution = null;
   LivenessRef.test;
-  LivenessRef.cancel = false;
 
   LivenessRef.setupVariables = function(testType){
-    LivenessRef.tests = vi$.shuffle( [1, 2, 3]);// 0 Down and 4 Yawn Tests Disabled
+    LivenessRef.tests = vi$.shuffle( [1, 2]);// TODO: 3 Smile Disabled 0 Down and 4 Yawn Tests Disabled
     LivenessRef.testTimeStart = Date.now();
     LivenessRef.currentTest = LivenessRef.tests[0];
     LivenessRef.testIndex = 0;
-    LivenessRef.doingLiveness = true;
     LivenessRef.passed = {
       test: -1,
       value: false
@@ -43,12 +45,10 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
     LivenessRef.livenessTries = 0;
     // TODO: Make this dynamic
     LivenessRef.MAX_TRIES = 1;
-    LivenessRef.doingLiveness = false;
     LivenessRef.checkForFaceStraight = false;
     LivenessRef.verificationTries = 0;
-    LivenessRef.successPics = [];
+    LivenessRef.successPic = null;
     LivenessRef.timePassed = 0;
-    LivenessRef.passedAll = false;
     // Liveness counters
     LivenessRef.turnedRightCounter = 0;
     LivenessRef.turnedLeftCounter = 0;
@@ -56,6 +56,7 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
     LivenessRef.smileCounter = 0;
     LivenessRef.facedDownCounter = 0;
     LivenessRef.faceOtherWayCounter = 0;
+    LivenessRef.continueToVoice = true;
   }
 
   // Reset test counters
@@ -68,37 +69,15 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
     LivenessRef.faceOtherWayCounter = 0;
   }
 
-  LivenessRef.loadFaceTracker = function(faceTrackerStarted) {
-    vi$.readWASMBinary(face_detector_path, function(wasmBuffer){
-      LivenessRef.faceTrackerLib = {
-          wasmBinary: wasmBuffer
-         };
-        initFaceTracker(LivenessRef.faceTrackerLib, function(){
-          LivenessRef.resolution = new LivenessRef.faceTrackerLib.Rectangle(0, 0, modal.domRef.imageCanvas.width, modal.domRef.imageCanvas.height);
-          LivenessRef.faceManager = new LivenessRef.faceTrackerLib.FaceTrackerManager();
-          LivenessRef.faceManager.init(LivenessRef.resolution, LivenessRef.resolution, "VoiceItFaceTracking");
-          faceTrackerStarted();
-      });
+  LivenessRef.snapLivenessPic = function(callback){
+    modal.domRef.imageCanvas.toBlob(function(imageBlob){
+      LivenessRef.successPic = imageBlob;
+      LivenessRef.picturesCaptured = true;
+      if(LivenessRef.allPassed){
+          VoiceItObj.onFinishLivenessFaceVerification();
+      }
     });
   };
-
-  LivenessRef.snapLivenessPic = function(){
-    VoiceItObj.snapPic();
-    // modal.domRef.imageCanvas.toBlob(function(imageBlob){
-    //   LivenessRef.successPics.push(imageBlob);
-    // });
-  };
-
-  // Why is this never called?
-  function tooManyFaces() {
-    vi$.fadeIn(modal.domRef.outerOverlay, 200);
-    // TODO: refactor this to use prompts.js
-    modal.displayMessage("Please make sure there is only one face in the camera view");
-  }
-
-  function singleface() {
-    vi$.fadeIn(modal.domRef.outerOverlay, 200);
-  }
 
   LivenessRef.startLiveness = function(testType){
     if(LivenessRef.livenessStarted){ return; }
@@ -107,13 +86,17 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
     LivenessRef.type = testType;
     modal.createLivenessCircle();
     LivenessRef.drawCircle(LivenessRef.currentTest);
-    LivenessRef.trackfaces();
   };
 
   LivenessRef.tryAgain = function(turnBack){
-      modal.hideProgressCircle(300);
-      vi$.fadeIn(modal.domRef.outerOverlay, 300);
-      modal.displayMessage(LivenessRef.prompts.getPrompt(turnBack ? "LIVENESS_TRY_AGAIN_AND_TURN_BACK" : "LIVENESS_TRY_AGAIN"));
+    LivenessRef.testIndex = LivenessRef.testIndex >= (LivenessRef.tests.length - 1) ? 0 : LivenessRef.testIndex + 1;
+    LivenessRef.currentTest = LivenessRef.tests[LivenessRef.testIndex];
+    LivenessRef.livenessRetest(LivenessRef.currentTest);
+    LivenessRef.testTimeStart = Date.now();
+    modal.hideProgressCircle(300);
+    modal.darkenCircle(true);
+    modal.displayMessage(LivenessRef.prompts.getPrompt(turnBack ? "LIVENESS_TRY_AGAIN_AND_TURN_BACK" : "LIVENESS_TRY_AGAIN"));
+    LivenessRef.passed.value = false;
   };
 
   LivenessRef.passedLivenessTest = function(){
@@ -124,6 +107,7 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
   };
 
   LivenessRef.passedAllFaceLivenessTests = function(){
+    LivenessRef.allPassed = true;
     modal.updateProgressCircle(modal.domRef.progressCircle, LivenessRef.oldCircles[0], Colors.MAIN_THEME_COLOR);
     vi$.qs(modal.domRef.progressCircle).style.transform = LivenessRef.oldCircles[1];
     setTimeout(function() {
@@ -131,9 +115,11 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
         modal.domRef.progressCircle.style.display = 'none';
       });
     }, 300);
-    vi$.fadeIn(modal.domRef.outerOverlay,300);
+    modal.darkenCircle(true);
     LivenessRef.cancel = true;
-    VoiceItObj.onFinishLivenessFaceVerification();
+    if(LivenessRef.allPassed && LivenessRef.picturesCaptured){
+        VoiceItObj.onFinishLivenessFaceVerification();
+    }
   }
 
 
@@ -148,37 +134,48 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
   }
 
   LivenessRef.failedLiveness = function() {
+    LivenessRef.continueToVoice = false;
+    LivenessRef.cancel = true;
     // Failed liveness
     vi$.fadeOut(modal.domRef.progressCircle, 300, function(){
         modal.domRef.progressCircle.style.display = 'none';
     });
 
-    vi$.fadeIn(modal.domRef.outerOverlay, 300);
+    modal.darkenCircle(true);
     modal.displayMessage(LivenessRef.prompts.getPrompt("LIVENESS_FAILED"));
     VoiceItObj.exitOut();
   }
 
-  LivenessRef.trackfaces = function() {
-    if (!LivenessRef.cancel){
-      const imageArray = LivenessRef.imageDataCtx.getImageData(0, 0, LivenessRef.resolution.width, LivenessRef.resolution.height).data;
-      LivenessRef.faceManager.update(imageArray);
-      var faces = LivenessRef.faceManager.getFaces();
-      // TODO: If more than one face, say please
-      // make sure only once face is in camera
-      var face = faces[0];
-      LivenessRef.livenessCheck(face, function(){
-        // Failed Callback
-      });
-      LivenessRef.animationId = window.requestAnimationFrame(LivenessRef.trackfaces);
-    }
+  // LivenessRef.trackfaces = function() {
+  //   if (!LivenessRef.cancel){
+  //     const imageArray = LivenessRef.imageDataCtx.getImageData(0, 0, LivenessRef.resolution.width, LivenessRef.resolution.height).data;
+  //     LivenessRef.faceManager.update(imageArray);
+  //     const faces = LivenessRef.faceManager.getFaces();
+  //     if(faces.length > 0){
+  //       LivenessRef.livenessCheck(faces[0], function(){
+  //         // Failed Callback
+  //       });
+  //     }
+  //     LivenessRef.animationId = window.requestAnimationFrame(LivenessRef.trackfaces);
+  //   }
+  // }
+
+  LivenessRef.livenessRetest = function(){
+    LivenessRef.redrawCircle(LivenessRef.currentTest);
+    modal.darkenCircle(true);
   }
 
-  LivenessRef.livenessRetest = function(previousTest){
-    LivenessRef.redrawCircle(previousTest);
-    vi$.fadeIn(modal.domRef.outerOverlay, 600, null, 0.3);
-  }
+  LivenessRef.livenessCheck = function(pose) {
+    const faceObject = {
+      minPartConfidence : 0.5,
+      nose : pose.keypoints[0],
+      leftEye : pose.keypoints[1],
+      rightEye : pose.keypoints[2],
+      leftEar : pose.keypoints[3],
+      rightEar : pose.keypoints[4],
+      eyeMidPoint : (pose.keypoints[2].position.x - pose.keypoints[1].position.x) / 2.0 + pose.keypoints[1].position.x
+    };
 
-  LivenessRef.livenessCheck = function(faceObject, failedCallback) {
     const timeDiff = Date.now() - LivenessRef.testTimeStart;
     const testTimedOut = timeDiff > LIVENESS_TEST_TIMEOUT;
     // If Test timed out retry
@@ -186,110 +183,60 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
       LivenessRef.livenessTries++;
       // If Failed More Liveness test than tries then fail
       if (LivenessRef.livenessTries > LivenessRef.MAX_TRIES) {
-        failedCallback();
+        // failedCallback();
+        // TODO: Failed Callback
       }
       // Otherwise retry liveness tests
       else {
-        LivenessRef.doingLiveness = false;
         LivenessRef.tryAgain();
-        LivenessRef.testIndex++;
-        if (LivenessRef.testIndex > (LivenessRef.tests.length - 1)) {
-          LivenessRef.testIndex = 0;
-        }
+        LivenessRef.testIndex = LivenessRef.testIndex >= (LivenessRef.tests.length - 1) ? 0 : LivenessRef.testIndex + 1;
         LivenessRef.currentTest = LivenessRef.tests[LivenessRef.testIndex];
         setTimeout(function() {
-          LivenessRef.livenessRetest(LivenessRef.currentTest);
+          LivenessRef.livenessRetest();
           LivenessRef.testTimeStart = Date.now();
-          setTimeout(() => {
-            LivenessRef.doingLiveness = true;
-          }, 300);
         }, 2000);
       }
-    }
-
-    // While liveness tests not passed keep processing faceObjects
-    if (LivenessRef.passedTests < LivenessRef.numTests) {
-      LivenessMath.processFaceObject(LivenessRef, faceObject, function(){
-        VoiceItObj.StopRecording(0);
-        LivenessRef.failedLiveness();
-        LivenessRef.doingLiveness = false;
-      });
-    }
-
-    // If Liveness Test Passed
-    if (LivenessRef.passed.value) {
-      LivenessRef.snapLivenessPic();
-      LivenessRef.passedTests++;
-      LivenessRef.testIndex++;
-      if (LivenessRef.testIndex > 3) {
-        // If testIndex greater than 3 than reset tests to start from beginning
-        LivenessRef.testIndex = 0;
-      }
-
-      LivenessRef.oldTest = LivenessRef.currentTest;
-      LivenessRef.currentTest = LivenessRef.tests[LivenessRef.testIndex];
+    } else {
+      // While liveness tests not passed keep processing faceObjects
       if (LivenessRef.passedTests < LivenessRef.numTests) {
-        if (LivenessRef.cancel){
-          LivenessRef.cancel = false;
-        }
-        LivenessRef.redrawCircle(LivenessRef.currentTest);
-        if (LivenessRef.oldTest < 3) {
-          LivenessRef.timePassed = Date.now();
-          LivenessRef.checkForFaceStraight = true;
-        } else if (LivenessRef.oldTest >= 3) {
-          LivenessRef.checkForFaceStraight = false;
-          LivenessRef.snapLivenessPic();
-        }
-        LivenessRef.resetLivenessCounters();
-      } else {
-        LivenessRef.passedAll = true;
-        if (LivenessRef.type === "face") {
-          LivenessRef.passedAllFaceLivenessTests();
+        LivenessMath.processFaceObject(LivenessRef, faceObject, function(){
+          LivenessRef.failedLiveness();
+        });
+      // If Liveness Test Passed
+      if (LivenessRef.passed.value) {
+          LivenessRef.testIndex = LivenessRef.testIndex >= (LivenessRef.tests.length - 1) ? 0 : LivenessRef.testIndex + 1;
+          LivenessRef.oldTest = LivenessRef.currentTest;
+          LivenessRef.currentTest = LivenessRef.tests[LivenessRef.testIndex];
+
+          if (LivenessRef.passedTests < LivenessRef.numTests) {
+            if (LivenessRef.cancel){
+              LivenessRef.cancel = false;
+            }
+            LivenessRef.redrawCircle(LivenessRef.currentTest);
+            LivenessRef.resetLivenessCounters();
         } else {
-          LivenessRef.passedAllVideoLivenessTests();
-        }
 
-        var recordingTimeout = 500;
-        if (LivenessRef.oldTest < 3) {
-          LivenessRef.snapLivenessPic();
-          LivenessRef.passedLivenessTest();
-          recordingTimeout = 800;
-        } else if (LivenessRef.oldTest >= 3) {
-          LivenessRef.snapLivenessPic();
-        }
-
-        setTimeout(() => {
-          // TODO: Refactor Stop Recording
-          VoiceItObj.StopRecording(1);
-          if (LivenessRef.type === "video") {
-              VoiceItObj.continueToVoiceVerification();
+          if (LivenessRef.type === "face") {
+            LivenessRef.passedAllFaceLivenessTests();
+          } else if (LivenessRef.type === "video" && LivenessRef.continueToVoice) {
+            LivenessRef.passedAllVideoLivenessTests();
+            LivenessRef.finished = true;
+            VoiceItObj.passedLiveness = true;
+            VoiceItObj.continueToVoiceVerification();
           }
-        }, recordingTimeout);
-
-        LivenessRef.doingLiveness = false;
-      }
-      LivenessRef.passed.value = false;
-
-      if (LivenessRef.checkForFaceStraight) {
-        const timeNow = Date.now();
-        if ((faceObject.rotationY < 0.2 && faceObject.rotationY > -0.2 && faceObject.rotationX < 0.20) || (timeNow - LivenessRef.timePassed > 1000)) {
-          LivenessRef.testTimeStart = timeNow;
-          LivenessRef.successPics = [];
-          LivenessRef.snapLivenessPic();
-          LivenessRef.resetLivenessCounters();
-          LivenessRef.checkForFaceStraight = false;
         }
+
+        LivenessRef.passed.value = false;
       }
-
     }
-
   }
+}
 
   LivenessRef.resume = function() {
     LivenessRef.stop = false;
     LivenessRef.setup = true;
     LivenessRef.cancel = false;
-    LivenessRef.trackfaces();
+    // LivenessRef.trackfaces();
   }
 
   LivenessRef.drawCircle = function(testType) {
@@ -416,25 +363,7 @@ export default function Liveness(VoiceItObj, face_detector_path, modal, currentP
     delete modal.domRef.imageCanvas;
     LivenessRef.imageDataCtx = null;
     delete LivenessRef.imageDataCtx;
-    for (var key in LivenessRef.faceTrackerLib ){
-      LivenessRef.faceTrackerLib[key] = null;
-      delete LivenessRef.faceTrackerLib[key];
-    }
-    LivenessRef.faceTrackerLib = null;
-    delete LivenessRef.faceTrackerLib;
-    for (var key in LivenessRef.faceManager ){
-      LivenessRef.faceManager[key] = null;
-      delete LivenessRef.faceManager[key];
-    }
-    LivenessRef.faceManager = null;
-    delete LivenessRef.faceManager;
-    LivenessRef.resolution = null;
-    delete LivenessRef.resolution;
     LivenessRef.test = null;
     delete LivenessRef.test;
   }
-
-  LivenessRef.loadFaceTracker(function(){
-    LivenessRef.prompts.setCurrentPhrase(currentPhrase);
-  });
 }
