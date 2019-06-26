@@ -56,7 +56,7 @@ function exampleLoginAPICall(values, callback) {
     var bodyString = '?email=' + values.email + '&password=' + values.password;
     var http = new XMLHttpRequest();
     http.open("GET", "/login" + bodyString, true);
-    http.send(bodyString);
+    http.send(null);
     http.onreadystatechange = function() {
       if (http.readyState === 4) {
         var response = JSON.parse(http.responseText.trim());
