@@ -33,7 +33,7 @@ function returnJson($jsonResponse){
 
 class VoiceIt2WebBackend {
   public $BASE_URL = 'https://api.voiceit.io';
-  public $VERSION = '1.0.0';
+  public const VERSION = '1.0.0';
   public $api_key;
   public $platformId = '48';
   public $notification_url = '';
