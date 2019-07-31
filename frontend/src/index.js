@@ -14,7 +14,7 @@ import 'videojs-wavesurfer/dist/css/videojs.wavesurfer.css';
 import Wavesurfer from 'videojs-wavesurfer/dist/videojs.wavesurfer.js';
 // Register videojs-record plugin with this import
 import Record from 'videojs-record/dist/videojs.record.js';
-import 'semantic-ui/dist/semantic.min.css';
+import 'semantic-ui-css/semantic.min.css';
 import './vistyle.css';
 import Colors from './colors';
 import * as posenet from '@tensorflow-models/posenet';
