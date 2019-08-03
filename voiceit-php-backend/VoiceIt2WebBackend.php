@@ -1,9 +1,7 @@
 <?php
 
 require_once 'dependencies/autoload.php';
-use ReallySimpleJWT\Token;
-use ReallySimpleJWT\TokenBuilder;
-use ReallySimpleJWT\TokenValidator;
+use \Firebase\JWT\JWT;
 
 function createUUID() {
     return sprintf( '%04x%04x%04x%04x%04x%04x%04x%04x',
@@ -33,7 +31,7 @@ function returnJson($jsonResponse){
 
 class VoiceIt2WebBackend {
   public $BASE_URL = 'https://api.voiceit.io';
-  public const VERSION = '1.0.0';
+  const VERSION = '1.0.0';
   public $api_key;
   public $platformId = '48';
   public $notification_url = '';
@@ -50,31 +48,41 @@ class VoiceIt2WebBackend {
   }
 
   public function validateToken($userToken){
-    $validator = new TokenValidator;
+    $secret = "SECRET%_".$this->api_token;
+    $isValid = false;
     try {
-      $validator->splitToken($userToken)
-          ->validateExpiration()
-          ->validateSignature("SECRET%_".$this->api_token);
-      return true;
-    } catch(Exception $e) {
-      return false;
-    }
+      JWT::decode($userToken, $secret, array('HS256'));
+      $isValid = true;
+    } catch (Exception $e) {}
+    return $isValid;
   }
 
   public function getPayload($userToken){
-    $result = json_decode(Token::getPayload($userToken),true);
+    $secret = "SECRET%_".$this->api_token;
+    $decoded = JWT::decode($userToken, $secret, array('HS256'));
+    $result = (array) $decoded;
     return $result["userId"];
   }
 
+  /* Get timstamp for $numDays from now */
+  public function getTimeIn($numDays){
+    return time() + ($numDays * 24 * 60 * 60);
+  }
+
   public function generateTokenForUser($userId){
-    $builder = new TokenBuilder();
-    $token = $builder
-        ->addPayload(['key' => 'userId', 'value' => $userId])
-        ->setSecret("SECRET%_".$this->api_token)
-        ->setExpiration(strtotime("+7 day"))
-        ->setIssuer("voiceit")
-        ->build();
-    return $token;
+    $secret = "SECRET%_".$this->api_token;
+    $token = array(
+      "iss" => "https://voiceit.io",
+      "aud" => "https://voiceit.io",
+      "iat" => time(),
+      "nbf" => time(),
+      // Add 7 Days Expiry
+      "exp" => $this->getTimeIn(7),
+      "userId" => $userId
+    );
+
+    $jwt = JWT::encode($token, $secret);
+    return $jwt;
   }
 
   public function InitBackend($POST_REF, $FILES_REF, $resultCallback){

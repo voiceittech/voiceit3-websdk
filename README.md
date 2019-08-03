@@ -103,7 +103,7 @@ $myVoiceIt = new VoiceIt2WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN")
 
 // Define a callback function to capture the response when a verification request completes.
 
-function voiceItResultCallback($jsonObj){
+$voiceItResultCallback = function($jsonObj){
 	// $jsonObj is a php object following the json format as described below
   $callType = $jsonObj["callType"];
   $userId = $jsonObj["userId"];
@@ -113,12 +113,12 @@ function voiceItResultCallback($jsonObj){
 		// their details, after you lookup the user with the
 		// provided VoiceIt userId
   }
-}
+};
 
 // Initialize the backend, passing a reference to the $_POST, $_FILES objects so
 // the backend can successfully capture form parameters and files, and finally
 // a callback to handle the API response on the server side.
-$myVoiceIt->InitBackend($_POST, $_FILES, voiceItResultCallback);
+$myVoiceIt->InitBackend($_POST, $_FILES, $voiceItResultCallback);
 ```
 
 ##### *NodeJS*

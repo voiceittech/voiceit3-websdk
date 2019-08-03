@@ -3,7 +3,7 @@ session_start();
 require('../../voiceit-php-backend/VoiceIt2WebBackend.php');
 include('../config.php');
 $myVoiceIt = new VoiceIt2WebBackend($VOICEIT_API_KEY, $VOICEIT_API_TOKEN);
-function voiceItResultCallback($jsonObj){
+$voiceItResultCallback = function($jsonObj){
   $callType = strtolower($jsonObj["callType"]);
   $userId = $jsonObj["userId"];
   if(stripos($callType, "verification") !== false){
@@ -13,7 +13,7 @@ function voiceItResultCallback($jsonObj){
       $_SESSION["userId"] = $userId;
     }
   }
-}
+};
 
-$myVoiceIt->InitBackend($_POST, $_FILES, voiceItResultCallback);
+$myVoiceIt->InitBackend($_POST, $_FILES, $voiceItResultCallback);
 ?>
