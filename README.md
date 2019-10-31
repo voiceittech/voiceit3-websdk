@@ -36,6 +36,20 @@ The repository contains an example [web demonstration](#webexample) of VoiceIt's
 * PHP 5.0 or greater or Node 8.0 or greater
 * PHP Compatible Server such as Apache for the PHP backend
 
+## Supporting browsers
+On PC:
+* Google Chrome 10 (Enabled by default since 14)
+* Firefox 23 (Enabled by default since 25)
+* Opera 15
+* Safari 6
+* Microsoft Edge 12
+
+On mobile devices:
+* Google Chrome for Android 28 (Enabled by default since 29)
+* Safari 6 (Has restrictions on use (Muted unless user called))
+* Firefox 23 (Enabled by default since 25)
+* Tizen
+
 ## Recommended Platform
 <img width="35px" src="http://pngimg.com/uploads/chrome_logo/chrome_logo_PNG17.png" alt="Google Chrome"/>
 
