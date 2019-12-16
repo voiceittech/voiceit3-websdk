@@ -185,6 +185,7 @@ export default function Liveness(VoiceItObj) {
       if (LivenessRef.livenessTries > LivenessRef.MAX_TRIES) {
         // failedCallback();
         // TODO: Failed Callback
+        LivenessRef.failedLiveness();
       }
       // Otherwise retry liveness tests
       else {
