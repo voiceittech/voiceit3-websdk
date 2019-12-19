@@ -7,8 +7,10 @@ function Point(x, y) {
   this.x = x;
   this.y = y;
 
-  this.distanceTo = (point) => {
-    return Math.sqrt((Math.pow(point.x - this.x, 2)) + (Math.pow(point.y - this.y, 2)))
+  this.distanceTo = point => {
+    return Math.sqrt(
+      Math.pow(point.x - this.x, 2) + Math.pow(point.y - this.y, 2)
+    );
   };
 }
 
@@ -20,25 +22,76 @@ const LivenessMath = {
     const v = faceObj.vertices;
     switch (type) {
       case 0:
+        // console.log("left ear position.y is ", faceObj.leftEar.position.y);
+        // console.log("right ear position.y is ", faceObj.rightEar.position.y);
+        // console.log("left eye position.y is ", faceObj.leftEye.position.y);
+        // console.log("right eye position.y is ", faceObj.rightEye.position.y);
+        // console.log("left ear score is ", faceObj.leftEar.score);
+        // console.log("right ear score is ", faceObj.rightEar.score);
+        // console.log("left eye score is ", faceObj.leftEye.score);
+        // console.log("right eye score is ", faceObj.rightEye.score);
+        // console.log("\n");
+
         // Looking Down Logic
-        break;
-        // Looking Right Logic
-      case 1:
-        if ((newTime - LivenessObjRef.testTimeStart) > TIME_BEFORE_PROCESSING_FACE) {
-          if (faceObj.nose.position.x > faceObj.eyeMidPoint && (faceObj.leftEar.score < faceObj.minPartConfidence)) {
-            LivenessObjRef.turnedRightCounter++;
-            if (LivenessObjRef.turnedRightCounter > NUMBER_OF_FRAMES_TO_CONCLUDE_LIVENESS_RESULT) {
-                LivenessObjRef.passed.value = true;
-                LivenessObjRef.passedTests++;
-                LivenessObjRef.testTimeStart = Date.now();
+        if (
+          newTime - LivenessObjRef.testTimeStart >
+          TIME_BEFORE_PROCESSING_FACE
+        ) {
+          if (
+            faceObj.eyeMidHeight > faceObj.earMidHeight &&
+            faceObj.rightEye.score > 0.9 &&
+            faceObj.leftEye.score > 0.9
+          ) {
+            LivenessObjRef.facedDownCounter++;
+            // NUMBER_OF_FRAMES_TO_CONCLUDE_LIVENESS_RESULT was in if statement below instead of just a number
+            if (LivenessObjRef.facedDownCounter > 1) {
+              LivenessObjRef.passed.value = true;
+              LivenessObjRef.passedTests++;
+              LivenessObjRef.testTimeStart = Date.now();
             }
           }
           // Snap Pic if Straight Face
-          else if(Math.abs(faceObj.nose.position.x - faceObj.eyeMidPoint) < 9){
-              LivenessObjRef.snapLivenessPic();
-          } else if (faceObj.nose.position.x < faceObj.eyeMidPoint && (faceObj.rightEar.score < faceObj.minPartConfidence)) {
+          else if (
+            Math.abs(faceObj.nose.position.x - faceObj.leftEye.position.y) < 9
+          ) {
+            LivenessObjRef.snapLivenessPic();
+          }
+        }
+        break;
+      // Looking Right Logic
+      case 1:
+        if (
+          newTime - LivenessObjRef.testTimeStart >
+          TIME_BEFORE_PROCESSING_FACE
+        ) {
+          if (
+            faceObj.nose.position.x > faceObj.eyeMidPoint &&
+            faceObj.leftEar.score < faceObj.minPartConfidence
+          ) {
+            LivenessObjRef.turnedRightCounter++;
+            if (
+              LivenessObjRef.turnedRightCounter >
+              NUMBER_OF_FRAMES_TO_CONCLUDE_LIVENESS_RESULT
+            ) {
+              LivenessObjRef.passed.value = true;
+              LivenessObjRef.passedTests++;
+              LivenessObjRef.testTimeStart = Date.now();
+            }
+          }
+          // Snap Pic if Straight Face
+          else if (
+            Math.abs(faceObj.nose.position.x - faceObj.eyeMidPoint) < 9
+          ) {
+            LivenessObjRef.snapLivenessPic();
+          } else if (
+            faceObj.nose.position.x < faceObj.eyeMidPoint &&
+            faceObj.rightEar.score < faceObj.minPartConfidence
+          ) {
             LivenessObjRef.faceOtherWayCounter++;
-            if (LivenessObjRef.faceOtherWayCounter > NUMBER_OF_FRAMES_TO_CONCLUDE_LIVENESS_RESULT) {
+            if (
+              LivenessObjRef.faceOtherWayCounter >
+              NUMBER_OF_FRAMES_TO_CONCLUDE_LIVENESS_RESULT
+            ) {
               LivenessObjRef.faceOtherWayCounter = 0;
               LivenessObjRef.livenessTries++;
               LivenessObjRef.passed.value = false;
@@ -47,28 +100,44 @@ const LivenessMath = {
               } else {
                 LivenessObjRef.tryAgain(true);
               }
-
             }
           }
         }
         break;
-        // Looking Left Logic
+      // Looking Left Logic
       case 2:
-        if ((newTime - LivenessObjRef.testTimeStart) > TIME_BEFORE_PROCESSING_FACE) {
-          if (faceObj.nose.position.x < faceObj.eyeMidPoint && (faceObj.rightEar.score < faceObj.minPartConfidence)) {
+        if (
+          newTime - LivenessObjRef.testTimeStart >
+          TIME_BEFORE_PROCESSING_FACE
+        ) {
+          if (
+            faceObj.nose.position.x < faceObj.eyeMidPoint &&
+            faceObj.rightEar.score < faceObj.minPartConfidence
+          ) {
             LivenessObjRef.turnedLeftCounter++;
-            if (LivenessObjRef.turnedLeftCounter > NUMBER_OF_FRAMES_TO_CONCLUDE_LIVENESS_RESULT) {
+            if (
+              LivenessObjRef.turnedLeftCounter >
+              NUMBER_OF_FRAMES_TO_CONCLUDE_LIVENESS_RESULT
+            ) {
               LivenessObjRef.passed.value = true;
               LivenessObjRef.passedTests++;
               LivenessObjRef.testTimeStart = Date.now();
             }
           }
           // Snap Pic if Straight Face
-          else if(Math.abs(faceObj.nose.position.x - faceObj.eyeMidPoint) < 9){
-              LivenessObjRef.snapLivenessPic();
-          } else if (faceObj.nose.position.x > faceObj.eyeMidPoint && (faceObj.leftEar.score < faceObj.minPartConfidence)) {
+          else if (
+            Math.abs(faceObj.nose.position.x - faceObj.eyeMidPoint) < 9
+          ) {
+            LivenessObjRef.snapLivenessPic();
+          } else if (
+            faceObj.nose.position.x > faceObj.eyeMidPoint &&
+            faceObj.leftEar.score < faceObj.minPartConfidence
+          ) {
             LivenessObjRef.faceOtherWayCounter++;
-            if (LivenessObjRef.faceOtherWayCounter > NUMBER_OF_FRAMES_TO_CONCLUDE_LIVENESS_RESULT) {
+            if (
+              LivenessObjRef.faceOtherWayCounter >
+              NUMBER_OF_FRAMES_TO_CONCLUDE_LIVENESS_RESULT
+            ) {
               LivenessObjRef.faceOtherWayCounter = 0;
               LivenessObjRef.livenessTries++;
               if (LivenessObjRef.livenessTries > LivenessObjRef.MAX_TRIES) {
@@ -76,12 +145,11 @@ const LivenessMath = {
               } else {
                 LivenessObjRef.tryAgain(true);
               }
-
             }
           }
         }
         break;
-        // Smile Logic
+      // Smile Logic
       case 3:
         var p0 = new Point(v[48 * 2], v[48 * 2 + 1]); // mouth corner left
         var p1 = new Point(v[54 * 2], v[54 * 2 + 1]); // mouth corner right
@@ -94,7 +162,7 @@ const LivenessMath = {
         var eyeDist = p0.distanceTo(p1);
 
         var smileFactor = mouthWidth / eyeDist;
-        smileFactor -= 1.40; // 1.40 - neutral, 1.70 smiling
+        smileFactor -= 1.4; // 1.40 - neutral, 1.70 smiling
         smileFactor *= 4.0;
 
         if (smileFactor < 0.0) {
@@ -104,7 +172,7 @@ const LivenessMath = {
           smileFactor = 1.0;
         }
 
-        if ((newTime - LivenessObjRef.testTimeStart) > 650) {
+        if (newTime - LivenessObjRef.testTimeStart > 650) {
           if (smileFactor > 0.55) {
             LivenessObjRef.smileCounter++;
             if (LivenessObjRef.smileCounter > 1) {
@@ -115,7 +183,7 @@ const LivenessMath = {
           }
         }
         break;
-        // Yawn Logic
+      // Yawn Logic
       case 4:
         var p0 = new Point(v[39 * 2], v[39 * 2 + 1]); // left eye inner corner
         var p1 = new Point(v[42 * 2], v[42 * 2 + 1]); // right eye outer corner
@@ -139,7 +207,7 @@ const LivenessMath = {
         if (yawnFactor > 1.0) {
           yawnFactor = 1.0;
         }
-        if ((newTime - LivenessObjRef.testTimeStart) > 650) {
+        if (newTime - LivenessObjRef.testTimeStart > 650) {
           if (yawnFactor > 0.3) {
             LivenessObjRef.yawnCounter++;
             if (LivenessObjRef.yawnCounter > 1) {
