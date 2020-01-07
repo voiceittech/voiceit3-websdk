@@ -7,5 +7,4 @@ RUN yarn build
 RUN echo $' \n\
 ************************************ \n\
 Finished compiling. Please run "./copy_binaries" in another terminal window (making sure you keep this terminal window runing as is). \n\
-************************************ \n\
-'
+************************************ '
