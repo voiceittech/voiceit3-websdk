@@ -1,19 +1,23 @@
 #!/bin/bash
-
-if [ "$(uname -s)" = "Darwin" ]
-then
   # Check if docker is running
   docker ps &> /dev/null
   if [ "$?" != "0" ]
   then
     echo "Docker is not running.
     "
-    echo "Please run the Docker GUI App (/Applications/Docker.app), or if you don't have it, install it via"
-    echo "      brew cask install docker"
-    echo "in order to use this build script."
-    exit 1
+    if [ "$(uname -s)" = "Darwin" ]
+    then
+      echo "Please run the Docker GUI App (/Applications/Docker.app), or if you don't have it, install it via"
+      echo "      brew cask install docker"
+      echo "in order to use this build script."
+      exit 1
+    else
+      echo "Please install Docker for linux"
+      echo "      (https://docs.docker.com/install/linux/docker-ce/ubuntu/ for Ubuntu instructions)"
+      echo "in order to use this build script."
+      exit 1
+    fi
   fi
-fi
 
 docker build -t voiceitmin .
 docker run -ti --rm --mac-address 08:00:27:F0:D9:F1 voiceitmin
