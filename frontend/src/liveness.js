@@ -1,7 +1,7 @@
 import vi$ from "./utilities";
 import Prompts from "./prompts";
 import LivenessMath from "./livenessMath";
-const LIVENESS_TEST_TIMEOUT = 3500;
+const LIVENESS_TEST_TIMEOUT = 5200;
 import Colors from "./colors";
 
 export default function Liveness(VoiceItObj) {
@@ -278,8 +278,13 @@ export default function Liveness(VoiceItObj) {
   };
 
   LivenessRef.drawCircle = function(testType) {
+    modal.createAudioPrompts();
     switch (testType) {
       case 0:
+        document.getElementById("audioSrc").src = "wav/FACE_DOWN.wav";
+        console.log(document.getElementById("audioSrc").src)
+        document.getElementById("audioPrompt").load();
+        // document.getElementById("audioPrompt").play();
         modal.displayMessage(LivenessRef.prompts.getPrompt("FACE_DOWN"));
         modal.updateProgressCircle(
           modal.domRef.progressCircle,
@@ -291,6 +296,8 @@ export default function Liveness(VoiceItObj) {
         LivenessRef.oldCircles[1] = "rotate(135deg)";
         break;
       case 1:
+        document.getElementById("audioSrc").src = "wav/FACE_RIGHT.wav";
+        document.getElementById("audioPrompt").load();
         modal.displayMessage(LivenessRef.prompts.getPrompt("FACE_RIGHT"));
         modal.updateProgressCircle(
           modal.domRef.progressCircle,
@@ -302,6 +309,8 @@ export default function Liveness(VoiceItObj) {
         LivenessRef.oldCircles[1] = "rotate(45deg)";
         break;
       case 2:
+        document.getElementById("audioSrc").src = "wav/FACE_LEFT.wav";
+        document.getElementById("audioPrompt").load();
         modal.displayMessage(LivenessRef.prompts.getPrompt("FACE_LEFT"));
         modal.updateProgressCircle(
           modal.domRef.progressCircle,
@@ -341,6 +350,8 @@ export default function Liveness(VoiceItObj) {
         vi$.qs(modal.domRef.progressCircle).style.transform =
           LivenessRef.oldCircles[1];
         setTimeout(function() {
+          document.getElementById("audioSrc").src = "wav/FACE_DOWN.wav";
+          document.getElementById("audioPrompt").load();
           modal.displayMessage(LivenessRef.prompts.getPrompt("FACE_DOWN"));
           modal.hideProgressCircle(300, function() {
             modal.updateProgressCircle(
@@ -354,7 +365,7 @@ export default function Liveness(VoiceItObj) {
             LivenessRef.oldCircles[1] = "rotate(135deg)";
             modal.revealProgressCircle(300);
           });
-        }, 300);
+        }, 2000);
         break;
       case 1:
         modal.updateProgressCircle(
@@ -365,6 +376,8 @@ export default function Liveness(VoiceItObj) {
         vi$.qs(modal.domRef.progressCircle).style.transform =
           LivenessRef.oldCircles[1];
         setTimeout(function() {
+          document.getElementById("audioSrc").src = "wav/FACE_RIGHT.wav";
+          document.getElementById("audioPrompt").load();
           modal.displayMessage(LivenessRef.prompts.getPrompt("FACE_RIGHT"));
           modal.hideProgressCircle(300, function() {
             modal.updateProgressCircle(
@@ -378,7 +391,7 @@ export default function Liveness(VoiceItObj) {
             LivenessRef.oldCircles[1] = "rotate(45deg)";
             modal.revealProgressCircle(300);
           });
-        }, 300);
+        }, 2000);
         break;
       case 2:
         modal.updateProgressCircle(
@@ -389,6 +402,8 @@ export default function Liveness(VoiceItObj) {
         vi$.qs(modal.domRef.progressCircle).style.transform =
           LivenessRef.oldCircles[1];
         setTimeout(function() {
+          document.getElementById("audioSrc").src = "wav/FACE_LEFT.wav";
+          document.getElementById("audioPrompt").load();
           modal.displayMessage(LivenessRef.prompts.getPrompt("FACE_LEFT"));
           modal.hideProgressCircle(300, function() {
             modal.updateProgressCircle(
@@ -402,7 +417,7 @@ export default function Liveness(VoiceItObj) {
             LivenessRef.oldCircles[1] = "rotate(220deg)";
             modal.revealProgressCircle(300);
           });
-        }, 300);
+        }, 2000);
         break;
       case 3:
         modal.updateProgressCircle(
