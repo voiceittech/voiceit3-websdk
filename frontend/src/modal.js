@@ -464,6 +464,35 @@ export default function Modal(mRef) {
     VoiceItModalRef.livenessCircleInstance.set(value);
   }
 
+  // Create audio prompts for face verification 
+  VoiceItModalRef.createAudioPrompts = function() {
+    if(VoiceItModalRef.domRef.audioPrompts){
+      vi$.remove(VoiceItModalRef.domRef.audioPrompts)
+    }
+    VoiceItModalRef.domRef.audioPrompts = vi$.create('AUDIO');
+    // const filePath = "wav/" + fileName + ".wav";
+    var audioPromptsProps = {
+      'attributes':{
+        'height':'500px',
+        'width' :'500px',
+        'class' :'audioPrompts',
+        'id' : 'audioPrompt',
+        'autoplay' : 'true',
+        // 'src' : filePath
+      }
+    };
+    let sourceElem = vi$.create("SOURCE");
+    sourceElem.setAttribute('id', 'audioSrc');
+    console.log("audio prompt has been called");
+    for (var prop in audioPromptsProps.attributes) {
+      VoiceItModalRef.domRef.audioPrompts.setAttribute(prop, audioPromptsProps.attributes[prop]);
+    }
+    VoiceItModalRef.domRef.audioPrompts.appendChild(sourceElem)
+    VoiceItModalRef.domRef.viCard.insertBefore(VoiceItModalRef.domRef.audioPrompts, VoiceItModalRef.domRef.content);
+
+  }
+
+
   // Create the Audio waveform
   VoiceItModalRef.createWaveform = function() {
     if(VoiceItModalRef.domRef.waveform){
