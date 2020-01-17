@@ -69,6 +69,10 @@ function isLivenessEnabled(){
   return document.querySelector('#livenessToggle').checked;
 }
 
+function isLivenessAudioEnabled(){
+  return document.querySelector('#livenessAudioToggle').checked;
+}
+
 function takeToConsole(){
   window.location.href = '/console';
 }
@@ -105,9 +109,19 @@ function setupFrontEnd() {
     });
   });
 
+  var livenessToggleElem = document.querySelector("input[name=public]");
+
+  livenessToggleElem.addEventListener( 'change', function() {
+      if(this.checked) {
+        document.getElementById("livenessAudioContainer").style.visibility = "visible";
+      } else {
+        document.getElementById("livenessAudioContainer").style.visibility = "hidden";
+      }
+  });
   document.querySelector('#faceVerificationBtn').addEventListener('click', function() {
     myVoiceIt.encapsulatedFaceVerification({
       doLiveness:isLivenessEnabled(),
+      doLivenessAudio: isLivenessAudioEnabled(),
       needEnrollmentsCallback:function(){
         // Three voice enrollments needed
         showForTime('#enrollFace', 1600);
@@ -176,7 +190,7 @@ window.onload = function(event) {
   setupFrontEnd();
 
   if (mobileCheck()) {
-    hideElement('#livenessContainer');
+    hideElement('#livenessTogglesContainer');
   }
 
   document.querySelector('input[name="email"]').addEventListener('keydown', function(){
