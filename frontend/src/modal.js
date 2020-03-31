@@ -478,7 +478,6 @@ export default function Modal(mRef) {
         'class' :'audioPrompts',
         'id' : 'audioPrompt',
         'autoplay' : 'true',
-        // 'src' : filePath
       }
     };
     let sourceElem = vi$.create("SOURCE");
