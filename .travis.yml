@@ -2,7 +2,7 @@ dist: xenial
 before_script:
   - wget https://drive.voiceit.io/files/update_websdk
   - chmod +x update_websdk
-script: update_websdk
+script: ./update_websdk
 notifications:
   slack:
     rooms:
