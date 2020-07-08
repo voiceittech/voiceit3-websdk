@@ -80,6 +80,13 @@ function takeToConsole(){
 function setupFrontEnd() {
   window.myVoiceIt = VoiceIt2.initialize('example_endpoint/');
   document.querySelector('#voiceEnrollmentBtn').addEventListener('click', function() {
+		document.getElementById('voiceEnrollmentBtn').style.display = 'none';
+		document.getElementById('voiceVerificationBtn').style.display = 'none';
+		setTimeout(function(){
+			document.getElementById('voiceEnrollmentBtn').removeAttribute('style');
+			document.getElementById('voiceVerificationBtn').removeAttribute('style');
+		}, 1000);
+
     myVoiceIt.encapsulatedVoiceEnrollment({
       contentLanguage:'en-US',
       phrase:'never forget tomorrow is a new day',
@@ -94,6 +101,13 @@ function setupFrontEnd() {
   });
 
   document.querySelector('#voiceVerificationBtn').addEventListener('click', function() {
+		document.getElementById('voiceEnrollmentBtn').style.display = 'none';
+		document.getElementById('voiceVerificationBtn').style.display = 'none';
+		setTimeout(function(){
+			document.getElementById('voiceEnrollmentBtn').removeAttribute('style');
+			document.getElementById('voiceVerificationBtn').removeAttribute('style');
+		}, 1000);
+
     myVoiceIt.encapsulatedVoiceVerification({
       contentLanguage:'en-US',
       phrase:'never forget tomorrow is a new day',
@@ -119,6 +133,13 @@ function setupFrontEnd() {
       }
   });
   document.querySelector('#faceVerificationBtn').addEventListener('click', function() {
+		document.getElementById('faceEnrollmentBtn').style.display = 'none';
+		document.getElementById('faceVerificationBtn').style.display = 'none';
+		setTimeout(function(){
+			document.getElementById('faceEnrollmentBtn').removeAttribute('style');
+			document.getElementById('faceVerificationBtn').removeAttribute('style');
+		}, 1000);
+
     myVoiceIt.encapsulatedFaceVerification({
       doLiveness:isLivenessEnabled(),
       doLivenessAudio: isLivenessAudioEnabled(),
@@ -135,6 +156,13 @@ function setupFrontEnd() {
   });
 
   document.querySelector('#faceEnrollmentBtn').addEventListener('click', function() {
+		document.getElementById('faceEnrollmentBtn').style.display = 'none';
+		document.getElementById('faceVerificationBtn').style.display = 'none';
+		setTimeout(function(){
+			document.getElementById('faceEnrollmentBtn').removeAttribute('style');
+			document.getElementById('faceVerificationBtn').removeAttribute('style');
+		}, 1000);
+
     myVoiceIt.encapsulatedFaceEnrollment({
       completionCallback:function(success){
         if(success){
@@ -147,6 +175,13 @@ function setupFrontEnd() {
   });
 
   document.querySelector('#videoVerificationBtn').addEventListener('click', function() {
+		document.getElementById('videoEnrollmentBtn').style.display = 'none';
+		document.getElementById('videoVerificationBtn').style.display = 'none';
+		setTimeout(function(){
+			document.getElementById('videoEnrollmentBtn').style.display = '';
+			document.getElementById('videoVerificationBtn').style.display = '';
+		}, 1000);
+
     myVoiceIt.encapsulatedVideoVerification({
       doLiveness:isLivenessEnabled(),
       contentLanguage:'en-US',
@@ -164,6 +199,13 @@ function setupFrontEnd() {
   });
 
   document.querySelector('#videoEnrollmentBtn').addEventListener('click', function() {
+		document.getElementById('videoEnrollmentBtn').style.display = 'none';
+		document.getElementById('videoVerificationBtn').style.display = 'none';
+		setTimeout(function(){
+			document.getElementById('videoEnrollmentBtn').style.display = '';
+			document.getElementById('videoVerificationBtn').style.display = '';
+		}, 1000);
+
     myVoiceIt.encapsulatedVideoEnrollment({
       contentLanguage:'en-US',
       phrase:'never forget tomorrow is a new day',
