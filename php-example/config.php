@@ -1,7 +1,0 @@
-<?php
-$VOICEIT_API_KEY = getenv("VOICEIT_TWO_API_KEY", true) ? getenv("VOICEIT_TWO_API_KEY") : "API_KEY_HERE";
-$VOICEIT_API_TOKEN = getenv("VOICEIT_TWO_API_TOKEN", true) ? getenv("VOICEIT_TWO_API_TOKEN") : "API_TOKEN_HERE";
-$VOICEIT_TEST_USERID = getenv("VOICEIT_TEST_USER_ID", true) ? getenv("VOICEIT_TEST_USER_ID") :"TEST_USER_ID_HERE";
-$DEMO_EMAIL = "demo@voiceit.io";
-$DEMO_PASSWORD = "demo123";
-?>

@@ -1,0 +1,33 @@
+<?php
+session_start();
+if(!isset($_SESSION['userId'])){
+    header('Location: /');
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>VoiceIt Web Example Console</title>
+  <link rel="stylesheet" type="text/css" href="/css/semantic.min.css" />
+  <link rel="stylesheet" type="text/css" href="/css/example.css" />
+  <link type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,700" rel="stylesheet">
+</head>
+
+<body class='exampleBody'>
+  <div id="mainColumn" class="ui middle aligned center aligned grid">
+    <a href='/logout'>
+      <div id="logoutBtn" class="ui fluid large button viBtnStyle viBtnColor">
+      Log Out
+    </div>
+    </a>
+    <div id="mainForm">
+      <h2 class="ui center aligned icon header unlockedText">
+        You have unlocked the secret!
+        <br/>
+        🎉
+      </h2>
+    </div>
+    </div>
+</body>
