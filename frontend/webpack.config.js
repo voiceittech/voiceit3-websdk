@@ -6,6 +6,9 @@ module.exports = {
   context: path.join(basePath, 'src'),
   entry: './index.js',
   mode:      'production',
+  optimization: {
+    minimize: false
+  },
   module: {
     rules: [
       {

@@ -72,18 +72,18 @@ Sign up for a free Developer Account at [VoiceIt.io](https://voiceit.io/signup) 
 #### The Config File
 
 ##### *PHP*
-Before starting the Example, please navigate to `VoiceItApi2WebSDK/php-example/config.php`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
+Before starting the Example, please navigate to `VoiceItApi2WebSDK/php-server-example/config.php`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
 
 ##### *NodeJS*
-Before starting the Example, please navigate to `VoiceItApi2WebSDK/node-example/config.js`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
+Before starting the Example, please navigate to `VoiceItApi2WebSDK/node-server-example/config.js`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
 
 #### Running the Example
 
 ##### *PHP*
-Start your server(Apache), pointing to the `VoiceItApi2WebSDK/php-example` directory as the document root directory.
+Start your server(Apache), pointing to the `VoiceItApi2WebSDK/php-server-example` directory as the document root directory.
 
 ##### *NodeJS*
-First navigate to `VoiceItApi2WebSDK/voiceit-node-backend` via the command line and run `npm install`. Then navigate to the `VoiceItApi2WebSDK/node-example` directory via the command line, and run `npm install` to install all the required node modules. Finally, run `npm start` to start the server on port 3000.
+First navigate to `VoiceItApi2WebSDK/voiceit-node-websdk` via the command line and run `npm install`. Then navigate to the `VoiceItApi2WebSDK/node-server-example` directory via the command line, and run `npm install` to install all the required node modules. Finally, run `npm start` to start the server on port 3000.
 
 Now visit your server at its designated port in an appropriate browser, and you should see a demo login page. In the email input, type: `demo@voiceit.io`. In the password input, type: `demo123`. After submitting the form, further verification/enrollment methods will appear that you can test out. Please first do an enrollment, such as a face enrollment, then after a successful enrollment you can test the face verification method (Note: you will need to give your browser both microphone and camera permissions to test the demo).
 
@@ -93,24 +93,24 @@ Parts of the Example can be incorporated for any specific use-case. Each type (v
 ### Backend Implementation
 
 ##### *PHP*
-Please copy the folder `VoiceItApi2WebSDK/voiceit-php-backend` to you project root.
+Please copy the folder `VoiceItApi2WebSDK/voiceit-php-websdk` to you project root.
 
-The base module for the backend is `VoiceItApi2WebSDK/voiceit-php-backend/VoiceIt2VoiceIt2WebBackend.php`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action (any from the possible 27) for a specific user, in a specific web session.
+The base module for the backend is `VoiceItApi2WebSDK/voiceit-php-websdk/VoiceIt2VoiceIt2WebBackend.php`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action (any from the possible 27) for a specific user, in a specific web session.
 
 ##### *NodeJS*
-Please copy the folder `VoiceItApi2WebSDK/voiceit-node-backend` to you project root. Now navigate to `voiceit-node-backend` folder via the command line and run the command `npm install` or `yarn install` depending on your preferred package manager.
+Please copy the folder `VoiceItApi2WebSDK/voiceit-node-websdk` to you project root. Now navigate to `voiceit-node-websdk` folder via the command line and run the command `npm install` or `yarn install` depending on your preferred package manager.
 
-The base module for the backend is `voiceit-node-backend`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action for a specific user, in a specific web session.
+The base module for the backend is `voiceit-node-websdk`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action for a specific user, in a specific web session.
 
 #### Initializing the Base Module
 
 ##### *PHP*
-The base module needs to be initialized in a file that is publicly accessible via the server, such as `VoiceItApi2WebSDK/php-example/example_endpoint/index.php`. Initialize the VoiceIt2VoiceIt2WebBackend like the following
+The base module needs to be initialized in a file that is publicly accessible via the server, such as `VoiceItApi2WebSDK/php-server-example/example_endpoint/index.php`. Initialize the VoiceIt2VoiceIt2WebBackend like the following
 
 ```php
-// Note: You might have to modify the require path of the voiceit-php-backend folder
+// Note: You might have to modify the require path of the voiceit-php-websdk folder
 // depending on where you placed the folder in your project
-require('voiceit-php-backend/VoiceIt2WebBackend.php');
+require('voiceit-php-websdk/VoiceIt2WebBackend.php');
 // Replace these strings with your own credentials
 $myVoiceIt = new VoiceIt2WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN");
 
@@ -139,7 +139,7 @@ The base module needs to be initialized at a `POST` endpoint publicly accessible
 
 ```javascript
 ...
-const VoiceIt2WebSDK = require('../voiceit-node-backend')
+const VoiceIt2WebSDK = require('../voiceit-node-websdk')
 const multer = require('multer')()
 
 
@@ -177,13 +177,13 @@ After the completion of any verification action, the `voiceItResultCallback` wil
 ```
 
 #### Generating a Secure Token
-Similarly to `VoiceItApi2WebSDK/php-example/login/index.php` or the `/login` route in `VoiceItApi2WebSDK/node-example/server.js` you need to initialize the backend and then generate a secure token for the user in the backend, and send it to front end via an API call once the user is successfully authenticated via a username and password login or any other means. This token is then passed to the frontend to authorize the biometric login. Here is an example of how to generate the token in the backend.
+Similarly to `VoiceItApi2WebSDK/php-server-example/login/index.php` or the `/login` route in `VoiceItApi2WebSDK/node-server-example/server.js` you need to initialize the backend and then generate a secure token for the user in the backend, and send it to front end via an API call once the user is successfully authenticated via a username and password login or any other means. This token is then passed to the frontend to authorize the biometric login. Here is an example of how to generate the token in the backend.
 
 ##### *PHP*
 ```php
-// Note: You might have to modify the require path of the voiceit-php-backend folder
+// Note: You might have to modify the require path of the voiceit-php-websdk folder
 // depending on where you placed the folder in your project
-require('voiceit-php-backend/VoiceIt2WebBackend.php');
+require('voiceit-php-websdk/VoiceIt2WebBackend.php');
 
 // Upon a successful login, lookup the associated VoiceIt userId
 $VOICEIT_USERID = "VOICEIT_USER_ID_AFTER_DATABASE_LOOKUP";
@@ -207,7 +207,7 @@ echo json_encode($jsonResponse);
 ##### *NodeJS*
 ```javascript
 ...
-const VoiceIt2WebSDK = require('../voiceit-node-backend');
+const VoiceIt2WebSDK = require('../voiceit-node-websdk');
 
 app.get('/login', function (req, res) {
 	// Upon a successful login, lookup the associated VoiceIt userId
