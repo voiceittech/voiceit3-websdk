@@ -14,6 +14,8 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
 }))
+
+app.use('/favicon.ico', express.static('public/images/favicon.ico'));
 // parse application/json
 app.use(bodyParser.json())
 // parse application/x-www-form-urlencoded
