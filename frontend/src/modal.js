@@ -628,7 +628,9 @@ export default function Modal(mRef) {
       VoiceItModalRef.domRef.readyButton.style.display = 'inline-block';
       vi$.fadeIn(VoiceItModalRef.domRef.readyButton, 300);
       vi$.remove(VoiceItModalRef.domRef.livenessOverlay);
-      VoiceItModalRef.domRef.imageCanvas.style.opacity = 1.0;
+      if(VoiceItModalRef.domRef.imageCanvas) {
+         VoiceItModalRef.domRef.imageCanvas.style.opacity = 1.0;
+      }
     });
   }
 
@@ -812,7 +814,9 @@ export default function Modal(mRef) {
     VoiceItModalRef.domRef.warningOverlay.style.display = 'flex';
     VoiceItModalRef.domRef.readyButton.style.display = 'none';
     VoiceItModalRef.domRef.readyButton.style.opacity = 0;
-    VoiceItModalRef.domRef.imageCanvas.style.opacity = 0.0;
+    if(VoiceItModalRef.domRef.imageCanvas) {
+       VoiceItModalRef.domRef.imageCanvas.style.opacity = 0.0;
+    }
   };
 
   VoiceItModalRef.darkenCircle = function(darken){

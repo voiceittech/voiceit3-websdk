@@ -6,14 +6,14 @@ import Liveness from './liveness';
 import videojs from 'video.js';
 import 'webrtc-adapter';
 import RecordRTC from 'recordrtc';
-import WaveSurfer from 'wavesurfer.js';
-import MicrophonePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.microphone.js';
-WaveSurfer.microphone = MicrophonePlugin;
+import Record from 'videojs-record/dist/videojs.record.js';
 // Register videojs-wavesurfer plugin
 import 'videojs-wavesurfer/dist/css/videojs.wavesurfer.css';
+import WaveSurfer from 'wavesurfer.js';
 import Wavesurfer from 'videojs-wavesurfer/dist/videojs.wavesurfer.js';
-// Register videojs-record plugin with this import
-import Record from 'videojs-record/dist/videojs.record.js';
+import MicrophonePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.microphone.js';
+WaveSurfer.microphone = MicrophonePlugin;
+
 import 'semantic-ui-css/semantic.min.css';
 import './vistyle.css';
 import Colors from './colors';
@@ -35,6 +35,7 @@ export function initialize(backendURLPath){
     voiceIt2ObjRef.enrollCounter = 0;
     if(doLiveness){
       if(voiceIt2ObjRef.faceNeuralNet == undefined){
+        // Load neuralnet
         voiceIt2ObjRef.faceNeuralNet = await posenet.load(0.5);
       }
     }
@@ -376,7 +377,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     }).then(
       function(stream) {
         webcam.srcObject = stream;
-        webcam.onloadedmetadata = function(e) {
+        webcam.onloadedmetadata = function() {
           webcam.play();
           voiceIt2ObjRef.videoStream = stream;
         }
@@ -584,7 +585,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       console.log('error:', error);
     });
 
-    voiceIt2ObjRef.player.on('deviceReady', function(error) {
+    voiceIt2ObjRef.player.on('deviceReady', function() {
 
     });
 
@@ -826,7 +827,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   };
 
   //continue verification if errors, response codes, etc
-  voiceIt2ObjRef.continueVerification = function(response) {
+  voiceIt2ObjRef.continueVerification = function() {
     if(voiceIt2ObjRef.destroyed){ return ;}
     setTimeout(function() {
       voiceIt2ObjRef.modal.hideProgressCircle(350);
@@ -909,7 +910,10 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       voiceIt2ObjRef.player = undefined;
     }
 
-    voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'none';
+    if (voiceIt2ObjRef.modal.domRef.readyButton) {
+       voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'none';
+    }
+
     if (voiceIt2ObjRef.livenessObj !== undefined && voiceIt2ObjRef.livenessObj !== null) {
       voiceIt2ObjRef.livenessObj.destroy();
       setTimeout(function (){
