@@ -36,6 +36,17 @@ export default function api(modal, endPoint){
     );
   }
 
+  apiRef.videoLiveness = (options, callback) => {
+    vi$.post(
+      modal,
+      BASE_END_POINT,
+      'videoLiveness',
+      vi$.getToken(),
+      options,
+      callback
+    );
+  }
+
   apiRef.createFaceEnrollment = (options, callback) => {
     vi$.post(
       modal,

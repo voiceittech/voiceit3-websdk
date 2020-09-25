@@ -464,7 +464,7 @@ export default function Modal(mRef) {
     VoiceItModalRef.livenessCircleInstance.set(value);
   }
 
-  // Create audio prompts for face verification 
+  // Create audio prompts for face verification
   VoiceItModalRef.createAudioPrompts = function() {
     if(VoiceItModalRef.domRef.audioPrompts){
       vi$.remove(VoiceItModalRef.domRef.audioPrompts)
@@ -826,7 +826,7 @@ export default function Modal(mRef) {
       vi$.fadeIn(VoiceItModalRef.domRef.outerOverlay, 300);
     }
   }
-  
+
   VoiceItModalRef.destroy = function() {
     VoiceItModalRef.removeWaitingLoader();
     while(VoiceItModalRef.cleanupFunctions.length != 0){
