@@ -245,6 +245,23 @@ function VoiceIt2(apk, tok, options) {
             });
           });
             break;
+          case "videoLiveness":
+          var phrase = req.body.viPhrase;
+          var contentLang = req.body.viContentLanguage;
+          var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'mp4', function(){
+            mainThis.videoLiveness({
+              userId: extractedUserId,
+              file: tempFilePath,
+              lcoId: req.body.vilcoId,
+              contentLanguage: contentLang,
+              phrase: phrase,
+            }, (result) => {
+              fs.unlinkSync(tempFilePath);
+              resultCallback(formatResponse(reqType, extractedUserId, result));
+              res.json(result);
+            });
+          });
+            break;
           case "videoVerification":
               var phrase = req.body.viPhrase;
               var contentLang = req.body.viContentLanguage;
@@ -493,9 +510,9 @@ function VoiceIt2(apk, tok, options) {
       }
       const form = new FormData();
       form.append('userId', options.userId);
-      form.append('contentLanguage', options.contentLanguage ? options.contentLanguage : 'en-US');
+      //form.append('contentLanguage', options.contentLanguage ? options.contentLanguage : 'en-US');
       form.append('lcoId', options.lcoId);
-      form.append('phrase', options.phrase ? options.phrase : '');
+      //form.append('phrase', options.phrase ? options.phrase : '');
       form.append('file', fs.createReadStream(options.file), {
         filename: 'video.mp4',
       });
@@ -507,6 +524,27 @@ function VoiceIt2(apk, tok, options) {
         callback(error.response.data);
       });
     }
+
+    this.videoLiveness = (options, callback) => {
+        if (!checkFileExists(options.file, callback)) {
+          return;
+        }
+        const form = new FormData();
+        form.append('userId', options.userId);
+        form.append('contentLanguage', options.contentLanguage ? options.contentLanguage : 'en-US');
+        form.append('lcoId', options.lcoId);
+        form.append('phrase', options.phrase ? options.phrase : '');
+        form.append('file', fs.createReadStream(options.file), {
+          filename: 'video.mp4',
+        });
+        this.axiosInstance.post(`${LIVENESS_URL}/video`, form, {
+          headers: form.getHeaders(),
+        }).then((httpResponse) => {
+          callback(httpResponse.data);
+        }).catch((error) => {
+          callback(error.response.data);
+        });
+      }
 
 
   this.videoVerification = (options, callback) => {
