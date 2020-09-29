@@ -2,7 +2,6 @@ import Modal from './modal';
 import vi$ from './utilities';
 import api from './api';
 import Prompts from './prompts';
-import Liveness from './liveness';
 import 'video.js/dist/video-js.min.css';
 import 'videojs-wavesurfer/dist/css/videojs.wavesurfer.css';
 import 'videojs-record/dist/css/videojs.record.css';
@@ -49,7 +48,6 @@ export function initialize(backendEndpointPath,livenessEndpointPath){
     voiceIt2ObjRef.attempts = 0;
     voiceIt2ObjRef.setupWaveForm = false;
     voiceIt2ObjRef.destroyed = false;
-    voiceIt2ObjRef.livenessObj;
     voiceIt2ObjRef.passedLiveness = false;
     voiceIt2ObjRef.phrase;
     voiceIt2ObjRef.contentLanguage;
@@ -240,6 +238,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
                 //after 5 seconds, start showing the verification prompt
                 setTimeout(()=>{
                     voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+                    voiceIt2ObjRef.modal.createVideoCircle();
                 },8000);
               }
               setTimeout(()=>{
@@ -316,6 +315,9 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   };
 
   voiceIt2ObjRef.setup = function() {
+    if (voiceIt2ObjRef.liveness && voiceIt2ObjRef.biometricType !== "voice"){
+      document.getElementsByClassName("small ui inverted basic button viReadyButton")[0].childNodes[0].nodeValue = "Click to begin liveness";
+    }
     voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'none';
     voiceIt2ObjRef.modal.domRef.readyButton.style.opacity = 0;
     voiceIt2ObjRef.modal.domRef.outerOverlay.style.opacity = 0;
@@ -389,10 +391,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       throw new Error(
         'Browser API navigator.mediaDevices.getUserMedia not available');
-    }
-
-    if(doLiveness){
-      voiceIt2ObjRef.livenessObj = new Liveness(voiceIt2ObjRef);
     }
 
     navigator.mediaDevices.getUserMedia({
@@ -626,6 +624,10 @@ voiceIt2ObjRef.initModalClickListeners = function(){
             voiceIt2ObjRef.modal.removeWaitingLoader();
           },1000);
           setTimeout(()=>{
+            setTimeout(()=>{
+                voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+                voiceIt2ObjRef.modal.createVideoCircle();
+            },8000);
             voiceIt2ObjRef.player.record().start();
           },2000);
         });
@@ -676,10 +678,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   };
 
   voiceIt2ObjRef.onFinishLivenessFaceVerification = function(){
-      // voiceIt2ObjRef.livenessObj.finished = true;
       voiceIt2ObjRef.modal.showWaitingLoader(true,true);
       voiceIt2ObjRef.apiRef.faceVerificationWithLiveness({
-        //viPhotoData : voiceIt2ObjRef.livenessObj.successPic
       }, function(response){
       voiceIt2ObjRef.modal.removeWaitingLoader();
       if (response.responseCode === "SUCC") {
@@ -741,6 +741,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           voiceIt2ObjRef.type.action !== "Enrollment" &&
           voiceIt2ObjRef.type.biometricType == "video"
       ) {
+        console.log("destroying video circle");
+        voiceIt2ObjRef.modal.destroyVideoCircle();
         vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
         voiceIt2ObjRef.modal.showWaitingLoader(true,true);
         voiceIt2ObjRef.apiRef.videoLiveness({
@@ -1042,13 +1044,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
     if (voiceIt2ObjRef.modal.domRef.readyButton) {
        voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'none';
-    }
-
-    if (voiceIt2ObjRef.livenessObj !== undefined && voiceIt2ObjRef.livenessObj !== null) {
-      voiceIt2ObjRef.livenessObj.destroy();
-      setTimeout(function (){
-        voiceIt2ObjRef.livenessObj = null;
-      },100);
     }
 
     if (voiceIt2ObjRef.type.biometricType !== "voice") {

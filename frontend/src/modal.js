@@ -701,11 +701,13 @@ export default function Modal(mRef) {
         //add the checking text Here
         var overflowParent = document.getElementsByClassName("image")[0].children[1];
         overflowParent.style.overflow = "";
-        var checkingText = document.createElement("div");
-        checkingText.textContent = "Checking";
-        checkingText.id = "checkingText";
-        checkingText.setAttribute("style","top: 101%;margin: auto;color: white;position: absolute;font-size: 1rem;");
-        overflowParent.children[3].appendChild(checkingText);
+        if (livenessText){
+          var checkingText = document.createElement("div");
+          checkingText.textContent = "Checking";
+          checkingText.id = "checkingText";
+          checkingText.setAttribute("style","top: 101%;margin: auto;color: white;position: absolute;font-size: 1rem;");
+          overflowParent.children[3].appendChild(checkingText);  
+        }
   }
 
   VoiceItModalRef.removeWaitingLoader = function(){
@@ -848,6 +850,14 @@ export default function Modal(mRef) {
       VoiceItModalRef.videoCircleStream = undefined;
     }
     vi$.remove(VoiceItModalRef.domRef.modalDimBackground);
+  }
+
+  VoiceItModalRef.destroyVideoCircle = function(){
+    vi$.remove(VoiceItModalRef.domRef.videoCircle);
+    if (VoiceItModalRef.videoCircleStream !== undefined) {
+      VoiceItModalRef.videoCircleStream.getTracks()[0].stop();
+      VoiceItModalRef.videoCircleStream = undefined;
+    }
   }
 
   VoiceItModalRef.showTokenErrorAndDestroy = function(mainRef){
