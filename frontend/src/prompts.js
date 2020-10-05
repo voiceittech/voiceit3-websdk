@@ -72,18 +72,11 @@ export default function Prompts() {
     UNFD: "User not found. Pease make sure you have the right user ID",
     MAX_ATTEMPTS: "Exceeded maximum attempts allowed. Please try again later",
     /* Liveness Prompts */
-    SMILE: "Please smile widely",
-    YAWN: "Please yawn widely",
-    FACE_DOWN: "Please turn your face slightly down and back",
-    BLINK: "Please blink three times",
-    FACE_LEFT: "Please turn your face slightly to the left and back",
-    FACE_RIGHT: "Please turn your face slightly to the right and back ",
     LIVENESS_READY_PROMPT: "Please move closer to the camera. You\'ll be performing a predetermined number of liveness challenges. You\'ll have 2 seconds to perform each test, selected randomly from the following 3 :",
     LIVENESS_SUCCESS: "You've been successfully verified",
     LIVENESS_TIMEDOUT: "Sorry, liveness timed out. Please perform the liveness tests quickly",
     LIVENESS_FAILED: "Sorry, verification failed",
     LIVENESS_TRY_AGAIN: "Test failed, please try again",
-    LIVENESS_TRY_AGAIN_AND_TURN_BACK: "Test failed. Please turn your face to the correct direction",
     REENROLLMENT_WARNING: "Reenrollment will delete all previous voice, face, and video enrollments. \n Proceed?"
   };
 
