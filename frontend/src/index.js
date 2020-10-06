@@ -315,6 +315,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   voiceIt2ObjRef.handleFaceSetup = function() {
     //get the LCO
     if (voiceIt2ObjRef.liveness) {
+      //show waiting loader for at least 1 second
       voiceIt2ObjRef.apiRef.getLCO({
         viContentLanguage: voiceIt2ObjRef.contentLanguage
       },function(response){
@@ -322,6 +323,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           //error handling
           voiceIt2ObjRef.modal.displayMessage("An error occured " + response.message);
         } else {
+          // no timeout, start circle, and start recording as soon as possible
           const doLiveness = voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== "Enrollment";
           voiceIt2ObjRef.livenessChallengeTime = response.livenessChallengeTime;
           voiceIt2ObjRef.initFaceRecord(doLiveness);
@@ -332,10 +334,10 @@ voiceIt2ObjRef.initModalClickListeners = function(){
             function() {
                 vi$.remove(voiceIt2ObjRef.modal.domRef.readyButton);
                 voiceIt2ObjRef.startView();
-                  setTimeout(()=>{
-                      voiceIt2ObjRef.player.record().start();
-                  },2000);
-                  voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.LCO);
+                voiceIt2ObjRef.player.record().start();
+                voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.LCO);
+                voiceIt2ObjRef.modal.createProgressCircle(voiceIt2ObjRef.livenessChallengeTime*1000 + 350);
+                voiceIt2ObjRef.modal.revealProgressCircle(350);
           });
         }
       });
@@ -374,13 +376,18 @@ voiceIt2ObjRef.initModalClickListeners = function(){
                   //after 5 seconds, start showing the verification prompt
                   console.log(voiceIt2ObjRef.livenessChallengeTime);
                   setTimeout(()=>{
-                      voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
-                      voiceIt2ObjRef.modal.createVideoCircle();
-                  },voiceIt2ObjRef.livenessChallengeTime*1000);
+                    voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+                    voiceIt2ObjRef.modal.createVideoCircle();
+                  },voiceIt2ObjRef.livenessChallengeTime*1000+500);
                 voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.LCO);
+                voiceIt2ObjRef.modal.createProgressCircle(voiceIt2ObjRef.livenessChallengeTime*1000 + 350);
+                voiceIt2ObjRef.modal.revealProgressCircle(350);
+                setTimeout(()=>{
+                    voiceIt2ObjRef.modal.hideProgressCircle(350);
+                },voiceIt2ObjRef.livenessChallengeTime*1000+500);
                 setTimeout(()=>{
                     voiceIt2ObjRef.player.record().start();
-                },2000);
+                },500);
           }
         );
       }
@@ -511,8 +518,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     } else {
       voiceIt2ObjRef.player = videojs('videoRecord', {
         controls: false,
-        width: 640,
-        height: 480,
+        width: 1080,
+        height: 720,
         fluid: false,
         plugins: {
           record: {
@@ -595,14 +602,17 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       } else {
         voiceIt2ObjRef.modal.removeWaitingLoader();
         voiceIt2ObjRef.modal.displayMessage("Please try again");
+        setTimeout(()=>{
         voiceIt2ObjRef.modal.showWaitingLoader(true, true);
         setTimeout(()=>{
           voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.LCO);
           voiceIt2ObjRef.modal.removeWaitingLoader();
-        },1000);
-        setTimeout(()=>{
           voiceIt2ObjRef.player.record().start();
-        },3000);
+          voiceIt2ObjRef.modal.hideProgressCircle(350);
+          voiceIt2ObjRef.modal.createProgressCircle(voiceIt2ObjRef.livenessChallengeTime*1000 + 700);
+          voiceIt2ObjRef.modal.revealProgressCircle(350);
+        },1500);
+      },1500);
       }
     }
   }
@@ -621,18 +631,21 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       } else {
         voiceIt2ObjRef.modal.removeWaitingLoader();
         voiceIt2ObjRef.modal.displayMessage("Please try again");
+        setTimeout(()=>{
         voiceIt2ObjRef.modal.showWaitingLoader(true, true);
         setTimeout(()=>{
           voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.LCO);
           voiceIt2ObjRef.modal.removeWaitingLoader();
-        },1000);
-        setTimeout(()=>{
+          voiceIt2ObjRef.player.record().start();
+          voiceIt2ObjRef.modal.createProgressCircle(voiceIt2ObjRef.livenessChallengeTime*1000 + 350);
+          voiceIt2ObjRef.modal.revealProgressCircle(350);
           setTimeout(()=>{
               voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
               voiceIt2ObjRef.modal.createVideoCircle();
-          },2000 + voiceIt2ObjRef.livenessChallengeTime*1000);
-          voiceIt2ObjRef.player.record().start();
-        },2000);
+              voiceIt2ObjRef.modal.hideProgressCircle(350);
+          },voiceIt2ObjRef.livenessChallengeTime*1000);
+        },1500);
+      },1500);
     }
   }
 }
