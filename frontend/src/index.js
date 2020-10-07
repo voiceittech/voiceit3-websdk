@@ -597,8 +597,9 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     } else {
       //continue to verify
       if (!response.retry) {
-        voiceIt2ObjRef.modal.displayMessage("Please try again later: " + response.message);
-        voiceIt2ObjRef.exitOut(false, response);
+        voiceIt2ObjRef.modal.removeWaitingLoader();
+        setTimeout(()=>{voiceIt2ObjRef.exitOut(false, response);},1500);
+        voiceIt2ObjRef.modal.displayMessage("Please try again later");
       } else {
         voiceIt2ObjRef.modal.removeWaitingLoader();
         voiceIt2ObjRef.modal.displayMessage("Please try again");
@@ -626,8 +627,9 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       voiceIt2ObjRef.attempts++;
       //continue to verify
       if (!response.retry) {
-        voiceIt2ObjRef.modal.displayMessage("Please try again later: " + response.message);
-        voiceIt2ObjRef.exitOut(false, response);
+        voiceIt2ObjRef.modal.removeWaitingLoader();
+        setTimeout(()=>{voiceIt2ObjRef.exitOut(false, response);},1500);
+        voiceIt2ObjRef.modal.displayMessage("Please try again later");
       } else {
         voiceIt2ObjRef.modal.removeWaitingLoader();
         voiceIt2ObjRef.modal.displayMessage("Please try again");
