@@ -26,7 +26,7 @@ const TIME_BEFORE_EXITING_MODAL_AFTER_SUCCESS = 2800;
 const ErrorCodes = ["TVER", "PNTE", "NFEF", "UNAC", "UNFD"];
 const MAX_ATTEMPTS = 3;
 
-export function initialize(backendEndpointPath,livenessEndpointPath){
+export function initialize(backendEndpointPath,livenessEndpointPath, language){
   var voiceIt2ObjRef = this;
   voiceIt2ObjRef.isMobileBrowser = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
@@ -47,7 +47,7 @@ export function initialize(backendEndpointPath,livenessEndpointPath){
     voiceIt2ObjRef.contentLanguage;
     voiceIt2ObjRef.video;
     voiceIt2ObjRef.player;
-    voiceIt2ObjRef.prompts = new Prompts();
+    voiceIt2ObjRef.prompts = new Prompts(language);
     voiceIt2ObjRef.type = {
       biometricType: "",
       action: ""

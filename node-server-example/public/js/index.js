@@ -78,7 +78,7 @@ function takeToConsole(){
 }
 
 function setupFrontEnd() {
-  window.myVoiceIt = VoiceIt2.initialize('example_endpoint/', '');
+  window.myVoiceIt = VoiceIt2.initialize('example_endpoint/', '',"ES");
   document.querySelector('#voiceEnrollmentBtn').addEventListener('click', function() {
 		document.getElementById('voiceEnrollmentBtn').style.display = 'none';
 		document.getElementById('voiceVerificationBtn').style.display = 'none';
