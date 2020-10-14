@@ -1,8 +1,10 @@
 export default function Prompts(language) {
   var promptsRef = this;
   promptsRef.currentPhrase = "";
-  promptsRef.prompts = (language === "ES" ?
-  {CONTINUE: "Continuar",
+  promptsRef.prompts = (language === "es-ES" ?
+  {
+  BEGIN: "Comenzar",
+  CONTINUE: "Continuar",
   CANCEL: "Cancelar",
   DONE: "Listo",
   VOICE_FACE_SETUP: "Configurar verificación de rostro + voz.",
@@ -77,7 +79,9 @@ export default function Prompts(language) {
   REENROLLMENT_WARNING:"Este enrolamiento eliminará todos los enrolamientos anteriores de voz, rostro y video.\n ¿Quieres continuar?"
   }
   :
-  {CONTINUE: "Continue",
+  {
+  BEGIN: "Click to begin",
+  CONTINUE: "Continue",
   CANCEL: "Cancel",
   DONE: "Done",
   VOICE_FACE_SETUP: "Setup Face + Voice Verification",
@@ -147,7 +151,7 @@ export default function Prompts(language) {
   UNFD: "User not found. Pease make sure you have the right user ID",
   MAX_ATTEMPTS: "Exceeded maximum attempts allowed. Please try again later",
   /* Liveness Prompts */
-  LIVENESS_READY_PROMPT: "Please move closer to the camera. You\'ll be performing a predetermined number of liveness challenges. You\'ll have 2 seconds to perform each test, selected randomly from the following 3 :",
+  LIVENESS_READY_PROMPT: "Please move closer to the camera. You\'ll be performing a predetermined number of liveness challenges. A few examples of the challenges could be the following:",
   LIVENESS_SUCCESS: "You've been successfully verified",
   LIVENESS_TIMEDOUT: "Sorry, liveness timed out. Please perform the liveness tests quickly",
   LIVENESS_FAILED: "Sorry, verification failed",

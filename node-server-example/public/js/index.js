@@ -5,6 +5,8 @@ function mobileCheck() {
   return false;
 }
 
+const contentLanguage = "es-ES";
+
 function showLoader(show){
   var loadingContainer = document.querySelector('#messageLabel');
   if(show){
@@ -78,7 +80,7 @@ function takeToConsole(){
 }
 
 function setupFrontEnd() {
-  window.myVoiceIt = VoiceIt2.initialize('example_endpoint/', '',"ES");
+  window.myVoiceIt = VoiceIt2.initialize('example_endpoint/',contentLanguage);
   document.querySelector('#voiceEnrollmentBtn').addEventListener('click', function() {
 		document.getElementById('voiceEnrollmentBtn').style.display = 'none';
 		document.getElementById('voiceVerificationBtn').style.display = 'none';
@@ -88,7 +90,7 @@ function setupFrontEnd() {
 		}, 1000);
 
     myVoiceIt.encapsulatedVoiceEnrollment({
-      contentLanguage:'en-US',
+      contentLanguage: contentLanguage,
       phrase:'never forget tomorrow is a new day',
       completionCallback:function(success){
         if(success){
@@ -109,7 +111,7 @@ function setupFrontEnd() {
 		}, 1000);
 
     myVoiceIt.encapsulatedVoiceVerification({
-      contentLanguage:'en-US',
+      contentLanguage: contentLanguage,
       phrase:'never forget tomorrow is a new day',
       needEnrollmentsCallback:function(){
         // Three voice enrollments needed
@@ -142,7 +144,7 @@ function setupFrontEnd() {
 
     myVoiceIt.encapsulatedFaceVerification({
       doLiveness:isLivenessEnabled(),
-      contentLanguage:'en-US',
+      contentLanguage:contentLanguage,
       needEnrollmentsCallback:function(){
         // Three voice enrollments needed
         showForTime('#enrollFace', 1600);
@@ -184,7 +186,7 @@ function setupFrontEnd() {
 
     myVoiceIt.encapsulatedVideoVerification({
       doLiveness:isLivenessEnabled(),
-      contentLanguage:'en-US',
+      contentLanguage:contentLanguage,
       phrase:'never forget tomorrow is a new day',
       needEnrollmentsCallback:function(){
         // Three video enrollments needed
@@ -207,7 +209,7 @@ function setupFrontEnd() {
 		}, 1000);
 
     myVoiceIt.encapsulatedVideoEnrollment({
-      contentLanguage:'en-US',
+      contentLanguage:contentLanguage,
       phrase:'never forget tomorrow is a new day',
       completionCallback:function(success){
         if(success){

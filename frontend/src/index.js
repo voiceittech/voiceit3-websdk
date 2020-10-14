@@ -26,14 +26,14 @@ const TIME_BEFORE_EXITING_MODAL_AFTER_SUCCESS = 2800;
 const ErrorCodes = ["TVER", "PNTE", "NFEF", "UNAC", "UNFD"];
 const MAX_ATTEMPTS = 3;
 
-export function initialize(backendEndpointPath,livenessEndpointPath, language){
+export function initialize(backendEndpointPath, language){
   var voiceIt2ObjRef = this;
   voiceIt2ObjRef.isMobileBrowser = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
   voiceIt2ObjRef.setupView = async function(doLiveness = false){
     voiceIt2ObjRef.secureToken = vi$.getValue('viSecureToken') || '';
-    voiceIt2ObjRef.modal = new Modal(voiceIt2ObjRef);
-    voiceIt2ObjRef.apiRef = new api(voiceIt2ObjRef.modal, backendEndpointPath, livenessEndpointPath);
+    voiceIt2ObjRef.modal = new Modal(voiceIt2ObjRef, language);
+    voiceIt2ObjRef.apiRef = new api(voiceIt2ObjRef.modal, backendEndpointPath);
     voiceIt2ObjRef.enrollCounter = 0;
     voiceIt2ObjRef.LCO = "";
     // Variables needed for the audio/video streams, and for destroying instances
@@ -289,7 +289,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   voiceIt2ObjRef.setup = function() {
     if (voiceIt2ObjRef.liveness && voiceIt2ObjRef.biometricType !== "voice"){
-      document.getElementsByClassName("small ui inverted basic button viReadyButton")[0].childNodes[0].nodeValue = "Click to begin liveness";
+      document.getElementsByClassName("small ui inverted basic button viReadyButton")[0].childNodes[0].nodeValue = voiceIt2ObjRef.prompts.getPrompt("BEGIN");
     }
     voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'none';
     voiceIt2ObjRef.modal.domRef.readyButton.style.opacity = 0;
@@ -360,6 +360,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       },function(response){
         if (!response.success){
           //error handling
+          //Hide the Begin button
           voiceIt2ObjRef.modal.displayMessage("An error occured " + response.message);
         } else {
         voiceIt2ObjRef.livenessChallengeTime = response.livenessChallengeTime;

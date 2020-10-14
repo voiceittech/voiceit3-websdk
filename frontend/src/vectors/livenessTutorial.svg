@@ -93,7 +93,7 @@
              id="Face-Right"
              transform="translate(1.000000, 73.000000)"
              font-family="Helvetica"
-             font-size="14"
+             font-size="11"
              font-weight="normal">
             <text
                id="text119"><tspan
@@ -129,7 +129,7 @@
              id="Face-Left"
              transform="translate(3.000000, 73.000000)"
              font-family="Helvetica"
-             font-size="14"
+             font-size="11"
              font-weight="normal">
             <text
                id="text135"><tspan
@@ -165,9 +165,9 @@
              id="Smile"
              transform="translate(2,73)"
              font-family="Helvetica"
-             font-size="14"
+             font-size="11"
              font-weight="normal">
-            <text
+            <text 
                id="text149"><tspan
                  x="0"
                  y="14"

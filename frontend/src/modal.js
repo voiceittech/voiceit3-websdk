@@ -3,13 +3,14 @@ import Prompts from './prompts';
 import ProgressBar from 'progressbar.js';
 import LoadingCircle from './vectors/loadingCircle.svg';
 import LivenessTutorial from './vectors/livenessTutorial.svg';
+import LivenessTutorialES from './vectors/livenessTutorialES.svg';
 import PoweredByBadge from './vectors/voiceit-powered-by-one-default.svg'
 import Colors from './colors';
 
-export default function Modal(mRef) {
+export default function Modal(mRef, language) {
   const VoiceItModalRef = this;
   const TIME_TO_READ_LIVENESS_TUTORIAL = 6000;
-  const prompts = new Prompts();
+  const prompts = new Prompts(language);
   VoiceItModalRef.domRef = {};
   VoiceItModalRef.mainRef = mRef;
   // Array to keep track of cleanup functions
@@ -214,7 +215,7 @@ export default function Modal(mRef) {
         'width': '70%'
       },
       'attributes': {
-        'src': LivenessTutorial
+        'src': language == "es-ES" ? LivenessTutorialES : LivenessTutorial
       },
       'elName':'livenessTutorial',
       'nodeName': 'img',
@@ -272,8 +273,8 @@ export default function Modal(mRef) {
       'nodeName': 'button',
       'elName': 'readyButton',
       'parent': 'overlayHolder',
-      'text': 'Click to begin'
-    }, {
+      'text': language === "es-ES" ? "Comenzar" : "Click to begin"
+      }, {
       'styles':{
         'top': '6%',
         'width': '100%',
@@ -643,7 +644,7 @@ export default function Modal(mRef) {
     VoiceItModalRef.domRef.livenessOverlay.style.display = 'inline-flex';
     VoiceItModalRef.domRef.livenessText.style.display = '';
     vi$.delay(TIME_TO_READ_LIVENESS_TUTORIAL, function(){
-      VoiceItModalRef.endLivenessTutorial();
+      //VoiceItModalRef.endLivenessTutorial();
     })
   }
 
