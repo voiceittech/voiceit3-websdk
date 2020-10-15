@@ -332,8 +332,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           //if it's not there
           voiceIt2ObjRef.LCO = "";
           voiceIt2ObjRef.livenessReadyText = response.uiLivenessInstruction;
-          for (var i = 0; i < response.challenges.length; i++){
-            voiceIt2ObjRef.LCO += response.challenges[i] + " ";
+          for (var i = 0; i < response.lcoStrings.length; i++){
+            voiceIt2ObjRef.LCO += response.lcoStrings[i] + " ";
           }
           voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.livenessReadyText);
           voiceIt2ObjRef.livenessReqId = response.lcoId;
@@ -386,8 +386,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.livenessReqId = response.lcoId;
         voiceIt2ObjRef.LCO = "";
         voiceIt2ObjRef.livenessReadyText = response.uiLivenessInstruction;
-        for (var i = 0; i < response.challenges.length; i++){
-          voiceIt2ObjRef.LCO += response.challenges[i] + " ";
+        for (var i = 0; i < response.lcoStrings.length; i++){
+          voiceIt2ObjRef.LCO += response.lcoStrings[i] + " ";
         }
         voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.livenessReadyText);
         voiceIt2ObjRef.livenessReqId = response.lcoId;
