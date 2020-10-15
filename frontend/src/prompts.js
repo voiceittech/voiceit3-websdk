@@ -3,6 +3,7 @@ export default function Prompts(language) {
   promptsRef.currentPhrase = "";
   promptsRef.prompts = (language === "es-ES" ?
   {
+  ERROR: "Ocurrió un error:",
   BEGIN: "Comenzar",
   CONTINUE: "Continuar",
   CANCEL: "Cancelar",
@@ -81,6 +82,7 @@ export default function Prompts(language) {
   }
   :
   {
+  ERROR: "An error Occured:",
   BEGIN: "Click to begin",
   CONTINUE: "Continue",
   CANCEL: "Cancel",

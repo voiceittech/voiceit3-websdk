@@ -232,7 +232,7 @@ export default function Modal(mRef, language) {
       'elName': 'skipButton',
       'nodeName': 'a',
       'parent': 'livenessOverlay',
-      'text': 'Skip'
+      'text': language === "es-ES" ? "Omitir" : "Skip"
     }, {
       'styles':{
         'display': 'flex',
