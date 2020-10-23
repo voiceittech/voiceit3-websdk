@@ -159,7 +159,7 @@ export default function Prompts(language) {
   LIVENESS_SUCCESS: "You've been successfully verified",
   LIVENESS_TIMEDOUT: "Sorry, liveness timed out. Please perform the liveness tests quickly",
   LIVENESS_FAILED: "Sorry, verification failed",
-  LIVENESS_TRY_AGAIN: "Test failed, please try again",
+  LIVENESS_TRY_AGAIN: "Liveness test failed, please try again",
   REENROLLMENT_WARNING: "Reenrollment will delete all previous voice, face, and video enrollments. \n Proceed?"
   }
   );
