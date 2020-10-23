@@ -651,6 +651,10 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   };
 
   voiceIt2ObjRef.handleFaceLivenessResponse = function(response){
+    if (voiceIt2ObjRef.livenessAudio){
+      console.log(response.audioPrompt + "   sdfdfafsafgsagfasgsafg ");
+      voiceIt2ObjRef.livenessObj.playAudioPrompt(response.audioPrompt);
+    }
     if (response.success) {
       voiceIt2ObjRef.exitOut(true, response);
       voiceIt2ObjRef.modal.removeWaitingLoader();
@@ -677,7 +681,10 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   }
 
   voiceIt2ObjRef.handleVideoLivenessResponse = function(response){
-    console.log(response);
+    if (voiceIt2ObjRef.livenessAudio){
+      console.log(response.audioPrompt + "   sdfdfafsafgsagfasgsafg ");
+      voiceIt2ObjRef.livenessObj.playAudioPrompt(response.audioPrompt);
+    }
     if (response.success) {
       voiceIt2ObjRef.exitOut(true, response);
       voiceIt2ObjRef.modal.removeWaitingLoader();

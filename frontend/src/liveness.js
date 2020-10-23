@@ -5,6 +5,31 @@ export default function Liveness(VoiceItObj) {
   const modal = VoiceItObj.modal;
   const LivenessRef = this;
   LivenessRef.oldCircles = [];
+
+  LivenessRef.playAudioPrompt = function(promptPath){
+    switch (promptPath) {
+      case "LIVENESS_SUCCESS.wav":
+      if (VoiceItObj.livenessAudio) {
+          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/" + promptPath;
+          document.getElementById("audioPrompt").load();
+      }
+        break;
+      case "LIVENESS_TRY_AGAIN.wav":
+      if (VoiceItObj.livenessAudio) {
+          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/" + promptPath;
+          document.getElementById("audioPrompt").load();
+      }
+        break;
+      case "LIVENESS_FAILED.wav":
+      if (VoiceItObj.livenessAudio) {
+          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/" + promptPath;
+          document.getElementById("audioPrompt").load();
+      }
+        break;
+      default:
+    }
+  }
+
   LivenessRef.drawCircle = function(testType) {
     modal.createAudioPrompts();
     switch (testType) {

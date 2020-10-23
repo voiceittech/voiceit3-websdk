@@ -494,7 +494,6 @@ export default function Modal(mRef, language) {
 
   }
 
-
   // Create the Audio waveform
   VoiceItModalRef.createWaveform = function() {
     if(VoiceItModalRef.domRef.waveform){
