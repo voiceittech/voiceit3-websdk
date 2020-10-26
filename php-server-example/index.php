@@ -45,9 +45,15 @@
           </div>
           <div id="messageLabel" class="ui fluid large button viBtnStyle"></div>
           <div id="biometricOptions" class="column">
-            <div id='livenessContainer' class="ui toggle checkbox">
-              <input id="livenessToggle" type="checkbox" name="public">
-              <label for='public'>Liveness Enabled</label>
+            <div id='livenessTogglesContainer'>
+              <div id='livenessContainer' class="ui toggle checkbox">
+                <input id="livenessToggle" type="checkbox" name="public">
+                <label for='public'>Liveness Enabled</label>
+              </div>
+              <div id='livenessAudioContainer' class="ui toggle checkbox">
+                <input id="livenessAudioToggle" type="checkbox" name="audioPublic" checked>
+                <label for='public'>Liveness Audio Enabled</label>
+              </div>
             </div>
             <div class="biometricOptionsContainer">
               <div class="ui compact menu">

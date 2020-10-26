@@ -322,7 +322,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     if (doLiveness) {
       voiceIt2ObjRef.livenessObj = new Liveness(voiceIt2ObjRef);
       //show waiting loader for at least 1 second
-      console.log(voiceIt2ObjRef.contentLanguage);
       voiceIt2ObjRef.apiRef.getLCO({
         viContentLanguage: voiceIt2ObjRef.contentLanguage
       },function(response){
@@ -652,7 +651,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   voiceIt2ObjRef.handleFaceLivenessResponse = function(response){
     if (voiceIt2ObjRef.livenessAudio){
-      console.log(response.audioPrompt + "   sdfdfafsafgsagfasgsafg ");
+      console.log(response);
       voiceIt2ObjRef.livenessObj.playAudioPrompt(response.audioPrompt);
     }
     if (response.success) {
@@ -682,7 +681,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   voiceIt2ObjRef.handleVideoLivenessResponse = function(response){
     if (voiceIt2ObjRef.livenessAudio){
-      console.log(response.audioPrompt + "   sdfdfafsafgsagfasgsafg ");
       voiceIt2ObjRef.livenessObj.playAudioPrompt(response.audioPrompt);
     }
     if (response.success) {
