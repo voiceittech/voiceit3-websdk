@@ -1,3 +1,5 @@
+const contentLanguage = "en-US";
+
 function mobileCheck() {
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     return true;
@@ -78,10 +80,10 @@ function takeToConsole(){
 }
 
 function setupFrontEnd() {
-  window.myVoiceIt = VoiceIt2.initialize('example_endpoint/');
+  window.myVoiceIt = VoiceIt2.initialize('example_endpoint/',contentLanguage);
   document.querySelector('#voiceEnrollmentBtn').addEventListener('click', function() {
     myVoiceIt.encapsulatedVoiceEnrollment({
-      contentLanguage:'en-US',
+      contentLanguage:contentLanguage,
       phrase:'never forget tomorrow is a new day',
       completionCallback:function(success){
         if(success){
@@ -95,7 +97,7 @@ function setupFrontEnd() {
 
   document.querySelector('#voiceVerificationBtn').addEventListener('click', function() {
     myVoiceIt.encapsulatedVoiceVerification({
-      contentLanguage:'en-US',
+      contentLanguage:contentLanguage,
       phrase:'never forget tomorrow is a new day',
       needEnrollmentsCallback:function(){
         // Three voice enrollments needed
@@ -122,6 +124,7 @@ function setupFrontEnd() {
     myVoiceIt.encapsulatedFaceVerification({
       doLiveness:isLivenessEnabled(),
       doLivenessAudio: isLivenessAudioEnabled(),
+      contentLanguage:contentLanguage,
       needEnrollmentsCallback:function(){
         // Three voice enrollments needed
         showForTime('#enrollFace', 1600);
@@ -149,7 +152,8 @@ function setupFrontEnd() {
   document.querySelector('#videoVerificationBtn').addEventListener('click', function() {
     myVoiceIt.encapsulatedVideoVerification({
       doLiveness:isLivenessEnabled(),
-      contentLanguage:'en-US',
+      doLivenessAudio: isLivenessAudioEnabled(),
+      contentLanguage:contentLanguage,
       phrase:'never forget tomorrow is a new day',
       needEnrollmentsCallback:function(){
         // Three video enrollments needed
@@ -165,7 +169,7 @@ function setupFrontEnd() {
 
   document.querySelector('#videoEnrollmentBtn').addEventListener('click', function() {
     myVoiceIt.encapsulatedVideoEnrollment({
-      contentLanguage:'en-US',
+      contentLanguage:contentLanguage,
       phrase:'never forget tomorrow is a new day',
       completionCallback:function(success){
         if(success){
