@@ -18,7 +18,7 @@ const vi$ = {
       http.onreadystatechange = function() {
         if (http.readyState === 4) {
           // Uncomment below for debugging.
-          console.log(`${requestType} response: ${http.responseText}`);
+          console.log(http.responseText);
           const parsedJson = JSON.parse(http.responseText.trim());
           if(parsedJson.responseCode === 'INVT'){
             modal.showTokenErrorAndDestroy();

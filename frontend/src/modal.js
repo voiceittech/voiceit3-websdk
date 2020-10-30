@@ -485,7 +485,6 @@ export default function Modal(mRef, language) {
     };
     let sourceElem = vi$.create("SOURCE");
     sourceElem.setAttribute('id', 'audioSrc');
-    console.log("audio prompt has been called");
     for (var prop in audioPromptsProps.attributes) {
       VoiceItModalRef.domRef.audioPrompts.setAttribute(prop, audioPromptsProps.attributes[prop]);
     }

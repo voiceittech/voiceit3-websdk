@@ -203,6 +203,25 @@ class VoiceIt2WebBackend {
       returnJson($resp);
     }
 
+    if($reqType == "faceLiveness"){
+      $lcoId = "".$_POST["vilcoId"];
+      $videoFileName = saveFileData($FILES_REF["viVideoData"]['tmp_name'], "mp4");
+      $resp = $this->faceLiveness($EXTRACTED_USER_ID, $lcoId, $videoFileName);
+      unlink($videoFileName) or die("Couldn't delete ".$videoFileName);
+      $resultCallback(formatResponse($reqType, $EXTRACTED_USER_ID, $resp));
+      returnJson($resp);
+    }
+
+    if($reqType == "videoLiveness"){
+      $lcoId = "".$_POST["vilcoId"];
+      $phrase = "".$_POST["viPhrase"];
+      $videoFileName = saveFileData($FILES_REF["viVideoData"]['tmp_name'], "mp4");
+      $resp = $this->videoLiveness($EXTRACTED_USER_ID, $lcoId, $videoFileName, $phrase);
+      unlink($videoFileName) or die("Couldn't delete ".$videoFileName);
+      $resultCallback(formatResponse($reqType, $EXTRACTED_USER_ID, $resp));
+      returnJson($resp);
+    }
+
     if($reqType == "faceVerificationWithLiveness"){
       $photoFileName = saveFileData($FILES_REF["viPhotoData"]['tmp_name'], "png");
       $resp = $this->faceVerificationWithPhoto($EXTRACTED_USER_ID, $photoFileName);
@@ -258,7 +277,7 @@ class VoiceIt2WebBackend {
 
   public function getLCO($userId, $contentLanguage) {
     $crl = curl_init();
-    curl_setopt($crl, CURLOPT_URL, $this->LIVENESS_URL.'/'.$userId.'/'.$contentLanguage.$this->notification_url);
+    curl_setopt($crl, CURLOPT_URL, $this->LIVENESS_URL.'/verification'.'/'.$userId.'/'.$contentLanguage.$this->notification_url);
     curl_setopt($crl, CURLOPT_USERPWD, "$this->api_key:$this->api_token");
     curl_setopt($crl, CURLOPT_HTTPHEADER, array('platformId: '.$this->platformId, 'platformVersion: '.VoiceIt2WebBackend::VERSION));
     curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
@@ -418,14 +437,14 @@ class VoiceIt2WebBackend {
   public function faceLiveness($userId, $lcoId, $file) {
     $this->checkFileExists($file);
     $crl = curl_init();
-    curl_setopt($crl, CURLOPT_URL, $this->LIVENESS_URL.'/face'.$this->notification_url);
+    curl_setopt($crl, CURLOPT_URL, $this->LIVENESS_URL.'/verification/face'.$this->notification_url);
     curl_setopt($crl, CURLOPT_USERPWD, "$this->api_key:$this->api_token");
     curl_setopt($crl, CURLOPT_HTTPHEADER, array('platformId: '.$this->platformId, 'platformVersion: '.VoiceIt2WebBackend::VERSION));
     curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($crl, CURLOPT_CUSTOMREQUEST, 'POST');
     $fields = [
       'userId' => $userId,
-      'lcoId' => $doBlinkDetection ? 1 : 0,
+      'lcoId' => $lcoId,
       'file' => curl_file_create($file)
     ];
     curl_setopt($crl, CURLOPT_POSTFIELDS, $fields);
@@ -467,17 +486,16 @@ class VoiceIt2WebBackend {
     return curl_exec($crl);
   }
 
-  public function videoLiveness($userId, $contentLanguage, $phrase, $file, $lcoId) {
-    $this->checkFileExists($filePath);
+  public function videoLiveness($userId, $lcoId, $file, $phrase) {
+    $this->checkFileExists($file);
     $crl = curl_init();
-    curl_setopt($crl, CURLOPT_URL, $this->LIVENESS_URL.'/video'.$this->notification_url);
+    curl_setopt($crl, CURLOPT_URL, $this->LIVENESS_URL.'/verification/video'.$this->notification_url);
     curl_setopt($crl, CURLOPT_USERPWD, "$this->api_key:$this->api_token");
     curl_setopt($crl, CURLOPT_HTTPHEADER, array('platformId: '.$this->platformId, 'platformVersion: '.VoiceIt2WebBackend::VERSION));
     curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($crl, CURLOPT_CUSTOMREQUEST, 'POST');
     $fields = [
       'userId' => $userId,
-      'contentLanguage' => $contentLanguage,
       'phrase' => $phrase,
       'lcoId' => $lcoId,
       'file' => curl_file_create($file)

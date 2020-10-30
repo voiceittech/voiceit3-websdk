@@ -651,7 +651,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   voiceIt2ObjRef.handleFaceLivenessResponse = function(response){
     if (voiceIt2ObjRef.livenessAudio){
-      console.log(response);
       voiceIt2ObjRef.livenessObj.playAudioPrompt(response.audioPrompt);
     }
     if (response.success) {
@@ -823,7 +822,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.apiRef.videoLiveness({
           viVideoData : voiceIt2ObjRef.player.recordedData,
           vilcoId: voiceIt2ObjRef.livenessReqId,
-          viContentLanguage: voiceIt2ObjRef.contentLanguage,
           viPhrase: voiceIt2ObjRef.phrase
         }, function(response){
         voiceIt2ObjRef.handleVideoLivenessResponse(response);
