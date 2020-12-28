@@ -80,6 +80,16 @@ Before starting the Example, please navigate to `VoiceItApi2WebSDK/php-server-ex
 ##### *NodeJS*
 Before starting the Example, please navigate to `VoiceItApi2WebSDK/node-server-example/config.js`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
 
+#### Making changes to the frontend 
+The frontend folder holds the frontend source files, all of which are compiled using webpack into the dist folder. The script compile.sh does the compilation and transfers the voiceit.min.js file to the Node and PHP SDKs. TO make chagnes to the fronend sources, navigate to the frontend/src folder and make the respective changes. cd .. back to the fronend folder and execute the compile.sh script to transfer the changes you made to the php and node examples
+``` 
+./compile.sh
+```
+
+#### Setting the Content Language
+To set the content language of the SDK (the language of the UI/interface i.e), navigate to node-server-example/public/js/index.js file and set the language at line 1. For the php example, do the same change to the php-server-example/js/index.js file 
+
+
 #### Running the Example
 
 ##### *PHP*
@@ -124,7 +134,6 @@ $voiceItResultCallback = function($jsonObj){
   $callType = $jsonObj["callType"];
   $userId = $jsonObj["userId"];
   if($jsonObj["jsonResponse"]["responseCode"] == "SUCC"){
-  	// User was successfully verified now log them in via the
 		// backend, this could mean starting a new session with
 		// their details, after you lookup the user with the
 		// provided VoiceIt userId
@@ -244,11 +253,11 @@ Then include the minified JavaScript file `voiceit2.min.js` via a script tag on 
 <script src='/voiceit2.min.js'></script>
 ```
 
-Now we can initialize the frontend object, it takes the relative public path to the backend end point where the backend is initialized, such as the `example_endpoint` demonstrated in PHP and NodeJS above, and the path to web assembly model of the Face Detector, used for liveness. This should have been copied to the server's public directly in the step [Initializing the frontend](#initializing-the-frontend) above.
+Now we can initialize the frontend object, it takes the relative public path to the backend end point where the backend is initialized, such as the `example_endpoint` demonstrated in PHP and NodeJS above, and the content-Language parameter. This should have been copied to the server's public directly in the step [Initializing the frontend](#initializing-the-frontend) above.
 
 ```javascript
 // The
-var myVoiceIt = new VoiceIt2.initialize('/example_endpoint/');
+var myVoiceIt = new VoiceIt2.initialize('/example_endpoint/', 'content_language');
 ```
 
 #### Setting Theme Color
