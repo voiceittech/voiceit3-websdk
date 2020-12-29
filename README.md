@@ -100,6 +100,31 @@ First navigate to `VoiceItApi2WebSDK/voiceit-node-websdk` via the command line a
 
 Now visit your server at its designated port in an appropriate browser, and you should see a demo login page. In the email input, type: `demo@voiceit.io`. In the password input, type: `demo123`. After submitting the form, further verification/enrollment methods will appear that you can test out. Please first do an enrollment, such as a face enrollment, then after a successful enrollment you can test the face verification method (Note: you will need to give your browser both microphone and camera permissions to test the demo).
 
+## Liveness
+Liveness can be enabled with the liveness boolen passed to the encapsulated verifcation methods (details below). The process of doing a liveness call is two steps: 
+- Get Liveness Challenge Order (LCO) by making a GET request to the liveness backend. For instance: https://liveness.voiceit.io/verification/user_id_here/content_language_here
+The LCO ID can be obtained from the response as ```response.lcoId```
+- Make a post request to the liveness backend endpoint as: https://liveness.voiceit.io/verification/face or https://liveness.voiceit.io/verification/video.
+Add form data for 'userId', 'lcoId', 'file', for instance: 
+
+```
+const form = new FormData();
+      form.append('userId', options.userId);
+      //form.append('contentLanguage', options.contentLanguage ? options.contentLanguage : 'en-US');
+      form.append('lcoId', options.lcoId);
+      //form.append('phrase', options.phrase ? options.phrase : '');
+      form.append('file', fs.createReadStream(options.file), {
+        filename: 'video.webm',
+      });
+      this.axiosInstance.post(`${LIVENESS_SERVER_BASE_URL}/verification/face`, form, {
+        headers: form.getHeaders(),
+      }).then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+```
+
 ## Incorporating the SDK
 Parts of the Example can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification with/without Liveness), can be implemented independently, providing a total of 27 different use-cases (such as voice-only verification, or face enrollment and video verification, or video-only verification with Liveness, to name a few). For any such use-case, a backend and frontend implementation is required:
 
