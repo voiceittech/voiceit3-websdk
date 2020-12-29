@@ -320,7 +320,7 @@ function VoiceIt2(apk, tok, options) {
   };
 
   this.getLCO = (options, callback) => {
-    this.axiosInstance.get(`${LIVENESS_SERVER_BASE_URL}/verification/${options.userId}/${options.contentLanguage}`)
+    this.axiosInstance.get(`${LIVENESS_SERVER_BASE_URL}/v1/verification/${options.userId}/${options.contentLanguage}`)
       .then((httpResponse) => {
         callback(httpResponse.data,httpResponse.status);
       }).catch((error) => {
@@ -519,7 +519,7 @@ function VoiceIt2(apk, tok, options) {
       form.append('file', fs.createReadStream(options.file), {
         filename: 'video.webm',
       });
-      this.axiosInstance.post(`${LIVENESS_SERVER_BASE_URL}/verification/face`, form, {
+      this.axiosInstance.post(`${LIVENESS_SERVER_BASE_URL}/v1/verification/face`, form, {
         headers: form.getHeaders(),
       }).then((httpResponse) => {
         callback(httpResponse.data);
@@ -540,7 +540,7 @@ function VoiceIt2(apk, tok, options) {
         form.append('file', fs.createReadStream(options.file), {
           filename: 'video.webm',
         });
-        this.axiosInstance.post(`${LIVENESS_SERVER_BASE_URL}/verification/video`, form, {
+        this.axiosInstance.post(`${LIVENESS_SERVER_BASE_URL}/v1/verification/video`, form, {
           headers: form.getHeaders(),
         }).then((httpResponse) => {
           callback(httpResponse.data);
