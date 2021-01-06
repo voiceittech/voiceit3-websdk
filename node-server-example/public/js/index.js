@@ -1,4 +1,4 @@
-const contentLanguage = "es-ES";
+const contentLanguage = "en-US";
 
 function mobileCheck() {
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
