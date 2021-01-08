@@ -7,7 +7,7 @@ module.exports = {
   entry: './index.js',
   mode:      'production',
   optimization: {
-    minimize: false
+    minimize: true
   },
   module: {
     rules: [
