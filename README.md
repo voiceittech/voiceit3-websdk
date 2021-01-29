@@ -82,6 +82,7 @@ Before starting the Example, please navigate to `VoiceItApi2WebSDK/node-server-e
 
 #### Making changes to the frontend 
 The frontend folder holds the frontend source files, all of which are compiled using webpack into the dist folder. The script compile.sh does the compilation and transfers the voiceit.min.js file to the Node and PHP SDKs. TO make chagnes to the fronend sources, navigate to the frontend/src folder and make the respective changes. cd .. back to the fronend folder and execute the compile.sh script to transfer the changes you made to the php and node examples
+
 ``` 
 ./compile.sh
 ```
@@ -102,9 +103,9 @@ Now visit your server at its designated port in an appropriate browser, and you 
 
 ## Liveness
 Liveness can be enabled with the liveness boolen passed to the encapsulated verifcation methods (details below). The process of doing a liveness call is two steps: 
-- Get Liveness Challenge Order (LCO) by making a GET request to the liveness backend. For instance: https://liveness.voiceit.io/v1/verification/user_id_here/content_language_here
-The LCO ID can be obtained from the response as ```response.lcoId```
-- Make a post request to the liveness backend endpoint as: https://liveness.voiceit.io/v1/verification/face or https://liveness.voiceit.io/v1/verification/video.
+- Get Liveness Challenge Order (LCO) by making a GET request to the liveness backend. For instance: `https://liveness.voiceit.io/v1/verification/[userId]/[contentLanguage]`
+The LCO ID can be obtained from the response as `response.lcoId`.
+- Make a post request to the liveness backend endpoint as: `https://liveness.voiceit.io/v1/verification/face` or `https://liveness.voiceit.io/v1/verification/video`.
 Add form data for 'userId', 'lcoId', 'file', for instance: 
 
 ```
@@ -298,7 +299,7 @@ myVoiceIt.setThemeColor('#0000FF');
 #### Setting the secure token
 Once the frontend is initialized, you can set the secure token obtained via the backend(note: this secure token is unique for every userId and needs to be regenerated if a different user is attempting to log in) during the [Generating a Secure Token](#generating-a-secure-token) section above. Simply call `setSecureToken` like this:
 
-```JavaScript
+```javascript
 myVoiceIt.setSecureToken('TOKEN_OBTAINED_FROM_BACKEND');
 ```
 
@@ -307,7 +308,7 @@ myVoiceIt.setSecureToken('TOKEN_OBTAINED_FROM_BACKEND');
 To start the UI for any of the use-cases mentioned above, please call the appropriate encapsulated method as shown below
 
 ##### Encapsulated Voice Enrollment
-```JavaScript
+```javascript
 myVoiceIt.encapsulatedVoiceEnrollment({
 	contentLanguage:'en-US',
 	phrase:'never forget tomorrow is a new day',
@@ -322,7 +323,7 @@ myVoiceIt.encapsulatedVoiceEnrollment({
 ```
 
 ##### Encapsulated Face Enrollment
-```JavaScript
+```javascript
 myVoiceIt.encapsulatedFaceEnrollment({
 	completionCallback:function(success, jsonResponse){
 		if(success){
@@ -335,7 +336,7 @@ myVoiceIt.encapsulatedFaceEnrollment({
 ```
 
 ##### Encapsulated Video Enrollment
-```JavaScript
+```javascript
 myVoiceIt.encapsulatedVideoEnrollment({
 	contentLanguage:'en-US',
 	phrase:'never forget tomorrow is a new day',
@@ -350,7 +351,7 @@ myVoiceIt.encapsulatedVideoEnrollment({
 ```
 
 ##### Encapsulated Voice Verification
-```JavaScript
+```javascript
 myVoiceIt.encapsulatedVoiceVerification({
 	contentLanguage:'en-US',
 	phrase:'never forget tomorrow is a new day',
@@ -372,7 +373,7 @@ myVoiceIt.encapsulatedVoiceVerification({
 ```
 
 ##### Encapsulated Face Verification
-```JavaScript
+```javascript
 myVoiceIt.encapsulatedFaceVerification({
 	// Set to true to present user with liveness challenges
 	doLiveness:true,
@@ -392,7 +393,7 @@ myVoiceIt.encapsulatedFaceVerification({
 ```
 
 ##### Encapsulated Video Verification
-```JavaScript
+```javascript
 myVoiceIt.encapsulatedVideoVerification({
 	// Set to true to present user with liveness challenges
 	doLiveness:true,
