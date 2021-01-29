@@ -102,9 +102,9 @@ Now visit your server at its designated port in an appropriate browser, and you 
 
 ## Liveness
 Liveness can be enabled with the liveness boolen passed to the encapsulated verifcation methods (details below). The process of doing a liveness call is two steps: 
-- Get Liveness Challenge Order (LCO) by making a GET request to the liveness backend. For instance: https://liveness.voiceit.io/verification/user_id_here/content_language_here
+- Get Liveness Challenge Order (LCO) by making a GET request to the liveness backend. For instance: https://liveness.voiceit.io/v1/verification/user_id_here/content_language_here
 The LCO ID can be obtained from the response as ```response.lcoId```
-- Make a post request to the liveness backend endpoint as: https://liveness.voiceit.io/verification/face or https://liveness.voiceit.io/verification/video.
+- Make a post request to the liveness backend endpoint as: https://liveness.voiceit.io/v1/verification/face or https://liveness.voiceit.io/v1/verification/video.
 Add form data for 'userId', 'lcoId', 'file', for instance: 
 
 ```
