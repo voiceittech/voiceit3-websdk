@@ -7,7 +7,7 @@
   },
   "description": "VoiceIt's SDK to add Face and Voice verification to websites",
   "main": "index.js",
-  "author": "VoiceIt Technologies, LLC (C) 2020",
+  "author": "VoiceIt Technologies, LLC (C) 2021",
   "license": "MIT",
   "dependencies": {
     "css-loader": "^3.6.0",

@@ -156,7 +156,6 @@ export default function Modal(mRef, language) {
       'nodeName': 'video',
       'parent': 'cardOverlay',
       'type' : 'video/webm',
-      "codecs" :"vp8, vorbis"
     }, {
       'styles':{
         'color': '#2ECC71',
