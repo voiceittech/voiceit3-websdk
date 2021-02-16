@@ -384,11 +384,12 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     },timePerChallenge*1000 + 300);
   }
 
-
   voiceIt2ObjRef.changeDisplayTextForLiveness = function() {
-    document.getElementsByClassName("small ui inverted basic button viReadyButton")[0].style.bottom = "-14%";
-    document.getElementsByClassName("image")[0].children[1].style.overflow = "unset";
-    document.getElementsByClassName("content")[0].style.bottom = "3.7rem";
+    setTimeout(()=>{
+      document.getElementsByClassName("small ui inverted basic button viReadyButton")[0].style.bottom = "-14%";
+      document.getElementsByClassName("image")[0].children[1].style.overflow = "unset";
+      document.getElementsByClassName("content")[0].style.bottom = "3.7rem";
+    },700);
   }
 
   // Ready up animations and stuff for video enroll/verific.
