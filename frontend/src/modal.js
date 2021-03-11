@@ -15,6 +15,14 @@ export default function Modal(mRef, language) {
   VoiceItModalRef.mainRef = mRef;
   // Array to keep track of cleanup functions
   VoiceItModalRef.cleanupFunctions = [];
+  //each object in this array has the following keys
+  //nodeName: the type of html node
+  //parent: the parent element to append
+  //styles: the css styles
+  //attributes: the html attributes for the element
+
+  //the order of the objects is from parent => left child in html tree.
+  //it's a BFS traversal of the tree
   VoiceItModalRef.modalElementTree = [
     {
         'nodeName': 'div',
@@ -338,23 +346,33 @@ export default function Modal(mRef, language) {
         var parent = vi$.qs(modalPart.parent);
         if(!parent){ parent = VoiceItModalRef.domRef[modalPart.parent]; }
         parent.appendChild(ele);
-      } else {
+      }
+      //if not svg element
+      else {
         ele = document.createElement(modalPart.nodeName);
+        //find parent by query selector
         var parent = vi$.qs(modalPart.parent);
+        //otherwise, find parent from domRef
+        //the parent will ALWAYS be in the domRef because the modal tree has elements in it sequentially
+        //the parents always preceede the children
         if(parent == undefined){
           parent = VoiceItModalRef.domRef[modalPart.parent];
         }
+        //append element as last child to parent
         parent.appendChild(ele);
         if (modalPart.text) {
           ele.textContent = modalPart.text;
         }
       }
+      //add into domRef. Doesn't happen for query selector compatible elements, such as "body"
       if(modalPart['elName']){
         VoiceItModalRef.domRef[modalPart['elName']] = ele;
       }
+      //add attributes to the element
       for (var property in modalPart.attributes) {
         ele.setAttribute(property, modalPart.attributes[property]);
       }
+      //add styles to element
       for (var property in modalPart.styles) {
         ele.style[property] = modalPart.styles[property];
       }
