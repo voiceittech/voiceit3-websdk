@@ -28,6 +28,7 @@ The repository contains an example [web demonstration](#webexample) of VoiceIt's
 			* [Encapsulated Voice Verification](#encapsulated-voice-verification)
 			* [Encapsulated Face Verification](#encapsulated-voice-verification)
 			* [Encapsulated Video Verification](#encapsulated-video-verification)
+	* [Implementation Diagram](#implementation-diagram)
 	* [Content Languages](#changing-the-content-language)
 		* [PHP](#for-php)
 		* [Nodejs](#for-nodejs)
@@ -415,6 +416,11 @@ myVoiceIt.encapsulatedVideoVerification({
 	}
 });
 ```
+
+### Implementation Diagram 
+
+<img src="./graphics/diagram.png" width="70%" style="width:70%" />
+
 ### Changing the Content Language
 
 #### For PHP
