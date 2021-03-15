@@ -29,7 +29,7 @@ var sess;
 app.get('/login', function (req, res) {
   sess = req.session;
   if(req.query.email === config.DEMO_EMAIL && req.query.password === config.DEMO_PASSWORD){
-    const myVoiceIt = new VoiceIt2WebSDK(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN);
+    const myVoiceIt = new VoiceIt2WebSDK(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN, {sessionExpirationTimeHours:config.SESSION_EXPIRATION_TIME_HOURS});
     const generatedToken = myVoiceIt.generateTokenForUser(config.VOICEIT_TEST_USERID);
     res.json({
       'ResponseCode': 'SUCC',
@@ -71,7 +71,7 @@ app.get('/console', function (req, res) {
 
 app.post('/example_endpoint', multer.any(), function (req, res) {
     sess = req.session;
-    const myVoiceIt = new VoiceIt2WebSDK(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN);
+    const myVoiceIt = new VoiceIt2WebSDK(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN,{sessionExpirationTimeHours:config.SESSION_EXPIRATION_TIME_HOURS});
     myVoiceIt.makeCall(req, res, function(jsonObj){
       const callType = jsonObj.callType.toLowerCase();
       const userId = jsonObj.userId;

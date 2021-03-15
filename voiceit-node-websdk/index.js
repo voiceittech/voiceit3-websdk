@@ -36,10 +36,19 @@ function formatResponse(callType, userId, jsonResponse){
 
 function VoiceIt2(apk, tok, options) {
   // Set default options
-  if (!options) options = {};
-  this.options = {
-    tempFilePath: options.tempFilePath || ""
-  };
+  if (typeof options === 'undefined'){
+    this.options = {
+      tempFilePath: options.tempFilePath || "",
+      sessionExpirationTimeHours: 1
+    };
+  }
+  else {
+     if (!options.sessionExpirationTimeHours){
+      options.sessionExpirationTimeHours = 1;
+    } else if (!options.tempFilePath){
+      options.tempFilePath= "";
+    }
+  }
 
   this.axiosInstance = axios.create({
     auth: {
@@ -78,7 +87,7 @@ function VoiceIt2(apk, tok, options) {
   this.generateTokenForUser = (userId) => {
     const token = jwt.sign({
       data: JSON.stringify({ 'userId' : userId })
-    }, `SECRET%_${tok}`, { expiresIn: '168h' });
+    }, `SECRET%_${tok}`, { expiresIn: options.sessionExpirationTimeHours + 'h' });
     return token;
   }
 
@@ -86,6 +95,7 @@ function VoiceIt2(apk, tok, options) {
     const reqType = req.body.viRequestType;
     const secureToken = req.body.viSecureToken;
     const mainThis = this;
+    console.log(options);
     this.validateToken(secureToken, (isValid, payloadObj) => {
       if(!isValid){
         res.json({
@@ -148,7 +158,7 @@ function VoiceIt2(apk, tok, options) {
           case "createVoiceEnrollment":
               var phrase = req.body.viPhrase;
               var contentLang = req.body.viContentLanguage;
-              var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'wav', function(){
+              var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'wav', function(){
                 mainThis.createVoiceEnrollment({
                   userId: extractedUserId,
                   contentLanguage: contentLang,
@@ -161,7 +171,7 @@ function VoiceIt2(apk, tok, options) {
               });
               break;
           case "createFaceEnrollment":
-              var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'jpg', function(){
+              var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'jpg', function(){
                 mainThis.createFaceEnrollment({
                   userId: extractedUserId,
                   videoFilePath: tempFilePath
@@ -174,7 +184,7 @@ function VoiceIt2(apk, tok, options) {
           case "createVideoEnrollment":
               var phrase = req.body.viPhrase;
               var contentLang = req.body.viContentLanguage;
-              var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, '.mp4', function(){
+              var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, '.mp4', function(){
                 mainThis.createVideoEnrollment({
                   userId: extractedUserId,
                   contentLanguage: contentLang,
@@ -189,7 +199,7 @@ function VoiceIt2(apk, tok, options) {
           case "voiceVerification":
               var phrase = req.body.viPhrase;
               var contentLang = req.body.viContentLanguage;
-              var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer,'.wav', function(){
+              var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer,'.wav', function(){
                 mainThis.voiceVerification({
                   userId: extractedUserId,
                   contentLanguage: contentLang,
@@ -203,7 +213,7 @@ function VoiceIt2(apk, tok, options) {
               });
               break;
           case "faceVerification":
-              var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'mp4', function(){
+              var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'mp4', function(){
                 mainThis.faceVerification({
                   userId: extractedUserId,
                   videoFilePath: tempFilePath
@@ -215,7 +225,7 @@ function VoiceIt2(apk, tok, options) {
               });
               break;
           case "faceVerificationWithLiveness":
-              var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'mp4', function(){
+              var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'mp4', function(){
                 mainThis.faceVerificationWithPhoto({
                     userId: extractedUserId,
                     photoFilePath: tempFilePath
@@ -238,7 +248,7 @@ function VoiceIt2(apk, tok, options) {
               });
               break;
           case "faceLiveness":
-          var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'mp4', function(){
+          var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'mp4', function(){
             mainThis.faceLiveness({
               userId: extractedUserId,
               file: tempFilePath,
@@ -252,7 +262,7 @@ function VoiceIt2(apk, tok, options) {
             break;
           case "videoLiveness":
           var phrase = req.body.viPhrase;
-          var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'mp4', function(){
+          var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'mp4', function(){
             mainThis.videoLiveness({
               userId: extractedUserId,
               file: tempFilePath,
@@ -268,7 +278,7 @@ function VoiceIt2(apk, tok, options) {
           case "videoVerification":
               var phrase = req.body.viPhrase;
               var contentLang = req.body.viContentLanguage;
-              var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'mp4', function(){
+              var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'mp4', function(){
                 mainThis.videoVerification({
                   userId: extractedUserId,
                   contentLanguage: contentLang,
@@ -284,8 +294,8 @@ function VoiceIt2(apk, tok, options) {
           case "videoVerificationWithLiveness":
               var phrase = req.body.viPhrase;
               var contentLang = req.body.viContentLanguage;
-              var wavFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'wav', function(){
-                var jpgFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[1].buffer, 'jpg', function(){
+              var wavFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'wav', function(){
+                var jpgFilePath = writeFileBuffer(options.tempFilePath, req.files[1].buffer, 'jpg', function(){
                   mainThis.videoVerificationWithPhoto({
                     userId: extractedUserId,
                     contentLanguage: contentLang,

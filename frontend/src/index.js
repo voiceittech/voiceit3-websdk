@@ -33,6 +33,8 @@ export function initialize(backendEndpointPath, language){
 
   voiceIt2ObjRef.setupView = async function(doLiveness = false){
     voiceIt2ObjRef.secureToken = vi$.getValue('viSecureToken') || '';
+
+    //REFACTOR
     voiceIt2ObjRef.modal = new Modal(voiceIt2ObjRef, language);
     voiceIt2ObjRef.apiRef = new api(voiceIt2ObjRef.modal, backendEndpointPath);
     voiceIt2ObjRef.enrollCounter = 0;

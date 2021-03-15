@@ -11,6 +11,8 @@ export default function Modal(mRef, language) {
   const VoiceItModalRef = this;
   const TIME_TO_READ_LIVENESS_TUTORIAL = 6000;
   const prompts = new Prompts(language);
+  //stores the JS DOM Elements as value to the name, which is "elName"
+  //https://www.w3schools.com/js/js_htmldom_elements.asp
   VoiceItModalRef.domRef = {};
   VoiceItModalRef.mainRef = mRef;
   // Array to keep track of cleanup functions
@@ -20,6 +22,7 @@ export default function Modal(mRef, language) {
   //parent: the parent element to append
   //styles: the css styles
   //attributes: the html attributes for the element
+  //elName: the name
 
   //the order of the objects is from parent => left child in html tree.
   //it's a BFS traversal of the tree
@@ -44,7 +47,8 @@ export default function Modal(mRef, language) {
       'elName': 'voiceItModal',
       'nodeName': 'div',
       'parent': 'modalDimBackground'
-    }, {
+    },
+    {
       'attributes': {
         'class': 'close icon'
       },
@@ -351,6 +355,8 @@ export default function Modal(mRef, language) {
       else {
         ele = document.createElement(modalPart.nodeName);
         //find parent by query selector
+        //added specifically to find elements that might not be in domRef, such as <body> and <video> to accomodate the first case
+        // REFACTOR
         var parent = vi$.qs(modalPart.parent);
         //otherwise, find parent from domRef
         //the parent will ALWAYS be in the domRef because the modal tree has elements in it sequentially
