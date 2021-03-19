@@ -41,8 +41,6 @@ module.exports = {
   plugins: [
         new webpack.ProvidePlugin({
             videojs: 'video.js/dist/video.cjs.js',
-            RecordRTC: 'recordrtc',
-            MediaStreamRecorder: ['recordrtc', 'MediaStreamRecorder']
         })
   ]
 };

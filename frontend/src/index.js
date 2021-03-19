@@ -7,7 +7,6 @@ import 'video.js/dist/video-js.min.css';
 import 'videojs-wavesurfer/dist/css/videojs.wavesurfer.css';
 import 'videojs-record/dist/css/videojs.record.css';
 import videojs from 'video.js';
-import RecordRTC from 'recordrtc';
 import 'webrtc-adapter';
 import WaveSurfer from 'wavesurfer.js';
 import MicrophonePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.microphone.js';

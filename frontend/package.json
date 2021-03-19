@@ -1,6 +1,6 @@
 {
   "name": "voiceit2-web-sdk",
-  "version": "1.1.4",
+  "version": "1.2.16",
   "scripts": {
     "start": "node src/index.js",
     "build": "./node_modules/webpack/bin/webpack.js"
@@ -12,7 +12,6 @@
   "dependencies": {
     "css-loader": "^3.6.0",
     "progressbar.js": "^1.1.0",
-    "recordrtc": "^5.6.1",
     "semantic-ui-css": "^2.4.1",
     "style-loader": "^1.2.1",
     "url-loader": "^4.1.0",
