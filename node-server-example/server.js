@@ -70,9 +70,9 @@ app.post('/example_endpoint', multer.any(), function (req, res) {
     myVoiceIt.makeCall(req, res, function(jsonObj){
       const callType = jsonObj.callType.toLowerCase();
       const userId = jsonObj.userId;
-      req.session.userId = userId;
       if(jsonObj.jsonResponse.responseCode === "SUCC"){
         // Activate Session with userId
+        req.session.userId = userId;
       }
     });
 });
