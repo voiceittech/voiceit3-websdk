@@ -3,8 +3,10 @@ const session = require('express-session')
 const bodyParser = require('body-parser')
 const config = require('./config')
 const VoiceIt2WebSDK = require('../voiceit-node-websdk')
+// const  = require('../voiceit-node-websdk/tokenGenerator')
 const app = express()
 const port = 3000
+let test = "";
 
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
@@ -27,8 +29,12 @@ app.use(express.static('public'))
 
 app.get('/login', function (req, res) {
   if(req.query.email === config.DEMO_EMAIL && req.query.password === config.DEMO_PASSWORD){
-    const myVoiceIt = new VoiceIt2WebSDK(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN, {sessionExpirationTimeHours:config.SESSION_EXPIRATION_TIME_HOURS});
-    const generatedToken = myVoiceIt.generateTokenForUser(config.VOICEIT_TEST_USERID);
+    //use the token generator to generate a token passed to the client
+    const generatedToken = VoiceIt2WebSDK.generateTokenForUser({
+        userId: config.VOICEIT_TEST_USER_ID,
+        token: config.VOICEIT_API_TOKEN,
+        sessionExpirationTimeHours: config.SESSION_EXPIRATION_TIME_HOURS
+      });
     res.json({
       'ResponseCode': 'SUCC',
       'Message' : 'Successfully authenticated user',
@@ -66,7 +72,8 @@ app.get('/console', function (req, res) {
 })
 
 app.post('/example_endpoint', multer.any(), function (req, res) {
-    const myVoiceIt = new VoiceIt2WebSDK(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN, {sessionExpirationTimeHours:config.SESSION_EXPIRATION_TIME_HOURS});
+  //the token comes in from the fron end in the request body
+    const myVoiceIt = new VoiceIt2WebSDK.Voiceit2(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN, {sessionExpirationTimeHours:config.SESSION_EXPIRATION_TIME_HOURS});
     myVoiceIt.makeCall(req, res, function(jsonObj){
       if (
           (jsonObj.callType.includes('Liveness') && jsonObj.jsonResponse.success) || // Liveness Server returns success true/false instead of responseCode

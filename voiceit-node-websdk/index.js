@@ -34,6 +34,13 @@ function formatResponse(callType, userId, jsonResponse){
   return jsonResponseObj;
 }
 
+function generateTokenForUser (options) {
+  const token = jwt.sign({
+    data: JSON.stringify({ 'userId' : options.userId })
+  }, `SECRET%_${options.token}`, { expiresIn: options.sessionExpirationTimeHours + 'h' });
+  return token;
+}
+
 function VoiceIt2(apk, tok, options) {
   // Set default options
   if (typeof options === 'undefined'){
@@ -83,13 +90,6 @@ function VoiceIt2(apk, tok, options) {
     }
   });
   };
-
-  this.generateTokenForUser = (userId) => {
-    const token = jwt.sign({
-      data: JSON.stringify({ 'userId' : userId })
-    }, `SECRET%_${tok}`, { expiresIn: options.sessionExpirationTimeHours + 'h' });
-    return token;
-  }
 
   this.makeCall = (req, res, resultCallback) => {
     const reqType = req.body.viRequestType;
@@ -610,4 +610,7 @@ function VoiceIt2(apk, tok, options) {
 
 }
 
-module.exports = VoiceIt2;
+module.exports = {
+    Voiceit2: VoiceIt2,
+    generateTokenForUser: generateTokenForUser,
+};
