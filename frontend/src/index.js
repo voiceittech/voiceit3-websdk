@@ -390,7 +390,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       document.getElementsByClassName("small ui inverted basic button viReadyButton")[0].style.bottom = "-14%";
       document.getElementsByClassName("image")[0].children[1].style.overflow = "unset";
       document.getElementsByClassName("content")[0].style.bottom = "3.7rem";
-    },700);
+    },300);
   }
 
   // Ready up animations and stuff for video enroll/verific.
@@ -1099,6 +1099,9 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   // Destroy video, canvas, and other objects
   voiceIt2ObjRef.destroy = function(destroyFinished) {
+    if (voiceIt2ObjRef.liveness){
+      voiceIt2ObjRef.livenessObj = undefined; 
+    }
     window.cancelAnimationFrame(voiceIt2ObjRef.animationId);
     voiceIt2ObjRef.isInitiated = false;
     vi$.remove('#viVideo');
