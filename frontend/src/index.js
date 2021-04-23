@@ -212,10 +212,10 @@ function destroyAndHideModal(){
 
 voiceIt2ObjRef.initModalClickListeners = function(){
 
-      // When clicking skip button
-      vi$.clickOn(voiceIt2ObjRef.modal.domRef.skipButton, function() {
-                    voiceIt2ObjRef.modal.endLivenessTutorial();
-      });
+      // // When clicking skip button
+      // vi$.clickOn(voiceIt2ObjRef.modal.domRef.skipButton, function() {
+      //               voiceIt2ObjRef.modal.endLivenessTutorial();
+      // });
 
       vi$.clickOn(voiceIt2ObjRef.modal.domRef.readyButton,
         function() {
@@ -338,6 +338,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.livenessReadyText);
           voiceIt2ObjRef.livenessReqId = response.lcoId;
           voiceIt2ObjRef.changeDisplayTextForLiveness();
+          setTimeout(voiceIt2ObjRef.modal.endLivenessTutorial(),700);
           vi$.clickOn(voiceIt2ObjRef.modal.domRef.readyButton,
             function() {
               document.getElementsByClassName("content")[0].style.bottom = "3.5em";
@@ -1061,7 +1062,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.modal.domRef.readyButton.style.opacity = '1.0';
       } else if (voiceIt2ObjRef.liveness) {
         voiceIt2ObjRef.modal.domRef.imageCanvas.style.opacity = '1.0';
-        voiceIt2ObjRef.modal.revealLivenessOverlay();
+        //setTimeout(voiceIt2ObjRef.modal.endLivenessTutorial(),700);
+        // voiceIt2ObjRef.modal.revealLivenessOverlay();
       }
     }
   };
