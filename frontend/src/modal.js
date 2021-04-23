@@ -221,17 +221,19 @@ export default function Modal(mRef, language) {
       'nodeName': 'h4',
       'parent': 'livenessOverlay',
       'text': prompts.getPrompt('LIVENESS_READY_PROMPT')
-    }, {
-      'styles':{
-        'width': '70%'
-      },
-      'attributes': {
-        'src': language == "es-ES" ? LivenessTutorialES : LivenessTutorial
-      },
-      'elName':'livenessTutorial',
-      'nodeName': 'img',
-      'parent': 'livenessOverlay'
-    }, {
+    },
+    // {
+    //   'styles':{
+    //     'width': '70%'
+    //   },
+    //   'attributes': {
+    //     'src': language == "es-ES" ? LivenessTutorialES : LivenessTutorial
+    //   },
+    //   'elName':'livenessTutorial',
+    //   'nodeName': 'img',
+    //   'parent': 'livenessOverlay'
+    // },
+    {
       'styles':{
         'color': '#000000',
         'position': 'absolute',
@@ -660,16 +662,16 @@ export default function Modal(mRef, language) {
   }
 
   // TODO: Refactor this to a createOverlay method
-  VoiceItModalRef.revealLivenessOverlay = function(){
-    if(!VoiceItModalRef.domRef.livenessOverlay){ return; }
-    VoiceItModalRef.domRef.livenessOverlay.style.opacity = 1.0;
-    VoiceItModalRef.domRef.livenessOverlay.style.display = 'inline-flex';
-    VoiceItModalRef.domRef.livenessText.style.display = '';
-    VoiceItModalRef.domRef.content.style.display = "none";
-    vi$.delay(TIME_TO_READ_LIVENESS_TUTORIAL, function(){
-      VoiceItModalRef.endLivenessTutorial();
-    })
-  }
+  // VoiceItModalRef.revealLivenessOverlay = function(){
+  //   if(!VoiceItModalRef.domRef.livenessOverlay){ return; }
+  //   VoiceItModalRef.domRef.livenessOverlay.style.opacity = 1.0;
+  //   VoiceItModalRef.domRef.livenessOverlay.style.display = 'inline-flex';
+  //   VoiceItModalRef.domRef.livenessText.style.display = '';
+  //   VoiceItModalRef.domRef.content.style.display = "none";
+  //   vi$.delay(TIME_TO_READ_LIVENESS_TUTORIAL, function(){
+  //     VoiceItModalRef.endLivenessTutorial();
+  //   })
+  // }
 
   VoiceItModalRef.revealWarningOverlay = function(duration, after){
     if(!VoiceItModalRef.domRef.warningOverlay){ return; }
