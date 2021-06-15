@@ -289,7 +289,7 @@ window.onload = function(event) {
     if (validateCredentialsFormat(loginCreds)) {
       showLoader(true);
       exampleLoginAPICall(loginCreds, function(response) {
-        if (response.ResponseCode === "SUCC") {
+        if (response.ResponseCode === "SUCC" && response.Token) {
           window.loggedIn = true;
           window.myVoiceIt.setSecureToken(response.Token);
           if(window.frontEndInitialized){
@@ -303,7 +303,9 @@ window.onload = function(event) {
           if(window.frontEndInitialized){
             showLoader(false);
           }
-          showMessage('Sorry, user not found. Make sure you enter the right credentials', true);
+          hideElement('#loginBtn');
+          hideElement('#formOverlay');
+          showMessage('Please make sure you entered the right user id and api credentials', true);
         }
       });
     }

@@ -139,7 +139,7 @@ export default function Prompts(language) {
   FNFD: "Sorry, I couldn't quite see your face.\nPlease try again.",
   DDNE: "Sorry, something went wrong.\nPlease try again.",
   FAIL: "Failed.\nPlease try again.",
-  IFWD: "Sorry, something went wrong.\nPlease try again.",
+  IFVD: "Sorry, something went wrong.\nPlease try again.",
   SRNR: "Sorry, I couldn't quite hear you.\nPlease speak louder.",
   TVER: "Sorry, no video enrollments found.\nPlease enroll before verifying.",
   NFEF: "Sorry, no face enrollments found.\nPlease enroll before verifying.",
