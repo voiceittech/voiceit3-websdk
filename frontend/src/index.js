@@ -275,6 +275,10 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'inline-block';
         vi$.fadeIn(voiceIt2ObjRef.modal.domRef.readyButton, 500);
       });
+    } else {
+      //show an erroe message
+      voiceIt2ObjRef.modal.removeWaitingLoader();
+      voiceIt2ObjRef.modal.displayMessage(response.message);
     }
   };
 
