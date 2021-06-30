@@ -240,6 +240,9 @@ $jsonResponse = Array(
 	"Message" => "Successfully logged in user",
 	"Token" => $createdToken
 );
+//the front end should user the setSecureToken method
+//For example, window.myVoiceIt.setSecureToken(response.Token);
+
 echo json_encode($jsonResponse);
 ```
 
