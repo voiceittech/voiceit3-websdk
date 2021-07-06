@@ -128,6 +128,8 @@ const form = new FormData();
 ```
 
 ## Incorporating the SDK
+<img src="./graphics/diagram.png" width="70%" style="width:70%" />
+
 Parts of the Example can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification with/without Liveness), can be implemented independently, providing a total of 27 different use-cases (such as voice-only verification, or face enrollment and video verification, or video-only verification with Liveness, to name a few). For any such use-case, a backend and frontend implementation is required:
 
 ### Backend Implementation
