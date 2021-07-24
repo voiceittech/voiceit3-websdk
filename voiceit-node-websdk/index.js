@@ -95,7 +95,6 @@ function VoiceIt2(apk, tok, options) {
     const reqType = req.body.viRequestType;
     const secureToken = req.body.viSecureToken;
     const mainThis = this;
-    console.log(options);
     this.validateToken(secureToken, (isValid, payloadObj) => {
       if(!isValid){
         res.json({
