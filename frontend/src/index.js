@@ -236,10 +236,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         }
       }, false);
 
-      vi$.clickOn(voiceIt2ObjRef.modal.domRef.closeButton, function(){
-          destroyAndHideModal();
-      });
-
       vi$.clickOn(voiceIt2ObjRef.modal.domRef.leftArrowIcon, function(){
           destroyAndHideModal();
       });
@@ -255,13 +251,14 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   // Called by the the start up buttons
   voiceIt2ObjRef.initiate = function() {
+    voiceIt2ObjRef.player = undefined;
     voiceIt2ObjRef.destroyed = false;
     voiceIt2ObjRef.modal.build();
-    if (voiceIt2ObjRef.type.action === 'Enrollment') {
-      voiceIt2ObjRef.modal.showEnrollmentDeletionWarningOverlay();
-    }
     voiceIt2ObjRef.setup();
-    voiceIt2ObjRef.initModalClickListeners();
+    vi$.clickOn(voiceIt2ObjRef.modal.domRef.closeButton, function(){
+        destroyAndHideModal();
+    });
+    // voiceIt2ObjRef.initModalClickListeners();
   };
 
   voiceIt2ObjRef.handleDeletion = function(response) {
@@ -377,7 +374,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       if (i >= response.lco.length || voiceIt2ObjRef.destroyed){
         clearInterval(intervalId);
       } else {
-        console.log("NEXT CHALLENGE");
+
         vi$.fadeOut(voiceIt2ObjRef.modal.domRef.viMessage,150, ()=>{
           vi$.fadeIn(voiceIt2ObjRef.modal.domRef.viMessage,150);
 
@@ -768,130 +765,163 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     });
 
     voiceIt2ObjRef.player.on('deviceError', function() {
-      console.log('device error:', voiceIt2ObjRef.player.deviceErrorCode);
+      //permission not granted
+      //could'nt start recording device please try again.
+      // remove ready button, show that "permission not granted"
+      voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'none';
+      voiceIt2ObjRef.modal.displayMessage("Recording permission not granted, please refresh and try again");
     });
+
+    //called before deviceError above
     voiceIt2ObjRef.player.on('error', function(error) {
       console.log('error:', error);
     });
 
     voiceIt2ObjRef.player.on('deviceReady', function() {
-
+      //setup listners here
+      if (voiceIt2ObjRef.type.action === 'Enrollment') {
+        voiceIt2ObjRef.modal.showEnrollmentDeletionWarningOverlay();
+      }
+      voiceIt2ObjRef.initModalClickListeners();
+      voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'inline-block';
     });
 
     voiceIt2ObjRef.player.on('startRecord', function() {
-      console.log('video record started');
     });
 
     voiceIt2ObjRef.player.on('finishRecord', function() {
-      if (voiceIt2ObjRef.player.recordedData.video !== undefined) {
-        voiceIt2ObjRef.player.recordedData = voiceIt2ObjRef.player.recordedData.video;
-      }
-      if (
-          voiceIt2ObjRef.liveness &&
-          voiceIt2ObjRef.type.action !== "Enrollment" &&
-          voiceIt2ObjRef.type.biometricType == "video"
-      ) {
-        voiceIt2ObjRef.modal.destroyVideoCircle();
-        voiceIt2ObjRef.modal.hideProgressCircle(100);
-        vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
-        voiceIt2ObjRef.modal.showWaitingLoader(true,true);
-        voiceIt2ObjRef.apiRef.videoLiveness({
-          viVideoData : voiceIt2ObjRef.player.recordedData,
-          vilcoId: voiceIt2ObjRef.livenessReqId,
-          viPhrase: voiceIt2ObjRef.phrase
-        }, function(response){
-        voiceIt2ObjRef.handleVideoLivenessResponse(response);
-        });
-      } else if (
-        voiceIt2ObjRef.liveness &&
-        voiceIt2ObjRef.type.biometricType === "face" &&
-        voiceIt2ObjRef.type.action === "Verification") {
-          voiceIt2ObjRef.modal.hideProgressCircle(350);
-          //make api call to Andrew Here
-          vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
-          voiceIt2ObjRef.modal.showWaitingLoader(true,true);
-          voiceIt2ObjRef.apiRef.faceLiveness({
-            viVideoData : voiceIt2ObjRef.player.recordedData,
-            vilcoId: voiceIt2ObjRef.livenessReqId
-          }, function(response){
-          voiceIt2ObjRef.handleFaceLivenessResponse(response);
-          });
-      } else if (
-        !voiceIt2ObjRef.liveness ||
-        voiceIt2ObjRef.type.biometricType === "voice" ||
-        voiceIt2ObjRef.type.action === "Enrollment"
-      ) {
-        vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
-        voiceIt2ObjRef.modal.showWaitingLoader(true);
-
-        if(
-          voiceIt2ObjRef.type.biometricType === "voice" &&
-          voiceIt2ObjRef.type.action === "Verification"
-        ){
-          voiceIt2ObjRef.apiRef.voiceVerification({
-            viContentLanguage: voiceIt2ObjRef.contentLanguage,
-            viPhrase: voiceIt2ObjRef.phrase,
-            viVoiceData : voiceIt2ObjRef.player.recordedData
-          }, function(response){
-            voiceIt2ObjRef.handleVerificationResponse(response);
-          });
+      if (voiceIt2ObjRef.player.recordedData !== undefined) {
+        //check the size of the file
+        if (voiceIt2ObjRef.player.recordedData.size > 0){
+          voiceIt2ObjRef.player.recordedData = voiceIt2ObjRef.player.recordedData;
+          voiceIt2ObjRef.handleFinishRecording();
+        } else {
+          //re check the size of the file after 200ms
+          setTimeout(()=>{
+            if (voiceIt2ObjRef.player.recordedData.size > 0){
+              voiceIt2ObjRef.player.recordedData = voiceIt2ObjRef.player.recordedData;
+              voiceIt2ObjRef.handleFinishRecording();
+            } else {
+              //show error and return
+              voiceIt2ObjRef.modal.removeWaitingLoader();
+              voiceIt2ObjRef.modal.displayMessage("Recording error occurred, please try again");
+            }
+          },200);
         }
-
-        if(
-          voiceIt2ObjRef.type.biometricType === "face" &&
-          voiceIt2ObjRef.type.action === "Verification"
-        ){
-            voiceIt2ObjRef.apiRef.faceVerification({
-              viVideoData : voiceIt2ObjRef.player.recordedData
-            }, function(response){
-              voiceIt2ObjRef.handleVerificationResponse(response);
-          });
-        }
-
-        if(
-          voiceIt2ObjRef.type.biometricType === "video" &&
-          voiceIt2ObjRef.type.action === "Verification"
-        ){
-          voiceIt2ObjRef.apiRef.videoVerification({
-            viContentLanguage: voiceIt2ObjRef.contentLanguage,
-            viPhrase: voiceIt2ObjRef.phrase,
-            viVideoData : voiceIt2ObjRef.player.recordedData
-          }, function(response){
-            voiceIt2ObjRef.handleVerificationResponse(response);
-          });
-        }
-
-        if(voiceIt2ObjRef.type.biometricType === "voice" && voiceIt2ObjRef.type.action === "Enrollment"){
-          voiceIt2ObjRef.apiRef.createVoiceEnrollment({
-            viContentLanguage: voiceIt2ObjRef.contentLanguage,
-            viPhrase: voiceIt2ObjRef.phrase,
-            viVoiceData : voiceIt2ObjRef.player.recordedData
-          }, function(response){
-            voiceIt2ObjRef.handleEnrollmentResponse(response);
-          });
-        }
-
-        if(voiceIt2ObjRef.type.biometricType === "face" && voiceIt2ObjRef.type.action === "Enrollment"){
-          voiceIt2ObjRef.apiRef.createFaceEnrollment({
-            viVideoData : voiceIt2ObjRef.player.recordedData
-          }, function(response){
-            voiceIt2ObjRef.handleEnrollmentResponse(response);
-          });
-        }
-
-        if(voiceIt2ObjRef.type.biometricType === "video" && voiceIt2ObjRef.type.action === "Enrollment"){
-          voiceIt2ObjRef.apiRef.createVideoEnrollment({
-            viContentLanguage: voiceIt2ObjRef.contentLanguage,
-            viPhrase: voiceIt2ObjRef.phrase,
-            viVideoData : voiceIt2ObjRef.player.recordedData
-          }, function(response){
-            voiceIt2ObjRef.handleEnrollmentResponse(response);
-          });
-        }
-
+      } else {
+        //show error message
+        voiceIt2ObjRef.modal.removeWaitingLoader();
+        voiceIt2ObjRef.modal.displayMessage("Recording error occurred, please try again");
+        return;
       }
     });
   };
+
+  voiceIt2ObjRef.handleFinishRecording = function(){
+    if (
+        voiceIt2ObjRef.liveness &&
+        voiceIt2ObjRef.type.action !== "Enrollment" &&
+        voiceIt2ObjRef.type.biometricType == "video"
+    ) {
+      voiceIt2ObjRef.modal.destroyVideoCircle();
+      voiceIt2ObjRef.modal.hideProgressCircle(100);
+      vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
+      voiceIt2ObjRef.modal.showWaitingLoader(true,true);
+      voiceIt2ObjRef.apiRef.videoLiveness({
+        viVideoData : voiceIt2ObjRef.player.recordedData,
+        vilcoId: voiceIt2ObjRef.livenessReqId,
+        viPhrase: voiceIt2ObjRef.phrase
+      }, function(response){
+      voiceIt2ObjRef.handleVideoLivenessResponse(response);
+      });
+    } else if (
+      voiceIt2ObjRef.liveness &&
+      voiceIt2ObjRef.type.biometricType === "face" &&
+      voiceIt2ObjRef.type.action === "Verification") {
+        voiceIt2ObjRef.modal.hideProgressCircle(350);
+        //make api call to Andrew Here
+        vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
+        voiceIt2ObjRef.modal.showWaitingLoader(true,true);
+        voiceIt2ObjRef.apiRef.faceLiveness({
+          viVideoData : voiceIt2ObjRef.player.recordedData,
+          vilcoId: voiceIt2ObjRef.livenessReqId
+        }, function(response){
+        voiceIt2ObjRef.handleFaceLivenessResponse(response);
+        });
+    } else if (
+      !voiceIt2ObjRef.liveness ||
+      voiceIt2ObjRef.type.biometricType === "voice" ||
+      voiceIt2ObjRef.type.action === "Enrollment"
+    ) {
+      vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
+      voiceIt2ObjRef.modal.showWaitingLoader(true);
+
+      if(
+        voiceIt2ObjRef.type.biometricType === "voice" &&
+        voiceIt2ObjRef.type.action === "Verification"
+      ){
+        voiceIt2ObjRef.apiRef.voiceVerification({
+          viContentLanguage: voiceIt2ObjRef.contentLanguage,
+          viPhrase: voiceIt2ObjRef.phrase,
+          viVoiceData : voiceIt2ObjRef.player.recordedData
+        }, function(response){
+          voiceIt2ObjRef.handleVerificationResponse(response);
+        });
+      }
+
+      if(
+        voiceIt2ObjRef.type.biometricType === "face" &&
+        voiceIt2ObjRef.type.action === "Verification"
+      ){
+          voiceIt2ObjRef.apiRef.faceVerification({
+            viVideoData : voiceIt2ObjRef.player.recordedData
+          }, function(response){
+            voiceIt2ObjRef.handleVerificationResponse(response);
+        });
+      }
+
+      if(
+        voiceIt2ObjRef.type.biometricType === "video" &&
+        voiceIt2ObjRef.type.action === "Verification"
+      ){
+        voiceIt2ObjRef.apiRef.videoVerification({
+          viContentLanguage: voiceIt2ObjRef.contentLanguage,
+          viPhrase: voiceIt2ObjRef.phrase,
+          viVideoData : voiceIt2ObjRef.player.recordedData
+        }, function(response){
+          voiceIt2ObjRef.handleVerificationResponse(response);
+        });
+      }
+
+      if(voiceIt2ObjRef.type.biometricType === "voice" && voiceIt2ObjRef.type.action === "Enrollment"){
+        voiceIt2ObjRef.apiRef.createVoiceEnrollment({
+          viContentLanguage: voiceIt2ObjRef.contentLanguage,
+          viPhrase: voiceIt2ObjRef.phrase,
+          viVoiceData : voiceIt2ObjRef.player.recordedData
+        }, function(response){
+          voiceIt2ObjRef.handleEnrollmentResponse(response);
+        });
+      }
+
+      if(voiceIt2ObjRef.type.biometricType === "face" && voiceIt2ObjRef.type.action === "Enrollment"){
+        voiceIt2ObjRef.apiRef.createFaceEnrollment({
+          viVideoData : voiceIt2ObjRef.player.recordedData
+        }, function(response){
+          voiceIt2ObjRef.handleEnrollmentResponse(response);
+        });
+      }
+
+      if(voiceIt2ObjRef.type.biometricType === "video" && voiceIt2ObjRef.type.action === "Enrollment"){
+        voiceIt2ObjRef.apiRef.createVideoEnrollment({
+          viContentLanguage: voiceIt2ObjRef.contentLanguage,
+          viPhrase: voiceIt2ObjRef.phrase,
+          viVideoData : voiceIt2ObjRef.player.recordedData
+        }, function(response){
+          voiceIt2ObjRef.handleEnrollmentResponse(response);
+        });
+      }
+    }
+}
 
   ///REFACTOR
   voiceIt2ObjRef.startView = function() {
@@ -980,7 +1010,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           voiceIt2ObjRef.modal.createProgressCircle(5200);
           voiceIt2ObjRef.modal.revealProgressCircle(350);
           vi$.fadeOut(voiceIt2ObjRef.modal.domRef.outerOverlay, 500, function(){
-            voiceIt2ObjRef.player.record().getDevice();
             voiceIt2ObjRef.player.record().start();
           });
         }, 2000);
@@ -1126,7 +1155,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     voiceIt2ObjRef.modal.destroy();
     voiceIt2ObjRef.destroyed = true;
     if(destroyFinished){ destroyFinished();}
-    console.log(voiceIt2ObjRef.player);
   };
 
   voiceIt2ObjRef.createOverlay = function() {

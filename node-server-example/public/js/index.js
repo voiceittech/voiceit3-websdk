@@ -303,8 +303,8 @@ window.onload = function(event) {
           if(window.frontEndInitialized){
             showLoader(false);
           }
-          hideElement('#loginBtn');
-          hideElement('#formOverlay');
+          // hideElement('#loginBtn');
+          // hideElement('#formOverlay');
           showMessage('Please make sure you entered the right user id and api credentials', true);
         }
       });
