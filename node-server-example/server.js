@@ -31,7 +31,6 @@ app.get('/login', function (req, res) {
   if(req.query.email === config.DEMO_EMAIL && req.query.password === config.DEMO_PASSWORD){
     let generatedToken = "";
     const userId = config.VOICEIT_TEST_USER_ID;
-    console.log(userId.substring(0,4));
     if (userId.substring(0,4) === "usr_"){
       //use the token generator to generate a token passed to the client
       generatedToken = VoiceIt2WebSDK.generateTokenForUser({
