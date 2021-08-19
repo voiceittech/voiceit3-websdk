@@ -55,7 +55,7 @@ export default function Prompts(language) {
           PDNM: function() {
             return "Asegúrate de decir la frase correcta: \"" + promptsRef.currentPhrase    + "\"";
           },
-          CLNE: "El idioma del contenido no está habilitado para el nivel gratuito, solo en-US está disponible en el plan de nivel gratuito VoiceIt",
+          CLNE: "El idioma del contenido no está habilitado para el nivel gratuito, solo no-STT está disponible en el plan de nivel gratuito VoiceIt",
           FNFD:"Lo siento, hemos encontrado tu cara.\n Vuelve a intentarlo.",
           DDNE:"Lo siento, algo salió mal.\n Vuelve a intentarlo.",
           FAIL:"Algo ha fallado.\n Vuelve a intentarlo.",
@@ -139,7 +139,7 @@ export default function Prompts(language) {
           PDNM: function() {
             return "Please make sure you are saying the correct phrase: \"" + promptsRef.currentPhrase + "\"";
           },
-          CLNE: "Content language not enabled for free tier, only en-US is available on the VoiceIt free tier plan",
+          CLNE: "Content language not enabled for free tier, only no-STT is available on the VoiceIt free tier plan",
           FNFD: "Sorry, I couldn't quite see your face.\nPlease try again.",
           DDNE: "Sorry, something went wrong.\nPlease try again.",
           FAIL: "Failed.\nPlease try again.",
