@@ -89,4 +89,9 @@ app.post('/example_endpoint', multer.any(), function (req, res) {
     });
 });
 
+app.get('/content_language', function (req, res) {
+  console.log('config.CONTENT_LANGUAGE: ', config.CONTENT_LANGUAGE)
+  res.json({contentLanguage: config.CONTENT_LANGUAGE});
+});
+
 app.listen(port, () => console.log(`Node Example Server running on port ${port}`))

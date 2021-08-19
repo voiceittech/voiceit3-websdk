@@ -1,5 +1,3 @@
-const contentLanguage = "en-US";
-
 function mobileCheck() {
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     return true;
@@ -79,8 +77,20 @@ function takeToConsole(){
   window.location.href = '/console';
 }
 
-function setupFrontEnd() {
-  window.myVoiceIt = VoiceIt2.initialize('example_endpoint/',contentLanguage);
+async function getContentLanguage() {
+  return await fetch('/content_language')
+    .then(response => response.json())
+    .then((data) => {
+      return data.contentLanguage;
+    });
+}
+
+async function setupFrontEnd() {
+
+  const contentLanguage = await getContentLanguage();
+  console.log('contentLanguage: ', contentLanguage);
+
+  window.myVoiceIt = VoiceIt2.initialize('example_endpoint/', contentLanguage);
   document.querySelector('#voiceEnrollmentBtn').addEventListener('click', function() {
 		document.getElementById('voiceEnrollmentBtn').style.display = 'none';
 		document.getElementById('voiceVerificationBtn').style.display = 'none';
