@@ -454,3 +454,4 @@ Please note this is a Beta version - Feel free to document any errors/bugs in th
 - [ ] Test on Edge (Windows 10)
 - [ ] Test on Windows 10
 - [x] Test on Opera (Mac)
+
