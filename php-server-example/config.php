@@ -4,4 +4,5 @@ $VOICEIT_API_TOKEN = getenv("VOICEIT_TWO_API_TOKEN", true) ? getenv("VOICEIT_TWO
 $VOICEIT_TEST_USERID = getenv("VOICEIT_TEST_USER_ID", true) ? getenv("VOICEIT_TEST_USER_ID") :"API_USER_ID_HERE";
 $DEMO_EMAIL = "demo@voiceit.io";
 $DEMO_PASSWORD = "demo123";
+$CONTENT_LANGUAGE = "no-STT";
 ?>
