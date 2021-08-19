@@ -86,10 +86,7 @@ async function getContentLanguage() {
 }
 
 async function setupFrontEnd() {
-
   const contentLanguage = await getContentLanguage();
-  console.log('contentLanguage: ', contentLanguage);
-
   window.myVoiceIt = VoiceIt2.initialize('example_endpoint/', contentLanguage);
   document.querySelector('#voiceEnrollmentBtn').addEventListener('click', function() {
 		document.getElementById('voiceEnrollmentBtn').style.display = 'none';
