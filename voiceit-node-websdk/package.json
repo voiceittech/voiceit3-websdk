@@ -1,6 +1,6 @@
 {
   "name": "voiceit-node-websdk",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "NodeJS Backend for VoiceIt Web SDK",
   "main": "index.js",
   "author": "VoiceIt Technologies, LLC (C) 2020",
