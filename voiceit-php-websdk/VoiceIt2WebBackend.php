@@ -31,7 +31,7 @@ function returnJson($jsonResponse){
 
 class VoiceIt2WebBackend {
   public $BASE_URL = 'https://api.voiceit.io';
-  public $LIVENESS_URL = 'https://liveness.voiceit.io';
+  public $LIVENESS_URL = 'https://liveness.voiceit.io/v1';
   const VERSION = '1.2.1';
   public $api_key;
   public $platformId = '48';

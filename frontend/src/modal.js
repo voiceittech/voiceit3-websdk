@@ -617,7 +617,7 @@ export default function Modal(mRef, language) {
           window.cancelAnimationFrame(animationId);
         });
     }).catch(function(err) {
-        console.log('error : ' + err);
+        console.log('modal.js getPath navigator.mediaDevices.getUserMedia Exception: ', err);
     });
 
 
@@ -843,7 +843,7 @@ export default function Modal(mRef, language) {
           window.cancelAnimationFrame(animationId);
         });
     }).catch(function(err) {
-        console.log('error : ' + err);
+        console.log('modal.js VoiceItModalRef.createVideoCircle navigator.mediaDevices.getUserMedia Exception: ', err);
     });
     vi$.fadeIn(VoiceItModalRef.domRef.videoCircle, 500);
   }
