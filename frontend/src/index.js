@@ -659,6 +659,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       voiceIt2ObjRef.livenessObj.playAudioPrompt(response.audioPrompt);
     }
     if (response.success) {
+      voiceIt2ObjRef.completionCallback(true, response);
       voiceIt2ObjRef.exitOut(true, response);
       voiceIt2ObjRef.modal.removeWaitingLoader();
       voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC'));
@@ -667,6 +668,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       if (!response.retry) {
         voiceIt2ObjRef.modal.removeWaitingLoader();
         voiceIt2ObjRef.modal.displayMessage(response.uiMessage);
+        voiceIt2ObjRef.completionCallback(false, response);
         setTimeout(()=>{voiceIt2ObjRef.exitOut(false, response);},2000);
       } else {
         voiceIt2ObjRef.modal.removeWaitingLoader();
@@ -688,6 +690,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       voiceIt2ObjRef.livenessObj.playAudioPrompt(response.audioPrompt);
     }
     if (response.success) {
+      voiceIt2ObjRef.completionCallback(true, response);
       voiceIt2ObjRef.exitOut(true, response);
       voiceIt2ObjRef.modal.removeWaitingLoader();
       voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC'));
@@ -697,6 +700,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.modal.removeWaitingLoader();
         setTimeout(()=>{
           voiceIt2ObjRef.modal.displayMessage(response.uiMessage);
+          voiceIt2ObjRef.completionCallback(false, response);
           setTimeout(()=>{voiceIt2ObjRef.exitOut(false, response);},2000);
         },2000);
       } else {
@@ -717,6 +721,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   voiceIt2ObjRef.handleVerificationResponse = function(response){
     voiceIt2ObjRef.modal.removeWaitingLoader();
     if (response.responseCode === 'SUCC') {
+      voiceIt2ObjRef.completionCallback(true, response);
       voiceIt2ObjRef.exitOut(true, response);
       voiceIt2ObjRef.displayAppropriateMessage(response);
     } else {
@@ -724,10 +729,12 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       //continue to verify
       if (voiceIt2ObjRef.attempts > MAX_ATTEMPTS) {
         voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('MAX_ATTEMPTS'));
+        voiceIt2ObjRef.completionCallback(false, response);
         voiceIt2ObjRef.exitOut(false, response);
       } else {
         voiceIt2ObjRef.displayAppropriateMessage(response);
         if(vi$.contains(ErrorCodes, response.responseCode)) {
+          voiceIt2ObjRef.completionCallback(false, response);
             voiceIt2ObjRef.exitOut(false, response);
         } else {
             voiceIt2ObjRef.continueVerification(response);
@@ -749,6 +756,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       voiceIt2ObjRef.attempts++;
       if (voiceIt2ObjRef.attempts > MAX_ATTEMPTS) {
         voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('MAX_ATTEMPTS'));
+        voiceIt2ObjRef.completionCallback(false, response);
         voiceIt2ObjRef.exitOut(false, response);
       } else {
         voiceIt2ObjRef.continueEnrollment(response);
@@ -989,6 +997,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
             voiceIt2ObjRef.enrollmentNeededVideo = false;
           }
           voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC_ENROLLMENT_3'));
+          voiceIt2ObjRef.completionCallback(true, response);
           voiceIt2ObjRef.exitOut(true, response);
         }
       } else {
@@ -1000,6 +1009,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       if (response.responseCode === 'SUCC') {
         // voiceIt2ObjRef.enrollmentNeededFace = false;
         voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC_ENROLLMENT_3'));
+        voiceIt2ObjRef.completionCallback(true, response);
         voiceIt2ObjRef.exitOut(true, response);
       }
       //handle re-recording and animations for face
@@ -1108,9 +1118,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         vi$.fadeOut(voiceIt2ObjRef.modal.domRef.modalDimBackground, 1100, function(){
               voiceIt2ObjRef.destroy();
               voiceIt2ObjRef.modal.hide();
-              if(voiceIt2ObjRef.biometricType === 'Verification'){
-                voiceIt2ObjRef.completionCallback(success, response);
-              }
         });
       });
     }
