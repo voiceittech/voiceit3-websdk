@@ -502,7 +502,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         }
       }
     ).catch(function(err) {
-      console.log(err);
+      console.log('index.js navigator.mediaDevices.getUserMedia Exception: ', err);
     });
 
 
@@ -782,7 +782,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
     //called before deviceError above
     voiceIt2ObjRef.player.on('error', function(error) {
-      console.log('error:', error);
+      console.log("index.js voiceIt2ObjRef.player.on('error') : ", error);
     });
 
     voiceIt2ObjRef.player.on('deviceReady', function() {
