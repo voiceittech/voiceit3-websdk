@@ -126,7 +126,9 @@ async function setupFrontEnd() {
       },
       completionCallback:function(success){
         if(success){
-          takeToConsole();
+          setTimeout(()=>{
+            takeToConsole();
+          },4000);
         }
       }
     });
@@ -159,7 +161,9 @@ async function setupFrontEnd() {
       },
       completionCallback:function(success){
         if(success){
-          takeToConsole();
+          setTimeout(()=>{
+            takeToConsole();
+          },4000);
         }
       }
     });
@@ -203,7 +207,9 @@ async function setupFrontEnd() {
       },
       completionCallback:function(success){
         if(success){
-          takeToConsole();
+          setTimeout(()=>{
+            takeToConsole();
+          },4000);
         }
       }
     });

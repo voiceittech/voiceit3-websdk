@@ -5,7 +5,7 @@ const config = {
   DEMO_EMAIL: 'demo@voiceit.io',
   DEMO_PASSWORD: 'demo123',
   SESSION_EXPIRATION_TIME_HOURS: 1,
-  CONTENT_LANGUAGE: 'no-STT'
+  CONTENT_LANGUAGE: 'en-US'
 };
 
 module.exports = config;
