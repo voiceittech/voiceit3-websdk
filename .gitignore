@@ -76,3 +76,7 @@ typings/
 .serverless
 
 .DS_Store
+
+# Go WebSDK Backend/Example
+go-server-example/output.txt
+go-server-example/go-server-example
