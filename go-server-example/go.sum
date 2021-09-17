@@ -1,0 +1,4 @@
+github.com/go-chi/chi v1.5.4 h1:QHdzF2szwjqVV4wmByUnTcsbIg7UGaQ0tPF2t5GcAIs=
+github.com/go-chi/chi v1.5.4/go.mod h1:uaf8YgoFazUOkPBG7fxPftUylNumIev9awIWOENIuEg=
+github.com/voiceittech/VoiceIt2-WebSDK/voiceit-go-websdk v0.0.0-20210917151955-036bb26c92ba h1:SaBJAPvUnxsH7j86CJNcWGsnhsP9qZqrfy/ixIKfhnk=
+github.com/voiceittech/VoiceIt2-WebSDK/voiceit-go-websdk v0.0.0-20210917151955-036bb26c92ba/go.mod h1:2VtOkuDpk9uf7a49qyfGUFTrbLD40ImQbxyU0WpDm2s=
