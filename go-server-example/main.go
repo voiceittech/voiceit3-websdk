@@ -25,13 +25,13 @@ func main() {
 
 	r.Post("/", websdk.MakeCall)
 
-	FileServer(r)
+	fileServer(r)
 
 	fmt.Println("Serving VoiceIt WebSDK Example at port :" + HTTP_PORT)
 	log.Fatal(http.ListenAndServe(":"+HTTP_PORT, r))
 }
 
-func FileServer(router *chi.Mux) {
+func fileServer(router *chi.Mux) {
 	root := "public/"
 	fs := http.FileServer(http.Dir(root))
 
