@@ -1,4 +1,4 @@
-module websdk
+module github.com/voiceittech/VoiceIt2-WebSDK/go-server-example/websdk
 
 go 1.17
 
