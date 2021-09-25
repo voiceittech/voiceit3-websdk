@@ -837,7 +837,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       voiceIt2ObjRef.modal.showWaitingLoader(true,true);
       voiceIt2ObjRef.apiRef.videoVerificationWithLiveness({
         viVideoData : voiceIt2ObjRef.player.recordedData,
-        vilcoId: voiceIt2ObjRef.livenessReqId,
+        viLCOId: voiceIt2ObjRef.livenessReqId,
         viPhrase: voiceIt2ObjRef.phrase
       }, function(response){
       voiceIt2ObjRef.handleVideoLivenessResponse(response);
@@ -852,7 +852,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.modal.showWaitingLoader(true,true);
         voiceIt2ObjRef.apiRef.faceVerificationWithLiveness({
           viVideoData : voiceIt2ObjRef.player.recordedData,
-          vilcoId: voiceIt2ObjRef.livenessReqId
+          viLCOId: voiceIt2ObjRef.livenessReqId
         }, function(response){
         voiceIt2ObjRef.handleFaceLivenessResponse(response);
         });

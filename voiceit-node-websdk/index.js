@@ -239,7 +239,7 @@ function VoiceIt2(apk, tok, options) {
             mainThis.faceVerificationWithLiveness({
               userId: extractedUserId,
               file: tempFilePath,
-              lcoId: req.body.vilcoId
+              lcoId: req.body.viLCOId
             }, (result) => {
               fs.unlinkSync(tempFilePath);
               resultCallback(formatResponse(reqType, extractedUserId, result));
@@ -253,7 +253,7 @@ function VoiceIt2(apk, tok, options) {
             mainThis.videoVerificationWithLiveness({
               userId: extractedUserId,
               file: tempFilePath,
-              lcoId: req.body.vilcoId,
+              lcoId: req.body.viLCOId,
               phrase: phrase,
             }, (result) => {
               fs.unlinkSync(tempFilePath);

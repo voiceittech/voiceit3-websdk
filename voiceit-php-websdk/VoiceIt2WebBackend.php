@@ -204,7 +204,7 @@ class VoiceIt2WebBackend {
     }
 
     if($reqType == "faceVerificationWithLiveness"){
-      $lcoId = "".$_POST["vilcoId"];
+      $lcoId = "".$_POST["viLCOId"];
       $videoFileName = saveFileData($FILES_REF["viVideoData"]['tmp_name'], "mp4");
       $resp = $this->faceVerificationWithLiveness($EXTRACTED_USER_ID, $lcoId, $videoFileName);
       unlink($videoFileName) or die("Couldn't delete ".$videoFileName);
@@ -213,7 +213,7 @@ class VoiceIt2WebBackend {
     }
 
     if($reqType == "videoVerificationWithLiveness"){
-      $lcoId = "".$_POST["vilcoId"];
+      $lcoId = "".$_POST["viLCOId"];
       $phrase = "".$_POST["viPhrase"];
       $videoFileName = saveFileData($FILES_REF["viVideoData"]['tmp_name'], "mp4");
       $resp = $this->videoVerificationWithLiveness($EXTRACTED_USER_ID, $lcoId, $videoFileName, $phrase);
