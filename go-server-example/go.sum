@@ -12,8 +12,8 @@ github.com/stretchr/testify v1.5.1 h1:nOGnQDM7FYENwehXlg/kFVnos3rEvtKTjRvOWSzb6H
 github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
 github.com/voiceittech/VoiceIt2-Go/v2 v2.6.1 h1:5esYWmD1ypkUeaAQ3LgXHYms5EoJoYdwraeNdJO1v+I=
 github.com/voiceittech/VoiceIt2-Go/v2 v2.6.1/go.mod h1:yvbvaQB/lHx34GfEQW5/Cr7E5GdrtgXzUxY0Rm1R5+M=
-github.com/voiceittech/VoiceIt2-WebSDK/voiceit-go-websdk v0.0.0-20210926133108-55eed3861131 h1:fcAULpCSCrMniHUhlC3ipSQwBuCkfs7qL52McyhiPIQ=
-github.com/voiceittech/VoiceIt2-WebSDK/voiceit-go-websdk v0.0.0-20210926133108-55eed3861131/go.mod h1:VBBhMXLXhl+NfwmomW7aoXMQvUc/ZwhpM99vjlKpQXQ=
+github.com/voiceittech/VoiceIt2-WebSDK/voiceit-go-websdk v0.0.0-20210926134650-19bf9069b55b h1:TTbMIPg9QC+hvuMD2DM0KW0FEHVRO2outLLeyY15r38=
+github.com/voiceittech/VoiceIt2-WebSDK/voiceit-go-websdk v0.0.0-20210926134650-19bf9069b55b/go.mod h1:VBBhMXLXhl+NfwmomW7aoXMQvUc/ZwhpM99vjlKpQXQ=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v2 v2.2.2 h1:ZCJp+EgiOT7lHqUV2J862kp8Qj64Jo6az82+3Td9dZw=
 gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
