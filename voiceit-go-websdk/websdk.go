@@ -215,6 +215,7 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) {
 		// Make client request to API 2/Liveness Server
 	} else if viRequestType == "enoughVoiceEnrollments" || viRequestType == "enoughFaceEnrollments" || viRequestType == "enoughVideoEnrollments" {
 		websdk.enoughEnrollments(w, viRequestType, userId)
+		return
 	}
 
 	switch viRequestType {
@@ -375,5 +376,4 @@ func (websdk WebSDK) enoughEnrollments(w http.ResponseWriter, viRequestType, use
 	}
 	marshaled, _ := json.Marshal(res)
 	w.Write(marshaled)
-	return
 }
