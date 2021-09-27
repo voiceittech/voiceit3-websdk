@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/go-chi/chi v1.5.4
-	github.com/voiceittech/VoiceIt2-WebSDK/voiceit-go-websdk v0.0.0-20210926134650-19bf9069b55b
+	github.com/voiceittech/VoiceIt2-WebSDK/voiceit-go-websdk v0.0.0-20210927180528-3ebe6f338c77
 )
 
 require (
