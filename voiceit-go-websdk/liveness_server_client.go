@@ -85,7 +85,7 @@ func (livenessServerClient LivenessServerClient) VideoProcessingRequest(userId, 
 	}
 	req.SetBasicAuth(livenessServerClient.APIKey, livenessServerClient.APIToken)
 	req.Header.Add("Content-Type", writer.FormDataContentType())
-	req.Header.Add("platformId", platformVersion)
+	req.Header.Add("platformId", platformId)
 
 	req.Header.Add("platformVersion", platformVersion)
 
