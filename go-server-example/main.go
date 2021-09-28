@@ -60,16 +60,16 @@ func main() {
 		ret := make(map[string]interface{})
 
 		if req.URL.Query().Get("email") != DEMO_EMAIL {
-			ret["ResponseCode"] = "UNFD"
-			ret["Message"] = "User not found"
+			ret["responseCode"] = "UNFD"
+			ret["message"] = "User not found. Please make sure you entered the right userId and API credentials in config.go"
 			marshaled, _ := json.Marshal(ret)
 			w.Write(marshaled)
 			return
 		}
 
 		if req.URL.Query().Get("password") != DEMO_PASSWORD {
-			ret["ResponseCode"] = "INPW"
-			ret["Message"] = "Incorrect Password"
+			ret["responseCode"] = "INPW"
+			ret["message"] = "Incorrect Password"
 			marshaled, _ := json.Marshal(ret)
 			w.Write(marshaled)
 			return
@@ -79,17 +79,17 @@ func main() {
 			tok, err := backend.GenerateTokenForUser(VOICEIT_TEST_USER_ID)
 			if err != nil {
 				log.Println(`backend.GenerateTokenForUser("` + VOICEIT_TEST_USER_ID + `") Exception: ` + err.Error())
-				ret["ResponseCode"] = "BERR"
-				ret["Message"] = "Unable to generate secure token."
+				ret["responseCode"] = "BERR"
+				ret["message"] = "Unable to generate secure token."
 				marshaled, _ := json.Marshal(ret)
 				w.Write(marshaled)
 				return
 			}
-			ret["Token"] = tok
+			ret["token"] = tok
 		}
 
-		ret["ResponseCode"] = "SUCC"
-		ret["Message"] = "Successfully authenticated user"
+		ret["responseCode"] = "SUCC"
+		ret["message"] = "Successfully authenticated user"
 		marshaled, _ := json.Marshal(ret)
 		w.Write(marshaled)
 

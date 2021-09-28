@@ -40,19 +40,19 @@ app.get('/login', function (req, res) {
         });
     }
     res.json({
-      'ResponseCode': 'SUCC',
-      'Message' : 'Successfully authenticated user',
-      'Token' : generatedToken
+      'responseCode': 'SUCC',
+      'message' : 'Successfully authenticated user',
+      'token' : generatedToken
     });
   } else if (req.query.password !== config.DEMO_PASSWORD){
     res.json({
-      'ResponseCode': 'INPW',
-      'Message' : 'Incorrect Password'
+      'responseCode': 'INPW',
+      'message' : 'Incorrect Password'
     });
   } else {
     res.json({
-      'ResponseCode': 'UNFD',
-      'Message' : 'User not found'
+      'responseCode': 'UNFD',
+      'message' : 'User not found. Please make sure you entered the right userId and API credentials in config.js'
     });
   }
 });
