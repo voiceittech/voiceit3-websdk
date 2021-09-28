@@ -302,9 +302,9 @@ window.onload = function(event) {
     if (validateCredentialsFormat(loginCreds)) {
       showLoader(true);
       exampleLoginAPICall(loginCreds, function(response) {
-        if (response.ResponseCode === "SUCC" && response.Token) {
+        if (response.responseCode === "SUCC" && response.token) {
           window.loggedIn = true;
-          window.myVoiceIt.setSecureToken(response.Token);
+          window.myVoiceIt.setSecureToken(response.token);
           if(window.frontEndInitialized){
             showLoader(false);
             showElement('#biometricOptions');
@@ -318,7 +318,7 @@ window.onload = function(event) {
           }
           // hideElement('#loginBtn');
           // hideElement('#formOverlay');
-          showMessage('Please make sure you entered the right user id and api credentials', true);
+          showMessage(response.message, true);
         }
       });
     }

@@ -254,9 +254,9 @@ window.onload = function(event) {
     if (validateCredentialsFormat(loginCreds)) {
       showLoader(true);
       exampleLoginAPICall(loginCreds, function(response) {
-        if (response.ResponseCode === "SUCC") {
+        if (response.responseCode === "SUCC") {
           window.loggedIn = true;
-          window.myVoiceIt.setSecureToken(response.Token);
+          window.myVoiceIt.setSecureToken(response.token);
           if(window.frontEndInitialized){
             showLoader(false);
             showElement('#biometricOptions');
@@ -268,7 +268,7 @@ window.onload = function(event) {
           if(window.frontEndInitialized){
             showLoader(false);
           }
-          showMessage('Sorry, user not found. Make sure you enter the right credentials', true);
+          showMessage(response.message, true);
         }
       });
     }
