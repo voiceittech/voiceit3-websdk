@@ -21,10 +21,10 @@ const vi$ = {
           // console.log('utilities.js post() http.readyState === 4: ', http.responseText);
           const parsedJson = JSON.parse(http.responseText.trim());
           if(parsedJson.responseCode === 'INVT'){
-            modal.showTokenErrorAndDestroy();
+            modal.showErrorAndDestroy('Access Denied! Invalid secure token detected.');
             return;
           } else if (parsedJson.responseCode === 'BERR'){
-            modal.showGenericErrorAndDestroy(parsedJson.message);
+            modal.showErrorAndDestroy(parsedJson.message);
             return;
           }
           callback(parsedJson);

@@ -886,11 +886,12 @@ export default function Modal(mRef, language) {
     }
   }
 
-  VoiceItModalRef.showTokenErrorAndDestroy = function(mainRef){
+  VoiceItModalRef.showErrorAndDestroy = (errorMessage) => {
     VoiceItModalRef.build();
     VoiceItModalRef.show();
     VoiceItModalRef.domRef.viCard.innerHTML = '';
     VoiceItModalRef.domRef.viCard.style.backgroundColor = 'red';
+    VoiceItModalRef.domRef.viCard.style.minHeight = '400px';
     VoiceItModalRef.domRef.viCard.style.minHeight = '400px';
     var content = vi$.create('div');
     content.style.bottom = '3.5em';
@@ -899,39 +900,12 @@ export default function Modal(mRef, language) {
     content.style.backgroundColor = 'red';
     content.style.textAlign = 'center';
     content.setAttribute('class', 'content');
-    var message = vi$.create('p');
-    message.style.paddingTop = '200px';
-    message.style.color = '#FFFFFF';
-    message.setAttribute('class', 'ui header');
-    message.innerHTML = 'Access Denied! Invalid secure token detected.<br/>Please contact support.';
-    content.appendChild(message);
-    VoiceItModalRef.domRef.viCard.appendChild(content);
-    vi$.delay(2000, function(){
-      vi$.fadeOut(VoiceItModalRef.domRef.modalDimBackground, 1100, function(){
-        VoiceItModalRef.mainRef.destroy();
-      });
-    });
-  }
-
-  VoiceItModalRef.showGenericErrorAndDestroy = function(mainRef, message){
-    VoiceItModalRef.build();
-    VoiceItModalRef.show();
-    VoiceItModalRef.domRef.viCard.innerHTML = '';
-    VoiceItModalRef.domRef.viCard.style.backgroundColor = 'red';
-    VoiceItModalRef.domRef.viCard.style.minHeight = '400px';
-    var content = vi$.create('div');
-    content.style.bottom = '3.5em';
-    content.style.position = 'relative';
-    content.style.padding = '0px';
-    content.style.backgroundColor = 'red';
-    content.style.textAlign = 'center';
-    content.setAttribute('class', 'content');
-    var message = vi$.create('p');
-    message.style.paddingTop = '200px';
-    message.style.color = '#FFFFFF';
-    message.setAttribute('class', 'ui header');
-    message.innerHTML = `${message}<br/>Please contact support.`;
-    content.appendChild(message);
+    var messageElement = vi$.create('p');
+    messageElement.style.paddingTop = '200px';
+    messageElement.style.color = '#FFFFFF';
+    messageElement.setAttribute('class', 'ui header');
+    messageElement.innerHTML = `${errorMessage}<br/>Please contact support.`;
+    content.appendChild(messageElement);
     VoiceItModalRef.domRef.viCard.appendChild(content);
     vi$.delay(2000, function(){
       vi$.fadeOut(VoiceItModalRef.domRef.modalDimBackground, 1100, function(){

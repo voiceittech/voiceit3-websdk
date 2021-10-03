@@ -1,6 +1,6 @@
 {
   "name": "voiceit2-web-sdk",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "scripts": {
     "start": "node src/index.js",
     "build": "./node_modules/webpack/bin/webpack.js"

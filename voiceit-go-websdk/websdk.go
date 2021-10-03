@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	platformVersion = "1.5.2"
+	platformVersion = "1.5.3"
 	platformId      = "53"
 )
 
