@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	platformVersion = "1.5.4"
+	platformVersion = "1.5.5"
 	platformId      = "53"
 )
 
@@ -182,7 +182,7 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) {
 			break
 		case "createFaceEnrollment", "createVideoEnrollment", "faceVerification", "faceVerificationWithLiveness", "videoVerificationWithLiveness", "videoVerification":
 			key = "viVideoData"
-			extension = ".wav"
+			extension = ".mp4"
 			break
 		}
 
