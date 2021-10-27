@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	platformVersion = "1.5.7"
+	platformVersion = "1.5.8"
 	platformId      = "53"
 )
 
@@ -29,6 +29,18 @@ type WebSDK struct {
 	vi                         voiceit2.VoiceIt2
 	livenessServerClient       LivenessServerClient
 	sessionExpirationTimeHours int
+}
+
+func (websdk WebSDK) GetSessionExpirationTimeHours() int {
+	return websdk.sessionExpirationTimeHours
+}
+
+func (websdk WebSDK) GetAPI2Client() voiceit2.VoiceIt2 {
+	return websdk.vi
+}
+
+func (websdk WebSDK) GetLivenessServerClient() LivenessServerClient {
+	return websdk.livenessServerClient
 }
 
 func (websdk *WebSDK) Initialize(apiKey, apiToken string, sessionExpirationTimeHours int, baseUrls ...BaseUrls) {
