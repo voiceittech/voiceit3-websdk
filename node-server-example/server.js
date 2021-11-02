@@ -28,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const multer = require('multer')()
 
 app.post('/example_endpoint', multer.any(), function (req, res) {
+  console.log('/example_endpoint');
   //the token comes in from the fron end in the request body
     const myVoiceIt = new VoiceIt2WebSDK.Voiceit2(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN, {sessionExpirationTimeHours:config.SESSION_EXPIRATION_TIME_HOURS});
     myVoiceIt.makeCall(req, res, function(jsonObj){

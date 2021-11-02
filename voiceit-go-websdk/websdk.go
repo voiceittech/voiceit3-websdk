@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	platformVersion = "1.5.8"
+	platformVersion = "1.5.9"
 	platformId      = "53"
 )
 
@@ -152,6 +152,8 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) (map[strin
 		// w.Write([]byte("viRequestType not passed"))
 		return res, errors.New("viRequestType not passed")
 	}
+
+	res["requestType"] = viRequestType
 
 	if viSecureToken == "" {
 		log.Println(`viSecureToken == ""`)

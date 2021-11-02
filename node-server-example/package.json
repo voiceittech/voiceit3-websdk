@@ -1,6 +1,6 @@
 {
   "name": "node-server-example",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "description": "Node Web SDK Example",
   "main": "server.js",
   "scripts": {
