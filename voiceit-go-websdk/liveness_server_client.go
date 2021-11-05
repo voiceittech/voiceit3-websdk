@@ -23,6 +23,9 @@ type GenerateLCORequestReturn struct {
 func (livenessServerClient LivenessServerClient) GenerateLCORequest(userId, contentLanguage string) ([]byte, error) {
 
 	req, err := http.NewRequest("GET", livenessServerClient.BaseUrl+"/v1/verification/"+userId+"/"+contentLanguage, nil)
+	if err != nil {
+		return []byte{}, errors.New(`http.NewRequest("GET", "` + livenessServerClient.BaseUrl + "/v1/verification/" + userId + "/" + contentLanguage + `", nil) Exception: ` + err.Error())
+	}
 
 	req.SetBasicAuth(livenessServerClient.APIKey, livenessServerClient.APIToken)
 

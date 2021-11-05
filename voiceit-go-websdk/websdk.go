@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	platformVersion = "1.5.10"
+	platformVersion = "1.5.11"
 	platformId      = "53"
 )
 
@@ -133,13 +133,13 @@ func (websdk WebSDK) validateToken(tokenString string) (valid bool, userId strin
 
 }
 
-func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) (map[string]interface{}, error) {
+func (websdk WebSDK) MakeCall(r *http.Request) (map[string]interface{}, error) {
 
 	res := make(map[string]interface{})
 
 	if err := r.ParseMultipartForm(32 << 20); err != nil {
 		log.Println("r.ParseMultipartForm(32 << 20) Exception: " + err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		// w.WriteHeader(http.StatusBadRequest)
 		// w.Write([]byte("r.ParseMultipartForm(32 << 20) Exception: " + err.Error()))
 		return res, errors.New("r.ParseMultipartForm(32 << 20) Exception: " + err.Error())
 	}
@@ -148,7 +148,7 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) (map[strin
 
 	if viRequestType == "" {
 		log.Println(`viRequestType == ""`)
-		w.WriteHeader(http.StatusBadRequest)
+		// w.WriteHeader(http.StatusBadRequest)
 		// w.Write([]byte("viRequestType not passed"))
 		return res, errors.New("viRequestType not passed")
 	}
@@ -193,11 +193,9 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) (map[strin
 		case "createVoiceEnrollment", "voiceVerification":
 			key = "viVoiceData"
 			extension = ".wav"
-			break
 		case "createFaceEnrollment", "createVideoEnrollment", "faceVerification", "faceVerificationWithLiveness", "videoVerificationWithLiveness", "videoVerification":
 			key = "viVideoData"
 			extension = ".mp4"
-			break
 		}
 
 		file, header, err := r.FormFile(key)
@@ -228,7 +226,7 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) (map[strin
 
 		// Make client request to API 2/Liveness Server
 	} else if viRequestType == "enoughVoiceEnrollments" || viRequestType == "enoughFaceEnrollments" || viRequestType == "enoughVideoEnrollments" {
-		return websdk.enoughEnrollments(w, viRequestType, userId)
+		return websdk.enoughEnrollments(res, viRequestType, userId)
 		// return
 	}
 
@@ -280,8 +278,7 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) (map[strin
 
 }
 
-func (websdk WebSDK) enoughEnrollments(w http.ResponseWriter, viRequestType, userId string) (map[string]interface{}, error) {
-	res := make(map[string]interface{})
+func (websdk WebSDK) enoughEnrollments(res map[string]interface{}, viRequestType, userId string) (map[string]interface{}, error) {
 	switch viRequestType {
 	case "enoughVoiceEnrollments":
 		var voiceEnrollmentsResponse structs.GetAllVoiceEnrollmentsReturn
@@ -299,8 +296,6 @@ func (websdk WebSDK) enoughEnrollments(w http.ResponseWriter, viRequestType, use
 			log.Println(`json.Unmarshal([]byte("` + string(ret) + `"), &voiceEnrollmentsResponse) Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
 			return res, nil
 		}
 		ret, err = websdk.vi.GetAllVideoEnrollments(userId)
