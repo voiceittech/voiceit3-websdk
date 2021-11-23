@@ -80,3 +80,6 @@ typings/
 # Go WebSDK Backend/Example
 go-server-example/output.txt
 go-server-example/go-server-example
+
+node-server-example/*.mp4
+node-server-example/*.wav
