@@ -103,7 +103,7 @@ func main() {
 	router.Get("/console", func(w http.ResponseWriter, r *http.Request) { w.Write(consoleBytes) })
 
 	router.Post("/example_endpoint", func(w http.ResponseWriter, r *http.Request) {
-		ret, err := backend.MakeCall(w, r)
+		ret, err := backend.MakeCall(r)
 		if err != nil {
 			w.Write([]byte("backend.MakeCall(w, r) Exception: " + err.Error()))
 			return
@@ -112,9 +112,9 @@ func main() {
 		w.Write(bytes)
 	})
 	router.Post("/example_endpoint/", func(w http.ResponseWriter, r *http.Request) {
-		ret, err := backend.MakeCall(w, r)
+		ret, err := backend.MakeCall(r)
 		if err != nil {
-			w.Write([]byte("backend.MakeCall(w, r) Exception: " + err.Error()))
+			w.Write([]byte("backend.MakeCall(r) Exception: " + err.Error()))
 			return
 		}
 		bytes, _ := json.Marshal(ret)
