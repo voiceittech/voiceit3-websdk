@@ -68,8 +68,7 @@ The following show Voice Verification, Face Verification (With liveness detectio
 
 ### Getting Started
 
-
-Sign up for a free Developer Account at [VoiceIt.io](https://voiceit.io/signup) and view your API Key and Token in the settings page (as shown below). You can also review the HTTP Documentation at [api.voiceit.io](https://api.voiceit.io).
+Contact us at <a href="mailto:support@voiceit.io" target="_blank">support@voiceit.io</a> to get started with an account to use API 2.0.
 
 <img src="./graphics/getcredentials.png" alt="API Key and Token" width="400px" />
 
@@ -437,7 +436,7 @@ Set at line 1 on php_server_example/js/index.js
 Set at line 1 on node_server_example/public/js/index.js
 
 ## Getting Help
-Need implementation help? Found a bug? Please contact support@voiceit.io.
+Need implementation help? Found a bug? Please contact <a href="mailto:support@voiceit.io" target="_blank">support@voiceit.io</a>.
 
 ### Disclaimer
 Please note this is a Beta version - Feel free to document any errors/bugs in the issues section of the repository.
