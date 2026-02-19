@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download and run update_websdk
+        run: |
+          wget https://drive.voiceit.io/files/update_websdk
+          chmod +x update_websdk
+          ./update_websdk

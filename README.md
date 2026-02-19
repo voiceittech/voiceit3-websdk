@@ -1,6 +1,6 @@
 <img src="./js.png" width="100%" style="width:100%" />
 
-# VoiceIt API 3 Web SDK [![travis](https://app.travis-ci.com/voiceittech/VoiceIt3-WebSDK.svg?branch=master)](https://app.travis-ci.com/github/voiceittech/VoiceIt3-WebSDK)
+# VoiceIt API 3 Web SDK [![CI](https://github.com/voiceittech/VoiceIt3-WebSDK/actions/workflows/ci.yml/badge.svg)](https://github.com/voiceittech/VoiceIt3-WebSDK/actions/workflows/ci.yml)
 The repository contains an example [web demonstration](#webexample) of VoiceIt's API 3.0 in the browser with a PHP or NodeJS backend. Please navigate to [Incorporating the SDK](#incorporating-the-sdk) for instructions on how to integrate the SDK into your own project(s).
 
 * [Prerequisites](#prerequisites)
