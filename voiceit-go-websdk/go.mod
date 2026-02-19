@@ -4,5 +4,5 @@ go 1.17
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.2
-	github.com/voiceittech/VoiceIt2-Go/v2 v2.7.2
+	github.com/voiceittech/VoiceIt3-Go/v3 v3.0.0
 )

@@ -9,7 +9,7 @@ require (
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
-	github.com/voiceittech/VoiceIt2-Go/v2 v2.7.2 // indirect
+	github.com/voiceittech/VoiceIt3-Go/v3 v3.0.0 // indirect
 )
 
 replace github.com/voiceittech/VoiceIt3-WebSDK/voiceit-go-websdk => ../voiceit-go-websdk

@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	voiceit2 "github.com/voiceittech/VoiceIt2-Go/v2"
-	"github.com/voiceittech/VoiceIt2-Go/v2/structs"
+	voiceit3 "github.com/voiceittech/VoiceIt3-Go/v3"
+	"github.com/voiceittech/VoiceIt3-Go/v3/structs"
 	"github.com/voiceittech/VoiceIt3-WebSDK/voiceit-go-websdk/utils"
 )
 
@@ -25,7 +25,7 @@ type BaseUrls struct {
 }
 
 type WebSDK struct {
-	vi                         voiceit2.VoiceIt2
+	vi                         voiceit3.VoiceIt3
 	sessionExpirationTimeHours int
 }
 
@@ -33,7 +33,7 @@ func (websdk WebSDK) GetSessionExpirationTimeHours() int {
 	return websdk.sessionExpirationTimeHours
 }
 
-func (websdk WebSDK) GetAPI2Client() voiceit2.VoiceIt2 {
+func (websdk WebSDK) GetAPI2Client() voiceit3.VoiceIt3 {
 	return websdk.vi
 }
 
@@ -51,7 +51,7 @@ func (websdk *WebSDK) Initialize(apiKey, apiToken string, sessionExpirationTimeH
 		}
 	}
 
-	websdk.vi = voiceit2.VoiceIt2{
+	websdk.vi = voiceit3.VoiceIt3{
 		APIKey:   apiKey,
 		APIToken: apiToken,
 		BaseUrl:  api2BaseUrl,
@@ -59,8 +59,8 @@ func (websdk *WebSDK) Initialize(apiKey, apiToken string, sessionExpirationTimeH
 
 	websdk.sessionExpirationTimeHours = sessionExpirationTimeHours
 
-	voiceit2.PlatformVersion = platformVersion
-	voiceit2.PlatformId = platformId
+	voiceit3.PlatformVersion = platformVersion
+	voiceit3.PlatformId = platformId
 
 }
 
