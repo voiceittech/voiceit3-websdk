@@ -1,5 +1,5 @@
 {
-  "name": "voiceit-node-websdk",
+  "name": "voiceit3-node-websdk",
   "version": "1.6.0",
   "description": "NodeJS Backend for VoiceIt Web SDK",
   "main": "index.js",
