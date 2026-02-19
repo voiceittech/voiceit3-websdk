@@ -9,9 +9,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/golang-jwt/jwt"
-	voiceit3 "github.com/voiceittech/VoiceIt3-Go/v2"
-	"github.com/voiceittech/VoiceIt3-Go/v2/structs"
+	"github.com/golang-jwt/jwt/v5"
+	voiceit2 "github.com/voiceittech/VoiceIt2-Go/v2"
+	"github.com/voiceittech/VoiceIt2-Go/v2/structs"
 	"github.com/voiceittech/VoiceIt3-WebSDK/voiceit-go-websdk/utils"
 )
 
@@ -25,7 +25,7 @@ type BaseUrls struct {
 }
 
 type WebSDK struct {
-	vi                         voiceit3.VoiceIt3
+	vi                         voiceit2.VoiceIt2
 	sessionExpirationTimeHours int
 }
 
@@ -33,7 +33,7 @@ func (websdk WebSDK) GetSessionExpirationTimeHours() int {
 	return websdk.sessionExpirationTimeHours
 }
 
-func (websdk WebSDK) GetAPI2Client() voiceit3.VoiceIt3 {
+func (websdk WebSDK) GetAPI2Client() voiceit2.VoiceIt2 {
 	return websdk.vi
 }
 
@@ -51,7 +51,7 @@ func (websdk *WebSDK) Initialize(apiKey, apiToken string, sessionExpirationTimeH
 		}
 	}
 
-	websdk.vi = voiceit3.VoiceIt3{
+	websdk.vi = voiceit2.VoiceIt2{
 		APIKey:   apiKey,
 		APIToken: apiToken,
 		BaseUrl:  api2BaseUrl,
@@ -59,14 +59,14 @@ func (websdk *WebSDK) Initialize(apiKey, apiToken string, sessionExpirationTimeH
 
 	websdk.sessionExpirationTimeHours = sessionExpirationTimeHours
 
-	voiceit3.PlatformVersion = platformVersion
-	voiceit3.PlatformId = platformId
+	voiceit2.PlatformVersion = platformVersion
+	voiceit2.PlatformId = platformId
 
 }
 
 type Claims struct {
 	UserId string `json:"userId"`
-	jwt.StandardClaims
+	jwt.RegisteredClaims
 }
 
 func (websdk WebSDK) GenerateTokenForUser(userId string) (string, error) {
@@ -75,9 +75,8 @@ func (websdk WebSDK) GenerateTokenForUser(userId string) (string, error) {
 	// Create the JWT claims, which includes the username and expiry time
 	claims := &Claims{
 		UserId: userId,
-		StandardClaims: jwt.StandardClaims{
-			// In JWT, the expiry time is expressed as unix milliseconds
-			ExpiresAt: expirationTime.Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
 	}
 

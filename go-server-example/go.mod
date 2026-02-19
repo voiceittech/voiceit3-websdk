@@ -8,6 +8,8 @@ require (
 )
 
 require (
-	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
-	github.com/voiceittech/VoiceIt3-Go/v2 v2.6.1 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
+	github.com/voiceittech/VoiceIt2-Go/v2 v2.7.2 // indirect
 )
+
+replace github.com/voiceittech/VoiceIt3-WebSDK/voiceit-go-websdk => ../voiceit-go-websdk
