@@ -1,4 +1,4 @@
-module github.com/voiceittech/VoiceIt3-WebSDK/voiceit-go-websdk
+module github.com/voiceittech/VoiceIt3-WebSDK/voiceit3-go-websdk
 
 go 1.17
 

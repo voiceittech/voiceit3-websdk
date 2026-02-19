@@ -78,8 +78,8 @@ typings/
 .DS_Store
 
 # Go WebSDK Backend/Example
-go-server-example/output.txt
-go-server-example/go-server-example
+voiceit3-go-server-example/output.txt
+voiceit3-go-server-example/voiceit3-go-server-example
 
-node-server-example/*.mp4
-node-server-example/*.wav
+voiceit3-node-server-example/*.mp4
+voiceit3-node-server-example/*.wav

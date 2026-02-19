@@ -1,5 +1,5 @@
 <?php
-require('../../voiceit-php-websdk/VoiceIt3WebBackend.php');
+require('../../voiceit3-php-websdk/VoiceIt3WebBackend.php');
 include('../config.php');
 
 

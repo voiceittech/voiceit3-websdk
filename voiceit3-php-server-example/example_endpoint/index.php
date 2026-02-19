@@ -1,6 +1,6 @@
 <?php
 session_start();
-require('../../voiceit-php-websdk/VoiceIt3WebBackend.php');
+require('../../voiceit3-php-websdk/VoiceIt3WebBackend.php');
 include('../config.php');
 
 if (!function_exists('str_contains')) {

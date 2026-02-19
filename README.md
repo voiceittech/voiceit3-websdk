@@ -63,41 +63,41 @@ For update to date web browser support please visit: [HERE](https://en.wikipedia
 The following show Voice Verification, Face Verification (With liveness detection on) and Video Verification (with Liveness turned off), respectively.
 
 <div style="background: #000 !important;">
-  <img width="290px" src="./graphics/voiceVerification.gif" style="display: inline-block !important"/><img width="290px" src="./graphics/faceVerification.gif" style="display: inline-block !important;"/><img width="290px" src="./graphics/videoVerification.gif" style="display: inline-block !important;"/>
+  <img width="290px" src="./voiceit3-graphics/voiceVerification.gif" style="display: inline-block !important"/><img width="290px" src="./voiceit3-graphics/faceVerification.gif" style="display: inline-block !important;"/><img width="290px" src="./voiceit3-graphics/videoVerification.gif" style="display: inline-block !important;"/>
 </div>
 
 ### Getting Started
 
 Contact us at <a href="mailto:support@voiceit.io" target="_blank">support@voiceit.io</a> to get started with an account to use API 3.0.
 
-<img src="./graphics/getcredentials.png" alt="API Key and Token" width="400px" />
+<img src="./voiceit3-graphics/getcredentials.png" alt="API Key and Token" width="400px" />
 
 #### The Config File
 
 ##### *PHP*
-Before starting the Example, please navigate to `VoiceIt3-WebSDK/php-server-example/config.php`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
+Before starting the Example, please navigate to `VoiceIt3-WebSDK/voiceit3-php-server-example/config.php`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
 
 ##### *NodeJS*
-Before starting the Example, please navigate to `VoiceIt3-WebSDK/node-server-example/config.js`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
+Before starting the Example, please navigate to `VoiceIt3-WebSDK/voiceit3-node-server-example/config.js`. Please replace the `API_KEY_HERE` with your API Key, and `API_TOKEN_HERE` with your API Token. And add the userId created in the User Management section before in place of the `TEST_USER_ID_HERE`.
 
 #### Making changes to the frontend 
-The frontend folder holds the frontend source files, all of which are compiled using webpack into the dist folder. The script compile.sh does the compilation and transfers the voiceit.min.js file to the Node and PHP SDKs. TO make chagnes to the fronend sources, navigate to the frontend/src folder and make the respective changes. cd .. back to the fronend folder and execute the compile.sh script to transfer the changes you made to the php and node examples
+The frontend folder holds the frontend source files, all of which are compiled using webpack into the voiceit3-dist folder. The script compile.sh does the compilation and transfers the voiceit.min.js file to the Node and PHP SDKs. TO make chagnes to the fronend sources, navigate to the voiceit3-frontend/src folder and make the respective changes. cd .. back to the voiceit3-frontend folder and execute the compile.sh script to transfer the changes you made to the php and node examples
 
 ``` 
 ./compile.sh
 ```
 
 #### Setting the Content Language
-To set the content language of the SDK (the language of the UI/interface i.e), navigate to node-server-example/public/js/index.js file and set the language at line 1. For the php example, do the same change to the php-server-example/js/index.js file 
+To set the content language of the SDK (the language of the UI/interface i.e), navigate to voiceit3-node-server-example/public/js/index.js file and set the language at line 1. For the php example, do the same change to the voiceit3-php-server-example/js/index.js file 
 
 
 #### Running the Example
 
 ##### *PHP*
-Start your server(Apache), pointing to the `VoiceIt3-WebSDK/php-server-example` directory as the document root directory.
+Start your server(Apache), pointing to the `VoiceIt3-WebSDK/voiceit3-php-server-example` directory as the document root directory.
 
 ##### *NodeJS*
-First navigate to `VoiceIt3-WebSDK/voiceit-node-websdk` via the command line and run `npm install`. Then navigate to the `VoiceIt3-WebSDK/node-server-example` directory via the command line, and run `npm install` to install all the required node modules. Finally, run `npm start` to start the server on port 3000.
+First navigate to `VoiceIt3-WebSDK/voiceit3-node-websdk` via the command line and run `npm install`. Then navigate to the `VoiceIt3-WebSDK/voiceit3-node-server-example` directory via the command line, and run `npm install` to install all the required node modules. Finally, run `npm start` to start the server on port 3000.
 
 Now visit your server at its designated port in an appropriate browser, and you should see a demo login page. In the email input, type: `demo@voiceit.io`. In the password input, type: `demo123`. After submitting the form, further verification/enrollment methods will appear that you can test out. Please first do an enrollment, such as a face enrollment, then after a successful enrollment you can test the face verification method (Note: you will need to give your browser both microphone and camera permissions to test the demo).
 
@@ -127,31 +127,31 @@ const form = new FormData();
 ```
 
 ## Incorporating the SDK
-<img src="./graphics/diagram.png" width="70%" style="width:70%" />
+<img src="./voiceit3-graphics/diagram.png" width="70%" style="width:70%" />
 
 Parts of the Example can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification with/without Liveness), can be implemented independently, providing a total of 27 different use-cases (such as voice-only verification, or face enrollment and video verification, or video-only verification with Liveness, to name a few). For any such use-case, a backend and frontend implementation is required:
 
 ### Backend Implementation
 
 ##### *PHP*
-Please copy the folder `VoiceIt3-WebSDK/voiceit-php-websdk` to you project root.
+Please copy the folder `VoiceIt3-WebSDK/voiceit3-php-websdk` to you project root.
 
-The base module for the backend is `VoiceIt3-WebSDK/voiceit-php-websdk/VoiceIt3WebBackend.php`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action (any from the possible 27) for a specific user, in a specific web session.
+The base module for the backend is `VoiceIt3-WebSDK/voiceit3-php-websdk/VoiceIt3WebBackend.php`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action (any from the possible 27) for a specific user, in a specific web session.
 
 ##### *NodeJS*
-Please copy the folder `VoiceIt3-WebSDK/voiceit-node-websdk` to you project root. Now navigate to `voiceit-node-websdk` folder via the command line and run the command `npm install` or `yarn install` depending on your preferred package manager.
+Please copy the folder `VoiceIt3-WebSDK/voiceit3-node-websdk` to you project root. Now navigate to `voiceit3-node-websdk` folder via the command line and run the command `npm install` or `yarn install` depending on your preferred package manager.
 
-The base module for the backend is `voiceit-node-websdk`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action for a specific user, in a specific web session.
+The base module for the backend is `voiceit3-node-websdk`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action for a specific user, in a specific web session.
 
 #### Initializing the Base Module
 
 ##### *PHP*
-The base module needs to be initialized in a file that is publicly accessible via the server, such as `VoiceIt3-WebSDK/php-server-example/example_endpoint/index.php`. Initialize the VoiceIt3WebBackend like the following
+The base module needs to be initialized in a file that is publicly accessible via the server, such as `VoiceIt3-WebSDK/voiceit3-php-server-example/example_endpoint/index.php`. Initialize the VoiceIt3WebBackend like the following
 
 ```php
-// Note: You might have to modify the require path of the voiceit-php-websdk folder
+// Note: You might have to modify the require path of the voiceit3-php-websdk folder
 // depending on where you placed the folder in your project
-require('voiceit-php-websdk/VoiceIt3WebBackend.php');
+require('voiceit3-php-websdk/VoiceIt3WebBackend.php');
 // Replace these strings with your own credentials
 $myVoiceIt = new VoiceIt3WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN");
 
@@ -179,7 +179,7 @@ The base module needs to be initialized at a `POST` endpoint publicly accessible
 
 ```javascript
 ...
-const VoiceIt3WebSDK = require('../voiceit-node-websdk')
+const VoiceIt3WebSDK = require('../voiceit3-node-websdk')
 const multer = require('multer')()
 
 
@@ -217,13 +217,13 @@ After the completion of any verification action, the `voiceItResultCallback` wil
 ```
 
 #### Generating a Secure Token
-Similarly to `VoiceIt3-WebSDK/php-server-example/login/index.php` or the `/login` route in `VoiceIt3-WebSDK/node-server-example/server.js` you need to initialize the backend and then generate a secure token for the user in the backend, and send it to front end via an API call once the user is successfully authenticated via a username and password login or any other means. This token is then passed to the frontend to authorize the biometric login. Here is an example of how to generate the token in the backend.
+Similarly to `VoiceIt3-WebSDK/voiceit3-php-server-example/login/index.php` or the `/login` route in `VoiceIt3-WebSDK/voiceit3-node-server-example/server.js` you need to initialize the backend and then generate a secure token for the user in the backend, and send it to front end via an API call once the user is successfully authenticated via a username and password login or any other means. This token is then passed to the frontend to authorize the biometric login. Here is an example of how to generate the token in the backend.
 
 ##### *PHP*
 ```php
-// Note: You might have to modify the require path of the voiceit-php-websdk folder
+// Note: You might have to modify the require path of the voiceit3-php-websdk folder
 // depending on where you placed the folder in your project
-require('voiceit-php-websdk/VoiceIt3WebBackend.php');
+require('voiceit3-php-websdk/VoiceIt3WebBackend.php');
 
 // Upon a successful login, lookup the associated VoiceIt userId
 $VOICEIT_USERID = "VOICEIT_USER_ID_AFTER_DATABASE_LOOKUP";
@@ -250,7 +250,7 @@ echo json_encode($jsonResponse);
 ##### *NodeJS*
 ```javascript
 ...
-const VoiceIt3WebSDK = require('../voiceit-node-websdk');
+const VoiceIt3WebSDK = require('../voiceit3-node-websdk');
 
 app.get('/login', function (req, res) {
 	// Upon a successful login, lookup the associated VoiceIt userId
@@ -276,7 +276,7 @@ The frontend can be implemented in a modular fashion - each type (voice, face, a
 
 #### Initializing the frontend
 
-To incorporate the frontend, please copy the file `VoiceIt3-WebSDK/dist/voiceit3.min.js` (javascript library) to your public directory exposed via the web server or to a designated folder for other included javascript files on the webpage for authentication.
+To incorporate the frontend, please copy the file `VoiceIt3-WebSDK/voiceit3-dist/voiceit3.min.js` (javascript library) to your public directory exposed via the web server or to a designated folder for other included javascript files on the webpage for authentication.
 
 Then include the minified JavaScript file `voiceit3.min.js` via a script tag on the webpage.
 
@@ -423,7 +423,7 @@ myVoiceIt.encapsulatedVideoVerification({
 
 ### Implementation Diagram 
 
-<img src="./graphics/diagram.png" width="70%" style="width:70%" />
+<img src="./voiceit3-graphics/diagram.png" width="70%" style="width:70%" />
 
 ### Changing the Content Language
 

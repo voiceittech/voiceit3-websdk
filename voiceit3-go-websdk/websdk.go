@@ -12,7 +12,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	voiceit3 "github.com/voiceittech/VoiceIt3-Go/v3"
 	"github.com/voiceittech/VoiceIt3-Go/v3/structs"
-	"github.com/voiceittech/VoiceIt3-WebSDK/voiceit-go-websdk/utils"
+	"github.com/voiceittech/VoiceIt3-WebSDK/voiceit3-go-websdk/utils"
 )
 
 const (
