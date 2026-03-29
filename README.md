@@ -49,7 +49,7 @@ The repository contains an example [web demonstration](#web-example) of VoiceIt'
 The following show Voice Verification, Face Verification, and Video Verification, respectively.
 
 <div style="background: #000 !important;">
-  <img width="290px" src="./voiceit3-graphics/voiceVerification.gif" style="display: inline-block !important"/><img width="290px" src="./voiceit3-graphics/faceVerification.gif" style="display: inline-block !important;"/><img width="290px" src="./voiceit3-graphics/videoVerification.gif" style="display: inline-block !important;"/>
+  <img width="290px" src="./voiceit3-graphics/voiceVerification.png" style="display: inline-block !important"/><img width="290px" src="./voiceit3-graphics/faceVerification.png" style="display: inline-block !important;"/><img width="290px" src="./voiceit3-graphics/videoVerification.png" style="display: inline-block !important;"/>
 </div>
 
 ## Web Example
