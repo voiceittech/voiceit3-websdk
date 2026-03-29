@@ -143,7 +143,6 @@ export default function Modal(mRef, language) {
         'alignContent': 'center'
       },
       'nodeName': 'div',
-      'elName':'livenessOverlay',
       'parent': 'cardOverlay'
     },{
       'styles':{
@@ -215,21 +214,15 @@ export default function Modal(mRef, language) {
         'color': 'white',
         'fontStyle': 'normal'
       },
-      'elName': 'livenessText',
       'nodeName': 'h4',
-      'parent': 'livenessOverlay',
-      'text': prompts.getPrompt('LIVENESS_READY_PROMPT')
     },
     // {
     //   'styles':{
     //     'width': '70%'
     //   },
     //   'attributes': {
-    //     'src': language == 'es-ES' ? LivenessTutorialES : LivenessTutorial
     //   },
-    //   'elName':'livenessTutorial',
     //   'nodeName': 'img',
-    //   'parent': 'livenessOverlay'
     // },
     {
       'styles':{
@@ -242,7 +235,6 @@ export default function Modal(mRef, language) {
       },
       'elName': 'skipButton',
       'nodeName': 'a',
-      'parent': 'livenessOverlay',
       'text': language === 'es-ES' ? 'Omitir' : 'Skip'
     }, {
       'styles':{
@@ -449,7 +441,6 @@ export default function Modal(mRef, language) {
     vi$.createProgressCircle(VoiceItModalRef.domRef.progressCircle, animationDuration);
   }
 
-  VoiceItModalRef.createLivenessCircle = function(animationDuration){
     if(VoiceItModalRef.domRef.progressCircle){
       vi$.remove(VoiceItModalRef.domRef.progressCircle);
     }
@@ -474,7 +465,6 @@ export default function Modal(mRef, language) {
       VoiceItModalRef.domRef.progressCircle.style[prop] = progressCircleProps.styles[prop];
     }
     VoiceItModalRef.domRef.overlayHolder.insertBefore(VoiceItModalRef.domRef.progressCircle, VoiceItModalRef.domRef.imageCanvas);
-    VoiceItModalRef.livenessCircleInstance = new ProgressBar.Circle(VoiceItModalRef.domRef.progressCircle, {
       strokeWidth: 3,
       easing: 'easeInOut',
       color: Colors.MAIN_THEME_COLOR,
@@ -482,12 +472,9 @@ export default function Modal(mRef, language) {
       trailWidth: 0,
       svgStyle: null
     });
-    VoiceItModalRef.livenessCircleInstance.set(1.0);
   }
 
   VoiceItModalRef.updateProgressCircle = function(circleId, value, color){
-    VoiceItModalRef.livenessCircleInstance.path.setAttribute('stroke', color);
-    VoiceItModalRef.livenessCircleInstance.set(value);
   }
 
   // Create audio prompts for face verification
@@ -647,12 +634,9 @@ export default function Modal(mRef, language) {
     }
   }
 
-  VoiceItModalRef.endLivenessTutorial = function(){
-    vi$.fadeOut(VoiceItModalRef.domRef.livenessOverlay, 400, function() {
       VoiceItModalRef.domRef.readyButton.style.display = 'inline-block';
       vi$.fadeIn(VoiceItModalRef.domRef.readyButton, 100);
       VoiceItModalRef.domRef.content.style.display = 'block';
-      vi$.remove(VoiceItModalRef.domRef.livenessOverlay);
       if(VoiceItModalRef.domRef.imageCanvas) {
          VoiceItModalRef.domRef.imageCanvas.style.opacity = 1.0;
       }
@@ -661,13 +645,7 @@ export default function Modal(mRef, language) {
 
   // TODO: Refactor this to a createOverlay method
   // VoiceItModalRef.revealLivenessOverlay = function(){
-  //   if(!VoiceItModalRef.domRef.livenessOverlay){ return; }
-  //   VoiceItModalRef.domRef.livenessOverlay.style.opacity = 1.0;
-  //   VoiceItModalRef.domRef.livenessOverlay.style.display = 'inline-flex';
-  //   VoiceItModalRef.domRef.livenessText.style.display = '';
   //   VoiceItModalRef.domRef.content.style.display = 'none';
-  //   vi$.delay(TIME_TO_READ_LIVENESS_TUTORIAL, function(){
-  //     VoiceItModalRef.endLivenessTutorial();
   //   })
   // }
 
@@ -689,7 +667,6 @@ export default function Modal(mRef, language) {
     VoiceItModalRef.domRef.viMessage.style.display = 'inline-block';
   }
 
-  VoiceItModalRef.showWaitingLoader = function(down, livenessText){
         if(VoiceItModalRef.domRef.waitingLoader){
           vi$.remove(VoiceItModalRef.domRef.waitingLoader);
         }
@@ -725,7 +702,6 @@ export default function Modal(mRef, language) {
         //add the checking text Here
         var overflowParent = document.getElementsByClassName('image')[0].children[1];
         overflowParent.style.overflow = '';
-        if (livenessText){
           var checkingText = document.createElement('div');
           checkingText.textContent = 'Checking';
           checkingText.id = 'checkingText';
