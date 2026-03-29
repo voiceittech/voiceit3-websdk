@@ -1,6 +1,14 @@
 {
-  "name": "voiceit3-websdk",
+  "name": "@voiceittech/voiceit3-websdk",
   "version": "1.7.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/voiceittech/VoiceIt3-WebSDK.git",
+    "directory": "voiceit3-frontend"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "start": "node src/index.js",
     "build": "./node_modules/webpack/bin/webpack.js"
