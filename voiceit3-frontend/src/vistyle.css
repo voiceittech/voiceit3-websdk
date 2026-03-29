@@ -43,12 +43,6 @@
   padding-bottom: 0px;
 }
 
-#videoLiveness {
-  position: relative;
-  height: 345px;
-  width: 460px;
-  display: none;
-}
 
 .viVideo {
   display: none !important;

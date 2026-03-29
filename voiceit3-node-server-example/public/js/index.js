@@ -64,12 +64,9 @@ async function exampleLoginAPICall(values) {
     });
 }
 
-function isLivenessEnabled(){
   return document.querySelector('#livenessToggle').checked;
 }
 
-function isLivenessAudioEnabled(){
-  return document.querySelector('#livenessAudioToggle').checked;
 }
 
 function takeToConsole(){
@@ -137,9 +134,7 @@ async function setupFrontEnd() {
 
   livenessToggleElem.addEventListener( 'change', function() {
       if(this.checked) {
-        document.getElementById("livenessAudioContainer").style.visibility = "visible";
       } else {
-        document.getElementById("livenessAudioContainer").style.visibility = "hidden";
       }
   });
   document.querySelector('#faceVerificationBtn').addEventListener('click', function() {
@@ -151,8 +146,6 @@ async function setupFrontEnd() {
 		}, 1000);
 
     myVoiceIt.encapsulatedFaceVerification({
-      doLiveness:isLivenessEnabled(),
-      doLivenessAudio: isLivenessAudioEnabled(),
       contentLanguage:contentLanguage,
       needEnrollmentsCallback:function(){
         // Three voice enrollments needed
@@ -196,8 +189,6 @@ async function setupFrontEnd() {
 		}, 1000);
 
     myVoiceIt.encapsulatedVideoVerification({
-      doLiveness:isLivenessEnabled(),
-      doLivenessAudio: isLivenessAudioEnabled(),
       contentLanguage:contentLanguage,
       phrase:'never forget tomorrow is a new day',
       needEnrollmentsCallback:function(){
