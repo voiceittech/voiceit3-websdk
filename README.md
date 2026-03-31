@@ -2,12 +2,17 @@
 
 # VoiceIt API 3.0 Web SDK
 
-The repository contains an example [web demonstration](#web-example) of VoiceIt's API 3.0 in the browser with a PHP or NodeJS backend. Please navigate to [Incorporating the SDK](#incorporating-the-sdk) for instructions on how to integrate the SDK into your own project(s).
+[![Version](https://img.shields.io/badge/version-1.10.0-blue)](https://github.com/voiceittech/VoiceIt3-WebSDK)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/voiceittech/VoiceIt3-WebSDK/blob/main/LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/voiceittech/VoiceIt3-WebSDK)](https://github.com/voiceittech/VoiceIt3-WebSDK/stargazers)
+[![Platform](https://img.shields.io/badge/platform-web-orange)](https://voiceit.io/demo)
+
+This repository contains an example [web demonstration](#web-example) of VoiceIt's API 3.0 in the browser with a PHP, NodeJS, or Go backend. See [Incorporating the SDK](#incorporating-the-sdk) for instructions on integrating the SDK into your own project.
 
 * [Backend Options](#backend-options)
 * [Supported Browsers](#supported-browsers)
+* [UI Screenshots](#ui-screenshots)
 * [Web Example](#web-example)
-  * [UI Screenshots](#ui-screenshots)
   * [Getting Started](#getting-started)
     * [The Config File](#the-config-file)
     * [Making Changes to the Frontend](#making-changes-to-the-frontend)
@@ -23,7 +28,7 @@ The repository contains an example [web demonstration](#web-example) of VoiceIt'
     * [Setting the Secure Token](#setting-the-secure-token)
     * [Enrollment and Verification Methods](#enrollment-and-verification-methods)
   * [Implementation Diagram](#implementation-diagram)
-  * [Content Languages](#changing-the-content-language)
+  * [Changing the Content Language](#changing-the-content-language)
 * [Getting Help](#getting-help)
 
 ## Backend Options
@@ -69,31 +74,36 @@ Sign up at [voiceit.io/pricing](https://voiceit.io/pricing) to get your API Key 
 #### The Config File
 
 ##### PHP
-Navigate to `VoiceIt3-WebSDK/voiceit3-php-server-example/config.php`. Replace `API_KEY_HERE` with your API Key, `API_TOKEN_HERE` with your API Token, and `TEST_USER_ID_HERE` with a userId.
+Navigate to `voiceit3-php-server-example/config.php`. Replace `API_KEY_HERE` with your API Key, `API_TOKEN_HERE` with your API Token, and `TEST_USER_ID_HERE` with a userId.
 
 ##### NodeJS
-Navigate to `VoiceIt3-WebSDK/voiceit3-node-server-example/config.js`. Replace `API_KEY_HERE` with your API Key, `API_TOKEN_HERE` with your API Token, and `TEST_USER_ID_HERE` with a userId.
+Navigate to `voiceit3-node-server-example/config.js`. Replace `API_KEY_HERE` with your API Key, `API_TOKEN_HERE` with your API Token, and `TEST_USER_ID_HERE` with a userId.
+
+##### Go
+Navigate to `voiceit3-go-server-example/config.go`. Replace `[API_KEY_HERE]` with your API Key, `[API_TOKEN_HERE]` with your API Token, and `[TEST_USER_ID_HERE]` with a userId.
 
 #### Making Changes to the Frontend
-The frontend folder holds the source files, compiled using webpack into the voiceit3-dist folder. The script `compile.sh` compiles and transfers `voiceit3.min.js` to the Node and PHP examples.
+The frontend source files are in the `voiceit3-frontend/` folder, compiled using webpack into the `voiceit3-dist/` folder. Run the compile script from the `voiceit3-frontend/` directory to rebuild and copy `voiceit3.min.js` to all example server directories:
 
 ```bash
-./compile.sh
+cd voiceit3-frontend && ./compile.sh
 ```
-
-#### Setting the Content Language
-To set the content language, navigate to the `index.js` file in the example server's public/js directory and set the language at line 1.
 
 #### Running the Example
 
 ##### PHP
-Start your server (Apache), pointing to `VoiceIt3-WebSDK/voiceit3-php-server-example` as the document root.
+Start your server (Apache), pointing to `voiceit3-php-server-example` as the document root.
 
 ##### NodeJS
 ```bash
-cd VoiceIt3-WebSDK/voiceit3-node-websdk && npm install
+cd voiceit3-node-websdk && npm install
 cd ../voiceit3-node-server-example && npm install
 npm start
+```
+
+##### Go
+```bash
+cd voiceit3-go-server-example && go run .
 ```
 
 Visit your server at port 3000. Use `demo@voiceit.io` / `demo123` to log in. First complete enrollment(s), then test verification. You will need to grant microphone and camera permissions.
@@ -143,6 +153,27 @@ app.post('/example_endpoint', multer.any(), function (req, res) {
 });
 ```
 
+##### Go
+```go
+import websdk "github.com/voiceittech/VoiceIt3-WebSDK/voiceit3-go-websdk"
+
+var backend websdk.WebSDK
+
+func init() {
+  backend.Initialize("YOUR_API_KEY", "YOUR_API_TOKEN", 1)
+}
+
+router.Post("/example_endpoint", func(w http.ResponseWriter, r *http.Request) {
+  ret, err := backend.MakeCall(r)
+  if err != nil {
+    // Handle error
+    return
+  }
+  bytes, _ := json.Marshal(ret)
+  w.Write(bytes)
+})
+```
+
 #### Getting the Result
 After verification, the callback receives:
 
@@ -190,6 +221,22 @@ app.get('/login', function (req, res) {
     'Token': createdToken
   });
 });
+```
+
+##### Go
+```go
+tok, err := backend.GenerateTokenForUser(VOICEIT_USERID)
+if err != nil {
+  // Handle error
+  return
+}
+
+ret := map[string]string{
+  "ResponseCode": "SUCC",
+  "Token": tok,
+}
+bytes, _ := json.Marshal(ret)
+w.Write(bytes)
 ```
 
 ### Frontend Implementation
@@ -304,11 +351,11 @@ myVoiceIt.encapsulatedVideoVerification({
 
 ### Changing the Content Language
 
-#### For PHP
-Set at line 1 in `voiceit3-php-server-example/js/index.js`
+The content language is configured in each backend's config file:
 
-#### For NodeJS
-Set at line 1 in `voiceit3-node-server-example/public/js/index.js`
+* **PHP:** Set `CONTENT_LANGUAGE` in `voiceit3-php-server-example/config.php`
+* **NodeJS:** Set `CONTENT_LANGUAGE` in `voiceit3-node-server-example/config.js`
+* **Go:** Set `CONTENT_LANGUAGE` in `voiceit3-go-server-example/config.go`
 
 ## Getting Help
 Need help? Found a bug? Contact us at [support@voiceit.tech](mailto:support@voiceit.tech).
