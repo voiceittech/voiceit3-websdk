@@ -33,16 +33,22 @@ The repository contains an example [web demonstration](#web-example) of VoiceIt'
 ## Supported Browsers
 
 **Desktop:**
-* Google Chrome 55+
-* Firefox 52+
-* Safari 14.1+
-* Microsoft Edge 79+
-* Opera 42+
+
+| Browser | Minimum Version | Windows | macOS | Linux |
+|---------|----------------|---------|-------|-------|
+| Google Chrome | 55+ | 7+ | 10.12+ | 64-bit |
+| Firefox | 52+ | 7+ | 10.12+ | 64-bit |
+| Safari | 14.1+ | — | 10.15+ | — |
+| Microsoft Edge | 79+ | 10+ | 10.12+ | 64-bit |
+| Opera | 42+ | 7+ | 10.12+ | 64-bit |
 
 **Mobile:**
-* Google Chrome for Android 55+
-* Safari iOS 14.5+
-* Firefox for Android 52+
+
+| Browser | Minimum Version | Android | iOS |
+|---------|----------------|---------|-----|
+| Google Chrome | 55+ | 6.0+ | 14.0+ |
+| Safari | 14.5+ | — | 14.5+ |
+| Firefox | 52+ | 6.0+ | 14.0+ |
 
 > **Note:** Internet Explorer is not supported. The SDK requires modern browser APIs including MediaRecorder, async/await, and getUserMedia.
 
