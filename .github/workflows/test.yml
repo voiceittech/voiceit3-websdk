@@ -1,0 +1,27 @@
+name: Build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+      - name: Build frontend
+        run: |
+          cd voiceit3-frontend
+          npm install
+          npm run build
+      - name: Build Go server
+        run: |
+          cd voiceit3-go-server-example
+          go build ./...
+      - name: Check Node server syntax
+        run: |
+          cd voiceit3-node-server-example
+          npm install
+          node --check server.js
