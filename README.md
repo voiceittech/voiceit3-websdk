@@ -358,5 +358,10 @@ The content language is configured in each backend's config file:
 * **NodeJS:** Set `CONTENT_LANGUAGE` in `voiceit3-node-server-example/config.js`
 * **Go:** Set `CONTENT_LANGUAGE` in `voiceit3-go-server-example/config.go`
 
+
+## Documentation
+
+For detailed API documentation, visit [voiceit.io/documentation](https://voiceit.io/documentation).
+
 ## Getting Help
 Need help? Found a bug? Contact us at [support@voiceit.tech](mailto:support@voiceit.tech).
