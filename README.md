@@ -3,7 +3,7 @@
 # VoiceIt API 3.0 Web SDK
 
 [![Build](https://github.com/voiceittech/VoiceIt3-WebSDK/actions/workflows/test.yml/badge.svg)](https://github.com/voiceittech/VoiceIt3-WebSDK/actions/workflows/test.yml)
-[![Dependabot](https://img.shields.io/badge/dependabot-enabled-025e8c?logo=dependabot)](https://github.com/voiceittech/VoiceIt3-WebSDK/security/dependabot)
+[![Dependabot](https://img.shields.io/badge/dependabot-100%25-025e8c?logo=dependabot)](https://github.com/voiceittech/VoiceIt3-WebSDK/security/dependabot)
 [![Version](https://img.shields.io/badge/version-1.10.0-blue)](https://github.com/voiceittech/VoiceIt3-WebSDK)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/voiceittech/VoiceIt3-WebSDK/blob/main/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/voiceittech/VoiceIt3-WebSDK)](https://github.com/voiceittech/VoiceIt3-WebSDK/stargazers)
