@@ -97,6 +97,13 @@ cd voiceit3-frontend && ./compile.sh
 Start your server (Apache), pointing to `voiceit3-php-server-example` as the document root.
 
 ##### NodeJS
+
+Packages are hosted on [GitHub Packages](https://github.com/orgs/voiceittech/packages). Add the registry to your `.npmrc`:
+```
+@voiceittech:registry=https://npm.pkg.github.com
+```
+
+Then install:
 ```bash
 cd voiceit3-node-websdk && npm install
 cd ../voiceit3-node-server-example && npm install
