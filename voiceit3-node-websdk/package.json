@@ -1,6 +1,6 @@
 {
   "name": "@voiceittech/voiceit3-node-websdk",
-  "version": "1.8.0",
+  "version": "3.0.0",
   "description": "VoiceIt3-node-webSDK - NodeJS Backend for VoiceIt API 3.0 Web SDK",
   "main": "index.js",
   "author": "VoiceIt Technologies, LLC",

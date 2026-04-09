@@ -1,6 +1,6 @@
 {
   "name": "voiceit3-node-server-example",
-  "version": "1.6.0",
+  "version": "3.0.0",
   "description": "Node Web SDK Example",
   "main": "server.js",
   "scripts": {
