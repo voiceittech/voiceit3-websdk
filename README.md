@@ -2,11 +2,11 @@
 
 # VoiceIt API 3.0 Web SDK
 
-[![Build](https://github.com/voiceittech/VoiceIt3-WebSDK/actions/workflows/test.yml/badge.svg)](https://github.com/voiceittech/VoiceIt3-WebSDK/actions/workflows/test.yml)
-[![Dependabot](https://img.shields.io/github/issues-pr/voiceittech/VoiceIt3-WebSDK/dependencies?label=dependabot&logo=dependabot&color=025e8c)](https://github.com/voiceittech/VoiceIt3-WebSDK/pulls?q=is%3Apr+label%3Adependencies)
-[![Version](https://img.shields.io/badge/version-1.10.0-blue)](https://github.com/voiceittech/VoiceIt3-WebSDK)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/voiceittech/VoiceIt3-WebSDK/blob/main/LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/voiceittech/VoiceIt3-WebSDK)](https://github.com/voiceittech/VoiceIt3-WebSDK/stargazers)
+[![Build](https://github.com/voiceittech/voiceit3-websdk/actions/workflows/test.yml/badge.svg)](https://github.com/voiceittech/voiceit3-websdk/actions/workflows/test.yml)
+[![Dependabot](https://img.shields.io/github/issues-pr/voiceittech/voiceit3-websdk/dependencies?label=dependabot&logo=dependabot&color=025e8c)](https://github.com/voiceittech/voiceit3-websdk/pulls?q=is%3Apr+label%3Adependencies)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue)](https://github.com/voiceittech/voiceit3-websdk)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/voiceittech/voiceit3-websdk/blob/main/LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/voiceittech/voiceit3-websdk)](https://github.com/voiceittech/voiceit3-websdk/stargazers)
 [![Platform](https://img.shields.io/badge/platform-web-orange)](https://voiceit.io/demo)
 
 This repository contains an example [web demonstration](#web-example) of VoiceIt's API 3.0 in the browser with a PHP, NodeJS, or Go backend. See [Incorporating the SDK](#incorporating-the-sdk) for instructions on integrating the SDK into your own project.
@@ -157,7 +157,7 @@ app.post('/example_endpoint', multer.any(), function (req, res) {
 
 ##### Go
 ```go
-import websdk "github.com/voiceittech/VoiceIt3-WebSDK/voiceit3-go-websdk"
+import websdk "github.com/voiceittech/voiceit3-websdk/voiceit3-go-websdk"
 
 var backend websdk.WebSDK
 
