@@ -6,8 +6,8 @@
 [![Dependabot](https://img.shields.io/github/issues-pr/voiceittech/voiceit3-websdk/dependencies?label=dependabot&logo=dependabot&color=025e8c)](https://github.com/voiceittech/voiceit3-websdk/pulls?q=is%3Apr+label%3Adependencies)
 [![Version](https://img.shields.io/badge/version-3.0.0-blue)](https://github.com/voiceittech/voiceit3-websdk)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/voiceittech/voiceit3-websdk/blob/main/LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/voiceittech/voiceit3-websdk)](https://github.com/voiceittech/voiceit3-websdk/stargazers)
-[![Platform](https://img.shields.io/badge/platform-web-orange)](https://voiceit.io/demo)
+[![Platform](https://img.shields.io/badge/platform-web-lightgrey)](https://voiceit.io/demo)
+[![VoiceIt API](https://img.shields.io/badge/VoiceIt-API%203.0-blue)](https://voiceit.io)
 
 This repository contains an example [web demonstration](#web-example) of VoiceIt's API 3.0 in the browser with a PHP, NodeJS, or Go backend. See [Incorporating the SDK](#incorporating-the-sdk) for instructions on integrating the SDK into your own project.
 
@@ -129,7 +129,7 @@ Each type (voice, face, and video) and each action (enrollment and verification)
 
 ##### PHP
 ```php
-require('voiceit3-php-websdk/VoiceIt3WebBackend.php');
+require('voiceit3-php-websdk/voiceit3webbackend.php');
 $myVoiceIt = new VoiceIt3WebBackend("YOUR_API_KEY", "YOUR_API_TOKEN");
 
 $voiceItResultCallback = function($jsonObj){
@@ -204,7 +204,7 @@ After verification, the callback receives:
 
 ##### PHP
 ```php
-require('voiceit3-php-websdk/VoiceIt3WebBackend.php');
+require('voiceit3-php-websdk/voiceit3webbackend.php');
 $myVoiceIt = new VoiceIt3WebBackend("YOUR_API_KEY", "YOUR_API_TOKEN");
 $createdToken = $myVoiceIt->generateTokenForUser($VOICEIT_USERID);
 
@@ -371,5 +371,12 @@ The content language is configured in each backend's config file:
 
 For detailed API documentation, visit [voiceit.io/documentation](https://voiceit.io/documentation).
 
-## Getting Help
-Need help? Found a bug? Contact us at [support@voiceit.tech](mailto:support@voiceit.tech).
+## Support
+
+If you find this SDK useful, please consider giving it a star on GitHub — it helps others discover the project!
+
+[![GitHub stars](https://img.shields.io/github/stars/voiceittech/voiceit3-websdk?style=social)](https://github.com/voiceittech/voiceit3-websdk/stargazers)
+
+## License
+
+voiceit3-websdk is available under the MIT license. See the LICENSE file for more info.
