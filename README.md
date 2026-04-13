@@ -115,7 +115,7 @@ npm start
 cd voiceit3-go-server-example && go run .
 ```
 
-Visit your server at port 3000. The example servers come preconfigured with a demo login (`demo@voiceit.io` / `demo123`) — update these credentials in the config file for your setup. First complete enrollment(s), then test verification. You will need to grant microphone and camera permissions.
+Visit your server at port 3000. Set `DEMO_EMAIL` and `DEMO_PASSWORD` in the example server's `.env` (see `.env.example`) — those are the credentials the example `/login` endpoint will accept. First complete enrollment(s), then test verification. You will need to grant microphone and camera permissions.
 
 ## Incorporating the SDK
 
