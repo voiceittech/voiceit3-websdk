@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const express = require('express')
 const session = require('express-session')
 const bodyParser = require('body-parser')
@@ -10,10 +11,28 @@ let test = '';
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 
+// Require a real session secret from the environment. The previous
+// hardcoded default was forgeable by anyone who read this example.
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret || sessionSecret.length < 32) {
+  console.error(
+    'ERROR: SESSION_SECRET environment variable must be set to at least 32 ' +
+    'characters before starting the example server. Generate one with: ' +
+    "node -e \"console.log(require('crypto').randomBytes(48).toString('hex'))\""
+  );
+  process.exit(1);
+}
+
 app.use(session({
-  secret: 'supersecretsessionkey',
+  secret: sessionSecret,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    // Set SESSION_COOKIE_SECURE=true once this is served over HTTPS.
+    secure: process.env.SESSION_COOKIE_SECURE === 'true',
+  },
 }));
 
 app.use('/favicon.ico', express.static('public/images/favicon.ico'));
@@ -45,8 +64,16 @@ app.use(multer.array());
 // serve all static files in public directory
 app.use(express.static('public'));
 
+// Constant-time comparison to avoid leaking the demo password via timing.
+function secureEquals(a, b) {
+  const ab = Buffer.from(String(a));
+  const bb = Buffer.from(String(b));
+  if (ab.length !== bb.length) return false;
+  return crypto.timingSafeEqual(ab, bb);
+}
+
 app.post('/login', function (req, res) {
-  if(req.body.email === config.DEMO_EMAIL && req.body.password === config.DEMO_PASSWORD){
+  if(secureEquals(req.body.email, config.DEMO_EMAIL) && secureEquals(req.body.password, config.DEMO_PASSWORD)){
     let generatedToken = '';
     const userId = config.VOICEIT_TEST_USER_ID;
     if (userId.substring(0,4) === 'usr_'){
@@ -62,7 +89,7 @@ app.post('/login', function (req, res) {
       'message' : 'Successfully authenticated user',
       'token' : generatedToken
     });
-  } else if (req.body.password !== config.DEMO_PASSWORD){
+  } else if (!secureEquals(req.body.password, config.DEMO_PASSWORD)){
     res.json({
       'responseCode': 'INPW',
       'message' : 'Incorrect Password'
