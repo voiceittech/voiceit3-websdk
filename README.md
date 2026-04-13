@@ -1,11 +1,11 @@
-<img src="https://raw.githubusercontent.com/voiceittech/voiceit3-websdk/main/js.png" width="100%" style="width:100%" />
+<img src="https://raw.githubusercontent.com/voiceittech/voiceit3-web-sdk/main/js.png" width="100%" style="width:100%" />
 
 # VoiceIt API 3.0 Web SDK
 
-[![Build](https://github.com/voiceittech/voiceit3-websdk/actions/workflows/test.yml/badge.svg)](https://github.com/voiceittech/voiceit3-websdk/actions/workflows/test.yml)
-[![Dependabot](https://img.shields.io/github/issues-pr/voiceittech/voiceit3-websdk/dependencies?label=dependabot&logo=dependabot&color=025e8c)](https://github.com/voiceittech/voiceit3-websdk/pulls?q=is%3Apr+label%3Adependencies)
-[![Version](https://img.shields.io/badge/version-3.0.5-blue)](https://github.com/voiceittech/voiceit3-websdk)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/voiceittech/voiceit3-websdk/blob/main/LICENSE)
+[![Build](https://github.com/voiceittech/voiceit3-web-sdk/actions/workflows/test.yml/badge.svg)](https://github.com/voiceittech/voiceit3-web-sdk/actions/workflows/test.yml)
+[![Dependabot](https://img.shields.io/github/issues-pr/voiceittech/voiceit3-web-sdk/dependencies?label=dependabot&logo=dependabot&color=025e8c)](https://github.com/voiceittech/voiceit3-web-sdk/pulls?q=is%3Apr+label%3Adependencies)
+[![Version](https://img.shields.io/badge/version-3.0.5-blue)](https://github.com/voiceittech/voiceit3-web-sdk)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/voiceittech/voiceit3-web-sdk/blob/main/LICENSE)
 [![Platform](https://img.shields.io/badge/platform-web-lightgrey)](https://voiceit.io/demo)
 [![VoiceIt API](https://img.shields.io/badge/VoiceIt-API%203.0-blue)](https://voiceit.io)
 
@@ -63,7 +63,7 @@ Choose one of the following for the server-side implementation:
 
 ## UI Screenshots
 
-<img width="32%" src="https://raw.githubusercontent.com/voiceittech/voiceit3-websdk/main/voiceit3-graphics/voiceVerification.png?v=2" style="display: inline-block"/><img width="32%" src="https://raw.githubusercontent.com/voiceittech/voiceit3-websdk/main/voiceit3-graphics/faceVerification.png?v=2" style="display: inline-block; margin: 0 2%"/><img width="32%" src="https://raw.githubusercontent.com/voiceittech/voiceit3-websdk/main/voiceit3-graphics/videoVerification.png?v=2" style="display: inline-block"/>
+<img width="32%" src="https://raw.githubusercontent.com/voiceittech/voiceit3-web-sdk/main/voiceit3-graphics/voiceVerification.png?v=2" style="display: inline-block"/><img width="32%" src="https://raw.githubusercontent.com/voiceittech/voiceit3-web-sdk/main/voiceit3-graphics/faceVerification.png?v=2" style="display: inline-block; margin: 0 2%"/><img width="32%" src="https://raw.githubusercontent.com/voiceittech/voiceit3-web-sdk/main/voiceit3-graphics/videoVerification.png?v=2" style="display: inline-block"/>
 
 ## Web Example
 
@@ -71,7 +71,7 @@ Choose one of the following for the server-side implementation:
 
 Sign up at [voiceit.io/pricing](https://voiceit.io/pricing) to get your API Key and Token, then log in to the [Dashboard](https://dashboard.voiceit.io) to manage your account.
 
-<img src="https://raw.githubusercontent.com/voiceittech/voiceit3-websdk/main/voiceit3-graphics/getcredentials.png" alt="API Key and Token" width="400px" />
+<img src="https://raw.githubusercontent.com/voiceittech/voiceit3-web-sdk/main/voiceit3-graphics/getcredentials.png" alt="API Key and Token" width="400px" />
 
 #### The Config File
 
@@ -119,7 +119,7 @@ Visit your server at port 3000. The example servers come preconfigured with a de
 
 ## Incorporating the SDK
 
-<img src="https://raw.githubusercontent.com/voiceittech/voiceit3-websdk/main/voiceit3-graphics/diagram.png" width="70%" style="width:70%" />
+<img src="https://raw.githubusercontent.com/voiceittech/voiceit3-web-sdk/main/voiceit3-graphics/diagram.png" width="70%" style="width:70%" />
 
 Each type (voice, face, and video) and each action (enrollment and verification) can be implemented independently. A backend and frontend implementation is required.
 
@@ -164,7 +164,7 @@ app.post('/example_endpoint', multer.any(), function (req, res) {
 
 ##### Go
 ```go
-import websdk "github.com/voiceittech/voiceit3-websdk/voiceit3-go-websdk"
+import websdk "github.com/voiceittech/voiceit3-web-sdk/voiceit3-go-websdk"
 
 var backend websdk.WebSDK
 
@@ -356,7 +356,7 @@ myVoiceIt.encapsulatedVideoVerification({
 
 ### Implementation Diagram
 
-<img src="https://raw.githubusercontent.com/voiceittech/voiceit3-websdk/main/voiceit3-graphics/diagram.png" width="70%" style="width:70%" />
+<img src="https://raw.githubusercontent.com/voiceittech/voiceit3-web-sdk/main/voiceit3-graphics/diagram.png" width="70%" style="width:70%" />
 
 ### Changing the Content Language
 
@@ -375,8 +375,8 @@ For detailed API documentation, visit [voiceit.io/documentation](https://voiceit
 
 If you find this SDK useful, please consider giving it a star on GitHub — it helps others discover the project!
 
-[![GitHub stars](https://img.shields.io/github/stars/voiceittech/voiceit3-websdk?style=social)](https://github.com/voiceittech/voiceit3-websdk/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/voiceittech/voiceit3-web-sdk?style=social)](https://github.com/voiceittech/voiceit3-web-sdk/stargazers)
 
 ## License
 
-voiceit3-websdk is available under the MIT license. See the LICENSE file for more info.
+voiceit3-web-sdk is available under the MIT license. See the LICENSE file for more info.
