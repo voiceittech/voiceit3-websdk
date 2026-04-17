@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GH_PAT }}
       - uses: actions/setup-node@v6
         with:
           node-version: '20'
@@ -14,12 +16,17 @@ jobs:
         with:
           go-version: '1.21'
           cache-dependency-path: voiceit3-go-server-example/go.sum
+      - name: Configure private repo access
+        run: git config --global url."https://x-access-token:${{ secrets.GH_PAT }}@github.com/".insteadOf "https://github.com/"
       - name: Build frontend
         run: |
           cd voiceit3-frontend
           npm install
           npm run build
       - name: Build Go server
+        env:
+          GOPRIVATE: github.com/voiceittech/*
+          GONOSUMCHECK: github.com/voiceittech/*
         run: |
           cd voiceit3-go-server-example
           go build ./...
