@@ -10,7 +10,7 @@ require (
 )
 
 require (
-	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
+	github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
 	github.com/voiceittech/voiceit3-go/v3 v3.0.6 // indirect
 )
 
