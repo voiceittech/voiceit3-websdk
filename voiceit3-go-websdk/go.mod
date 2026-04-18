@@ -6,5 +6,5 @@ toolchain go1.24.13
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.3.1
-	github.com/voiceittech/voiceit3-go/v3 v3.0.6
+	github.com/voiceittech/voiceit3-go/v3 v3.0.7
 )
