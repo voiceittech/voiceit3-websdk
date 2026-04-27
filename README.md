@@ -39,6 +39,19 @@ Choose one of the following for the server-side implementation:
 * **Node:** Node 18+
 * **Go:** Go 1.17+
 
+## Audio Recording Requirements
+
+The SDK records audio at the following specifications for optimal biometric accuracy:
+
+| Setting | Value |
+|---------|-------|
+| Sample Rate | 48 kHz |
+| Bit Depth | 16-bit |
+| Channels | Mono |
+| Format | WebM/Opus or WAV |
+
+> **Note:** Recordings below 16 kHz sample rate will significantly degrade biometric accuracy and may result in failed enrollments or verifications. The SDK explicitly requests 48 kHz mono from the browser. Browsers that only support 44.1 kHz will fall back gracefully.
+
 ## Supported Browsers
 
 **Desktop:**
