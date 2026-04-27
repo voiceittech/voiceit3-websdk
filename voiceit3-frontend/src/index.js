@@ -384,7 +384,7 @@ voiceIt3ObjRef.initModalClickListeners = function(){
   // Set up videoJS for voice
   voiceIt3ObjRef.initVoiceRecord = async function() {
     if (isIOS) {
-      await voiceIt3ObjRef.requestPermissions({ audio: true, video: false });
+      await voiceIt3ObjRef.requestPermissions({ audio: { sampleRate: { ideal: 48000 }, channelCount: 1, sampleSize: 16 }, video: false });
     }
     var audio = vi$.create('audio');
     audio.setAttribute('id', 'myAudio');
@@ -402,7 +402,9 @@ voiceIt3ObjRef.initModalClickListeners = function(){
           audio: true,
           video: false,
           maxLength: 5,
-          debug: true
+          debug: true,
+          audioSampleRate: 48000,
+          audioChannels: 1
         }
       }
     };
@@ -423,7 +425,7 @@ voiceIt3ObjRef.initModalClickListeners = function(){
             numberOfOutputChannels: 1,
             constraints: {
               video: false,
-              audio: true
+              audio: { sampleRate: { ideal: 48000 }, channelCount: 1, sampleSize: 16 }
             }
           })
         ]
@@ -437,7 +439,7 @@ voiceIt3ObjRef.initModalClickListeners = function(){
   // Set up videoJS for video
   voiceIt3ObjRef.initVideoRecord = async function() {
     if (isIOS) {
-      await voiceIt3ObjRef.requestPermissions({ video: { facingMode: 'user' }, audio: true });
+      await voiceIt3ObjRef.requestPermissions({ video: { facingMode: 'user' }, audio: { sampleRate: { ideal: 48000 }, channelCount: 1, sampleSize: 16 } });
     }
     var video = vi$.create('video');
     video.setAttribute('id', 'videoRecord');
@@ -459,7 +461,9 @@ voiceIt3ObjRef.initModalClickListeners = function(){
           audio: true,
           video: videoConstraints,
           maxLength: 5,
-          debug: true
+          debug: true,
+          audioSampleRate: 48000,
+          audioChannels: 1
         }
       }
     }, function() {});
