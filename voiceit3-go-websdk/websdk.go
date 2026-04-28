@@ -25,7 +25,7 @@ type BaseUrls struct {
 }
 
 type WebSDK struct {
-	vi                         voiceit3.VoiceIt3
+	vi                         voiceit3.Client
 	sessionExpirationTimeHours int
 }
 
@@ -33,7 +33,7 @@ func (websdk WebSDK) GetSessionExpirationTimeHours() int {
 	return websdk.sessionExpirationTimeHours
 }
 
-func (websdk WebSDK) GetAPI2Client() voiceit3.VoiceIt3 {
+func (websdk WebSDK) GetAPI2Client() voiceit3.Client {
 	return websdk.vi
 }
 
@@ -51,7 +51,7 @@ func (websdk *WebSDK) Initialize(apiKey, apiToken string, sessionExpirationTimeH
 		}
 	}
 
-	websdk.vi = voiceit3.VoiceIt3{
+	websdk.vi = voiceit3.Client{
 		APIKey:   apiKey,
 		APIToken: apiToken,
 		BaseUrl:  api2BaseUrl,
